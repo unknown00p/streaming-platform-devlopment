@@ -1,11 +1,11 @@
 import { useRef, useState, useEffect } from "react"
 import Hls from "hls.js"
-import { Parser } from 'm3u8-parser'
-import axios from "axios"
 
 function CustomVideoPlayer({ videoUrl, qualityArr }) {
   const videoRef = useRef(null)
+  const frameIdRef = useRef(null)
   const divRef = useRef(null)
+  // const testRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [videoRangeValue, setVideoRangeValue] = useState(0)
   const [soundRangeValue, setSoundRangeValue] = useState(40)
@@ -15,9 +15,85 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
   const [currentTime, setCurrentTime] = useState(0)
   const [toggleFullScreenImg, setToggleFullScreenImg] = useState("maximize.svg")
   const [showSetting, setShowSetting] = useState(false)
-  const [convertUrl, setConvertUrl] = useState("")
+  const [test, setTest] = useState(null)
 
-  async function togglePlayPause() {
+
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    
+    // setTimeout(() => {
+      console.log("ref",videoRef);
+      console.log("run",videoRef?.current);
+      setTest(videoRef.current.duration)
+    // }, 5000);
+    // videoElement.duration = 1
+    if (Hls.isSupported() && videoElement) {
+      const hls = new Hls();
+      hls.loadSource(qualityArr[videoIndex]);
+      hls.attachMedia(videoElement);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        videoElement.play();
+      });
+    } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+      videoElement.src = videoUrl;
+    }
+
+    const handleLoadedMetadata = () => {
+      const videoDuration = videoElement.duration;
+      setTest(videoDuration)
+      console.log("Video duration:", videoElement.duration);
+      // setDuration(videoDuration);
+    };
+
+    videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
+    
+    // setTest(videoRef.current.duration)
+    return () => {
+      videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
+    };
+
+
+
+  }, []);
+
+  useEffect(() => {
+    if(test != null){
+      console.log(test);
+      
+      console.log(videoRef.current.duration);
+    }
+  }, [test])
+
+  console.log(test);
+  
+  
+
+  
+
+  // useEffect(() => {
+  //   const videoElement = videoRef.current;
+  //   console.log(videoRef);
+    
+  //   // Event listener to handle when the metadata is loaded
+  //   const handleLoadedMetadata = () => {
+  //     console.log('Video duration:', videoElement.duration); // This should log the correct duration
+  //   };
+
+  //   if (videoElement) {
+  //     // Add event listener to trigger when the metadata is loaded
+  //     videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
+  //   }
+
+  //   // Cleanup the event listener
+  //   return () => {
+  //     if (videoElement) {
+  //       videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
+  //     }
+  //   };
+  // }, []);
+
+
+  function togglePlayPause() {
     if (videoRef.current.paused) {
       videoRef.current.play()
       setIsPlaying(true)
@@ -26,10 +102,6 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
       videoRef.current.pause()
       setIsPlaying(false)
     }
-  }
-
-  function handelEnded() {
-    setIsPlaying(false)
   }
 
   function onVideoInputValChange(e) {
@@ -55,46 +127,45 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
 
   useEffect(() => {
     videoRef.current.volume = soundRangeValue / 100
-  }, [toggleMute])
+  }, [soundRangeValue])
 
   const updateSlider = () => {
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
       const duration = videoRef.current.duration;
-      console.log(duration);      
-        setDuration(duration)
+      console.log("slider", duration);
 
       if (duration > 0) {
         const newValue = (currentTime / duration) * 100;
         setVideoRangeValue(Math.round(newValue));
         setCurrentTime(currentTime)
       }
-      // requestAnimationFrame(updateSlider)
+      frameIdRef.current = requestAnimationFrame(updateSlider)
     }
   };
 
   useEffect(() => {
-    requestAnimationFrame(updateSlider)
-    return ()=>cancelAnimationFrame(updateSlider)
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-
-    const handleMetadataLoaded = () => {
-      const duration = video.duration;
-      setDuration(duration)
-      console.log(duration);
-    };
-
-    video.addEventListener('loadedmetadata', handleMetadataLoaded);
-
+    if (isPlaying) {
+      frameIdRef.current = requestAnimationFrame(updateSlider);
+    } else {
+      if (frameIdRef.current) {
+        cancelAnimationFrame(frameIdRef.current);
+        frameIdRef.current = null;
+      }
+    }
     return () => {
-      video.removeEventListener('loadedmetadata', handleMetadataLoaded);
+      if (frameIdRef.current) {
+        cancelAnimationFrame(frameIdRef.current);
+        frameIdRef.current = null;
+      }
     };
+  }, [isPlaying]);
 
-  }, []);
-
+  const handleMetadataLoaded = () => {
+    const videoDuration = videoRef.current.duration;
+    console.log("handlemeta", videoDuration);
+    setDuration(videoDuration)
+  };
 
   useEffect(() => {
     if (soundRangeValue < 50 && soundRangeValue > 0) {
@@ -109,25 +180,24 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
 
   }, [soundRangeValue])
 
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.load()
-      videoRef.current.play()
-      if (!videoRef.current.paused) {
-        setIsPlaying(true)
-      } else {
-        setIsPlaying(false)
-      }
-    }
-  }, [videoIndex])
+  // useEffect(() => {
+  //   const video = videoRef.current
+  //   if (video) {
+  //     video.load()
+  //     video.play()
+  //     if (!video.paused) {
+  //       setIsPlaying(true)
+  //     } else {
+  //       setIsPlaying(false)
+  //     }
+  //   }
+  // }, [])
 
 
   function playNextVideo() {
-
     if (videoIndex < videoUrl.length - 1) {
       setVideoIndex(prev => prev + 1)
     }
-
   }
 
   function toggleScreen() {
@@ -141,28 +211,14 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
   }
 
   function formatDuration(seconds) {
+    // console.log(seconds);    
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
-    return `${hours > 0 ? `${hours}:` : ""}${minutes < 10 ? "0" : ""}${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+    let time = `${hours > 0 ? `${hours}:` : ""}${minutes < 10 ? "0" : ""}${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+    // console.log(time);
+    return time
   }
-
-  // function toggleSetting() {
-
-  // }
-
-  useEffect(() => {
-    const videoElement = videoRef.current;
-    if (Hls.isSupported() && videoElement) {
-      const hls = new Hls();
-      hls.loadSource(qualityArr[videoIndex]);
-      hls.attachMedia(videoElement);
-
-      videoElement.play()
-    } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-      videoElement.src = videoUrl;
-    }
-  }, [videoUrl, videoIndex, qualityArr]);
 
 
   return (
@@ -172,11 +228,15 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
         <video
           onClick={togglePlayPause}
           ref={videoRef}
-          onEnded={handelEnded}
+          onEnded={() => {
+            setIsPlaying(false)
+          }}
+          
+          onLoadedMetadata={handleMetadataLoaded}
+      
           disablePictureInPicture
           className="w-full h-full rounded-md object-cover cursor-pointer"
           controls={false}
-          poster=""
         >
 
           <source src={qualityArr[videoIndex]} type="application/x-mpegURL" />
