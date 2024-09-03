@@ -1,6 +1,8 @@
 import { v2 as cloudinary } from "cloudinary"
 import fs from "fs"
+import { Router } from "express";
 
+const router = Router()
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -60,7 +62,6 @@ const uploadVideoOnCloudinary = async (localFilePath) => {
 
             eager_async: true,
         })
-        console.log("response cloudinary", response);
         fs.unlinkSync(localFilePath)
         return response;
 
@@ -85,11 +86,12 @@ const uploadImagesOnCloudinary = async (localFilePath) => {
     }
 }
 
-const deletePreviousFile = async (previousFileId, type = "image",) => {
+const deletePreviousImage = async (FileId, type = "image",) => {
     try {
 
-        if (!previousFileId) return null
-        return await cloudinary.uploader.destroy(previousFileId, { resource_type: type })
+        if (!FileId) return null
+        const deleted =  await cloudinary.uploader.destroy(FileId, { resource_type: type })
+        return deleted      
 
     } catch (error) {
         console.log(error);
@@ -97,6 +99,16 @@ const deletePreviousFile = async (previousFileId, type = "image",) => {
     }
 }
 
+const deletePreviousVideo = async (FileId,type = "video") => {
+    // console.log("videoId cloudi",FileId);
+    try {
+        if (!FileId) return null
+        return await cloudinary.uploader.destroy(FileId,{resource_type: type,invalidate: true})
+    } catch (error) {
+        console.log("cloudi error",error);
+        throw error
+    }
+}
 
 
-export { uploadVideoOnCloudinary, deletePreviousFile, uploadImagesOnCloudinary }
+export { uploadVideoOnCloudinary, deletePreviousVideo, uploadImagesOnCloudinary,deletePreviousImage }

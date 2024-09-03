@@ -5,93 +5,30 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
   const videoRef = useRef(null)
   const frameIdRef = useRef(null)
   const divRef = useRef(null)
-  // const testRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [videoRangeValue, setVideoRangeValue] = useState(0)
-  const [soundRangeValue, setSoundRangeValue] = useState(40)
+  const [soundRangeValue, setSoundRangeValue] = useState(10)
   const [volumeUrl, setVolumeUrl] = useState("volume-full.svg")
   const [videoIndex, setVideoIndex] = useState(0)
-  const [duration, setDuration] = useState(0)
+  const [duration, setDuration] = useState(265.427302)
   const [currentTime, setCurrentTime] = useState(0)
   const [toggleFullScreenImg, setToggleFullScreenImg] = useState("maximize.svg")
   const [showSetting, setShowSetting] = useState(false)
-  const [test, setTest] = useState(null)
 
 
   useEffect(() => {
     const videoElement = videoRef.current;
     
-    // setTimeout(() => {
-      console.log("ref",videoRef);
-      console.log("run",videoRef?.current);
-      setTest(videoRef.current.duration)
-    // }, 5000);
-    // videoElement.duration = 1
     if (Hls.isSupported() && videoElement) {
       const hls = new Hls();
       hls.loadSource(qualityArr[videoIndex]);
       hls.attachMedia(videoElement);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        videoElement.play();
-      });
+      videoElement.play();
     } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
       videoElement.src = videoUrl;
     }
 
-    const handleLoadedMetadata = () => {
-      const videoDuration = videoElement.duration;
-      setTest(videoDuration)
-      console.log("Video duration:", videoElement.duration);
-      // setDuration(videoDuration);
-    };
-
-    videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
-    
-    // setTest(videoRef.current.duration)
-    return () => {
-      videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
-    };
-
-
-
-  }, []);
-
-  useEffect(() => {
-    if(test != null){
-      console.log(test);
-      
-      console.log(videoRef.current.duration);
-    }
-  }, [test])
-
-  console.log(test);
-  
-  
-
-  
-
-  // useEffect(() => {
-  //   const videoElement = videoRef.current;
-  //   console.log(videoRef);
-    
-  //   // Event listener to handle when the metadata is loaded
-  //   const handleLoadedMetadata = () => {
-  //     console.log('Video duration:', videoElement.duration); // This should log the correct duration
-  //   };
-
-  //   if (videoElement) {
-  //     // Add event listener to trigger when the metadata is loaded
-  //     videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
-  //   }
-
-  //   // Cleanup the event listener
-  //   return () => {
-  //     if (videoElement) {
-  //       videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
-  //     }
-  //   };
-  // }, []);
-
+  }, [qualityArr,videoIndex,videoUrl]);
 
   function togglePlayPause() {
     if (videoRef.current.paused) {
@@ -109,7 +46,6 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
     setVideoRangeValue(Value)
     videoRef.current.currentTime = (Value / 100) * videoRef.current.duration;
   }
-
 
   function onSoundInputChange(e) {
     const value = e.target.value
@@ -161,12 +97,6 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
     };
   }, [isPlaying]);
 
-  const handleMetadataLoaded = () => {
-    const videoDuration = videoRef.current.duration;
-    console.log("handlemeta", videoDuration);
-    setDuration(videoDuration)
-  };
-
   useEffect(() => {
     if (soundRangeValue < 50 && soundRangeValue > 0) {
       setVolumeUrl("volume-low.svg")
@@ -180,25 +110,24 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
 
   }, [soundRangeValue])
 
-  // useEffect(() => {
-  //   const video = videoRef.current
-  //   if (video) {
-  //     video.load()
-  //     video.play()
-  //     if (!video.paused) {
-  //       setIsPlaying(true)
-  //     } else {
-  //       setIsPlaying(false)
-  //     }
-  //   }
-  // }, [])
-
-
   function playNextVideo() {
     if (videoIndex < videoUrl.length - 1) {
       setVideoIndex(prev => prev + 1)
     }
   }
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (video) {
+      video.load()
+      video.play()
+      if (!video.paused) {
+        setIsPlaying(true)
+      } else {
+        setIsPlaying(false)
+      }
+    }
+  }, [videoIndex])
 
   function toggleScreen() {
     if (document.fullscreenElement) {
@@ -210,8 +139,7 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
     }
   }
 
-  function formatDuration(seconds) {
-    // console.log(seconds);    
+  function formatDuration(seconds) {   
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
@@ -219,6 +147,12 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
     // console.log(time);
     return time
   }
+
+  function changeQuality(event) {
+    console.log(event.target.innerText);    
+  }
+
+
 
 
   return (
@@ -231,8 +165,6 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
           onEnded={() => {
             setIsPlaying(false)
           }}
-          
-          onLoadedMetadata={handleMetadataLoaded}
       
           disablePictureInPicture
           className="w-full h-full rounded-md object-cover cursor-pointer"
@@ -242,7 +174,8 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
           <source src={qualityArr[videoIndex]} type="application/x-mpegURL" />
 
         </video>
-        <div className="absolute custom-video-controls bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent py-2">
+
+        {duration && <div className="absolute custom-video-controls bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent py-2">
           <div className="px-4 pb-[0.33rem]">
             <input className="
             transition-all
@@ -295,19 +228,19 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
                 <img className="cursor-pointer" onClick={() => (
                   setShowSetting(!showSetting)
                 )} src="dots2.svg" alt="" />
-                {showSetting && <div className="bg-[#211e1e7a] absolute w-[8.75rem] p-2 top-[-11rem] left-[-5rem]">
+                {showSetting && <div className="bg-[#211e1e7a] absolute w-[8.75rem] p-2 top-[-11rem] left-[-5rem] rounded-md">
                   <ul className="flex flex-col gap-3">
                     <button className="text-left">
-                      <li>Auto</li>
+                      <li onClick={changeQuality}>Auto</li>
                     </button>
                     <button className="text-left">
-                      <li>1080p</li>
+                      <li onClick={changeQuality}>1080p</li>
                     </button>
                     <button className="text-left">
-                      <li>720p</li>
+                      <li onClick={changeQuality}>720p</li>
                     </button>
                     <button className="text-left">
-                      <li>480p</li>
+                      <li onClick={changeQuality}>480p</li>
                     </button>
                   </ul>
                 </div>}
@@ -315,7 +248,7 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
               <img className="cursor-pointer" onClick={toggleScreen} src={toggleFullScreenImg} alt="" />
             </div>
           </div>
-        </div>
+        </div>}
       </div>
     </>
   )

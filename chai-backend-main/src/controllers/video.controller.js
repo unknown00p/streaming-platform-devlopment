@@ -4,7 +4,7 @@ import { User } from "../models/user.model.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
-import { deletePreviousFile, uploadVideoOnCloudinary,uploadImagesOnCloudinary } from "../utils/cloudinary.js"
+import { deletePreviousVideo, uploadVideoOnCloudinary,uploadImagesOnCloudinary, deletePreviousImage } from "../utils/cloudinary.js"
 import { response } from "express"
 
 
@@ -82,8 +82,13 @@ const getVideoById = asyncHandler(async (req, res) => {
     if (!videoId) {
         throw new ApiError(404, "videoId not found")
     }
+    console.log(videoId);
+    
 
-    const video = await Video.findById(videoId)
+    const video = await Video.findOne(new mongoose.Types.ObjectId(videoId))
+
+    console.log(video);
+    
 
     if (!video) {
         throw new ApiError(500, "unable to get video from dataBase")
@@ -147,13 +152,13 @@ const deleteVideo = asyncHandler(async (req, res) => {
 
     if (!deleteVideo) {
         throw new ApiError(500, "server error failed to delete video")
-    }
+    }    
 
-    const clodinaryVideoId = deleteVideo.videoFile.split("/").pop().split(".").shift()
+    const clodinaryVideoId = deleteVideo.videoFile[0].default.split("/").pop().split(".").shift()  
     const clodinaryThumbnailId = deleteVideo.thumbnail.split("/").pop().split(".").shift()
 
-    const deletedVideoFromCloudinary = await deletePreviousFile(clodinaryVideoId, "video")
-    const deletedThumbnailFromCloudinary = await deletePreviousFile(clodinaryThumbnailId)
+    const deletedVideoFromCloudinary = deletePreviousVideo(clodinaryVideoId)
+    const deletedThumbnailFromCloudinary = deletePreviousImage(clodinaryThumbnailId)
 
     if (!deletedVideoFromCloudinary) {
         throw new ApiError(500, "deletion of clodinary video files failed")

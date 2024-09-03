@@ -8,12 +8,12 @@ function Video() {
     "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7"
   ])
 
-  
+
   const qualityArr = [
-    "https://res.cloudinary.com/dlgstatc7/video/upload/sp_auto/v1724681752/gr2yzemvr6uaqihufy8t.m3u8",
-    "https://res.cloudinary.com/dlgstatc7/video/upload/br_3000k,c_limit,h_1080,vc_h265,w_1920/sp_full_hd/v1724948677/zw5aijoqeol8rnayqr8x.m3u8",
-    "https://res.cloudinary.com/dlgstatc7/video/upload/br_1500k,c_limit,h_720,vc_h264,w_1280/sp_hd/v1724948677/zw5aijoqeol8rnayqr8x.m3u8",
-    "https://res.cloudinary.com/dlgstatc7/video/upload/br_800k,c_limit,h_480,vc_h264,w_854/sp_sd/v1724948677/zw5aijoqeol8rnayqr8x.m3u8"
+    "https://res.cloudinary.com/dlgstatc7/video/upload/sp_auto/v1725275908/jtwtanvvspkj4rpsszdv.m3u8",
+    "https://res.cloudinary.com/dlgstatc7/video/upload/br_3000k,c_limit,h_1080,vc_h265,w_1920/sp_full_hd/v1725275908/jtwtanvvspkj4rpsszdv.m3u8",
+    "https://res.cloudinary.com/dlgstatc7/video/upload/br_1500k,c_limit,h_720,vc_h264,w_1280/sp_hd/v1725275908/jtwtanvvspkj4rpsszdv.m3u8",
+    "https://res.cloudinary.com/dlgstatc7/video/upload/br_800k,c_limit,h_480,vc_h264,w_854/sp_sd/v1725275908/jtwtanvvspkj4rpsszdv.m3u8"
   ]
 
   const videoUrls = ["Idea 10.mp4", "videoplayback.mp4", "6-second-timer.mp4"]
@@ -21,7 +21,7 @@ function Video() {
     <main className="flex gap-4 justify-around px-6">
       <div className="left">
         <div>
-          <CustomVideoPlayer videoUrl={videoUrls} qualityArr={qualityArr}/>
+          <CustomVideoPlayer videoUrl={videoUrls} qualityArr={qualityArr} />
         </div>
       </div>
       <div className="flex flex-col gap-4">

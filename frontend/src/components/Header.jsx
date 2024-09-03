@@ -39,20 +39,20 @@ function Header() {
     <>
       <div className=''>
         <div>
-          <div className='flex text-white items-center justify-between px-7 pt-2 pb-5 text-[1.11rem] bg-[#0f0f0f] shadow-xl'>
+          <div className='flex text-white items-center justify-between px-7 pt-2 pb-5 text-[1.11rem] bg-[#0c0c0d]'>
             <div className='flex items-center gap-8'>
               <button id='mainMenu' onClick={toggleSideBar}>
                 <img src="menubar.svg" alt="" />
               </button>
               <Link to={""} className='flex items-center gap-1'>
-                <img className='w-[2.5rem]' src="youtube-video.svg" alt="" srcSet="" />
+                <img className='w-[2.3rem]' src="youtube-video.svg" alt="" srcSet="" />
                 <span>Watch-here</span>
               </Link>
             </div>
 
             <div className='flex relative'>
               <Input
-                className="w-[50vw] rounded-full bg-[#00000000] h-11 px-5 text-[1.1rem] outline-none border-[#8d8d8d] border-[1px] text-white"
+                className="w-[50vw] hidden md:block  rounded-full bg-[#13131497] h-11 px-5 text-[1.1rem] outline-none border-[#8d8d8d8b] border-[1px] text-white"
                 placeholder="Search"
               />
               <button className='absolute right-0 text-center mt-[0.60rem] mr-6'>
