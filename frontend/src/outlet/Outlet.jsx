@@ -7,7 +7,7 @@ function OutletComp() {
         <div className='fixed z-20 w-full'>
         <Header />
         </div>
-        <div className='p-2 pt-20'>
+        <div className=''>
             <Outlet />
         </div>
         </>

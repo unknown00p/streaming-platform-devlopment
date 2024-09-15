@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body{
-    background-color: #0d0d0e;
+    background-color: #131519;
 }
 
 *{
@@ -41,4 +41,9 @@ input[type="range"]::-ms-thumb {
 
 video::-webkit-media-controls {
   display:none !important;
+}
+
+.custon-slide {
+  flex: 0 0 auto;
+  display: inline-block !important;
 }

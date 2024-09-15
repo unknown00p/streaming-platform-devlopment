@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react"
 import Hls from "hls.js"
 
-function CustomVideoPlayer({ videoUrl, qualityArr }) {
+function CustomVideoPlayer({ qualityArr }) {
   const videoRef = useRef(null)
   const frameIdRef = useRef(null)
   const divRef = useRef(null)
@@ -14,6 +14,7 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
   const [currentTime, setCurrentTime] = useState(0)
   const [toggleFullScreenImg, setToggleFullScreenImg] = useState("maximize.svg")
   const [showSetting, setShowSetting] = useState(false)
+  const [onHoverShow, setonHoverShow] = useState("absolute")
 
 
   useEffect(() => {
@@ -22,13 +23,14 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
     if (Hls.isSupported() && videoElement) {
       const hls = new Hls();
       hls.loadSource(qualityArr[videoIndex]);
+      console.log(qualityArr[videoIndex]);
       hls.attachMedia(videoElement);
-      videoElement.play();
+      // videoElement.play();
     } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-      videoElement.src = videoUrl;
+      videoElement.src = qualityArr[videoIndex];
     }
 
-  }, [qualityArr,videoIndex,videoUrl]);
+  }, [videoIndex]);
 
   function togglePlayPause() {
     if (videoRef.current.paused) {
@@ -69,7 +71,7 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
       const duration = videoRef.current.duration;
-      console.log("slider", duration);
+      // console.log("slider", duration);
 
       if (duration > 0) {
         const newValue = (currentTime / duration) * 100;
@@ -111,7 +113,8 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
   }, [soundRangeValue])
 
   function playNextVideo() {
-    if (videoIndex < videoUrl.length - 1) {
+    console.log(qualityArr.length);
+    if (videoIndex < qualityArr.length) {
       setVideoIndex(prev => prev + 1)
     }
   }
@@ -152,13 +155,12 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
     console.log(event.target.innerText);    
   }
 
-
-
-
   return (
     <>
-      <div ref={divRef} className="relative w-[57vw] h-[23rem]">
-
+      <div ref={divRef} 
+      // onMouseEnter={()=> setonHoverShow("absolute")}
+      //  onMouseLeave={()=> setonHoverShow("hidden")}
+        className="relative">
         <video
           onClick={togglePlayPause}
           ref={videoRef}
@@ -175,7 +177,7 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
 
         </video>
 
-        {duration && <div className="absolute custom-video-controls bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent py-2">
+        {duration && <div className={`${onHoverShow} absolute custom-video-controls bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent py-2`}>
           <div className="px-4 pb-[0.33rem]">
             <input className="
             transition-all
@@ -194,16 +196,16 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
           </div>
           <div className="flex justify-between items-center px-6">
             <div className="flex items-center gap-7">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center top-[-5rem] left-[14rem] sm:static gap-2">
 
                 <button className="focus:outline-none">
                   <img src="backward.svg" alt="Backward" className="w-6 h-6" />
                 </button>
                 <button onClick={togglePlayPause} className="focus:outline-none">
                   {!isPlaying ? (
-                    <img src="play.svg" alt="Play" className="w-[4vw] h-[4vh]" />
+                    <img src="play.svg" alt="Play" className="w-[1.4rem] h-[1.4rem]" />
                   ) : (
-                    <img src="pause.svg" alt="Pause" className="w-[4vw] h-[4vh]" />
+                    <img src="pause.svg" alt="Pause" className="w-[1.4rem] h-[1.4rem]" />
                   )}
                 </button>
                 <button className="focus:outline-none">
@@ -212,20 +214,20 @@ function CustomVideoPlayer({ videoUrl, qualityArr }) {
 
               </div>
               <div className="flex items-center gap-5">
-                <img onClick={toggleMute} src={volumeUrl} alt="Volume" className="w-[1.5rem] h-[1.5rem] cursor-pointer" />
+                <img onClick={toggleMute} src={volumeUrl} alt="Volume" className="w-[1.5rem] hidden sm:block h-[1.5rem] cursor-pointer" />
                 <input
                   onChange={onSoundInputChange}
                   type="range"
                   max={100}
                   value={soundRangeValue}
-                  className="w-[4rem] h-1 bg-gray-300 rounded-lg cursor-pointer accent-white focus:outline-none focus:ring-0 hover:shadow-none"
+                  className="w-[4rem] h-1 bg-gray-300 rounded-lg cursor-pointer accent-white focus:outline-none focus:ring-0 hover:shadow-none hidden sm:block"
                 />
                 <p className="text-white text-sm">{formatDuration(currentTime)} / {formatDuration(duration)}</p>
               </div>
             </div>
             <div className="text-white flex gap-4">
               <div className="relative">
-                <img className="cursor-pointer" onClick={() => (
+                <img className="cursor-pointer hidden sm:block" onClick={() => (
                   setShowSetting(!showSetting)
                 )} src="dots2.svg" alt="" />
                 {showSetting && <div className="bg-[#211e1e7a] absolute w-[8.75rem] p-2 top-[-11rem] left-[-5rem] rounded-md">

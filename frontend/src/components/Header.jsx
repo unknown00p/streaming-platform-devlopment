@@ -1,47 +1,40 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { Input } from "../index"
+import useCounterStore from '../zustand/useCounterStore';
 
 function Header() {
-  const [toggleBarCss, setToggleBarCss] = useState("left-[-20rem]")
-  const [coverAll, setCoverAll] = useState("")
-
-  function toggleSideBar() {
-    toggleBarCss == "left-[-20rem]" ? setToggleBarCss("left-[0]") : setToggleBarCss("left-[-20rem]")
-  }
-
-  useEffect(() => {
-    if (toggleBarCss == "left-[0]") {
-      setCoverAll("!bg-[#2c2c2c3f] h-screen top-[-73px] relative")
-    }else{
-      setCoverAll("")
-    }
-  }, [toggleBarCss])
-
-
+  const toggleBarCss = useCounterStore((state) => state.toggelBarCss)
+  const toggleSideBar = useCounterStore((state) => state.toggleSideBar)
+  const coverAll = useCounterStore((state) => state.coverAll)
+  const handleClickOutside = useCounterStore((state) => state.handleClickOutside)
+  const [mobileSearch, setMobileSearch] = useState("hidden")
+  const [headerClass, setHeaderClass] = useState("block")
 
   useEffect(() => {
-    function handleClickOutside(e) {
-      if (!e.target.closest("#logo-sidebar") && !e.target.closest("#mainMenu")) {
-        setToggleBarCss("left-[-20rem]");
-      }
-
-      if (e.target.closest(".slideLeft")) {
-        setToggleBarCss("left-[-20rem]");
-      }
-
-    }
+    handleClickOutside()
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
+  }, [handleClickOutside])
+
+
+  function toggleSearch() {
+    setMobileSearch("block")
+    setHeaderClass("hidden")
+  }
+
+  function backToHeader() {
+    setMobileSearch("hidden")
+    setHeaderClass("block")
+  }
 
   return (
     <>
       <div className=''>
-        <div>
-          <div className='flex text-white items-center justify-between px-7 pt-2 pb-5 text-[1.11rem] bg-[#0c0c0d]'>
+        <div className={`${headerClass} md:block`}>
+          <div className='flex text-white items-center justify-between px-7 pt-2 pb-5 text-[1.11rem] bg-[#13151a]'>
             <div className='flex items-center gap-8'>
-              <button id='mainMenu' onClick={toggleSideBar}>
+              <button className='hidden sm:block' id='mainMenu' onClick={toggleSideBar}>
                 <img src="menubar.svg" alt="" />
               </button>
               <Link to={""} className='flex items-center gap-1'>
@@ -52,44 +45,70 @@ function Header() {
 
             <div className='flex relative'>
               <Input
-                className="w-[50vw] hidden md:block  rounded-full bg-[#13131497] h-11 px-5 text-[1.1rem] outline-none border-[#8d8d8d8b] border-[1px] text-white"
+                className="w-[50vw] hidden md:block  rounded-full bg-[#13131400] h-11 px-5 text-[1.1rem] outline-none border-[#8d8d8d8b] border-[1px] text-white"
                 placeholder="Search"
               />
-              <button className='absolute right-0 text-center mt-[0.60rem] mr-6'>
-                <img className='' src="search.svg" alt="" />
-              </button>
+              <div>
+                <button className='absolute right-0 text-center mt-[0.60rem] mr-6'>
+                  <img className='' src="search.svg" alt="" />
+                </button>
+              </div>
             </div>
 
-            <div className='flex gap-5'>
+            <div className='flex gap-3 sm:gap-5'>
+              <button onClick={toggleSearch} className='md:hidden'>
+                <img src="search.svg" alt="" />
+              </button>
               <button>
                 <img src="uploadVideo.svg" alt="" />
               </button>
-              Profile
+              <button>
+                <img src="avatar.svg" alt="" />
+              </button>
             </div>
           </div>
         </div>
 
 
+        <div className={`${mobileSearch} md:hidden`}>
+          <div className='flex relative pt-3 pb-[0.8rem] bg-[#13151a] justify-center'>
+            <div className='flex gap-6'>
+              <button onClick={backToHeader}>
+                <img src="leftArrow.svg" alt="" />
+              </button>
+              <Input
+                className="w-[80vw] md:block  rounded-full bg-[#13131497] h-11 px-5 text-[1.1rem] outline-none border-[#8d8d8d8b] border-[1px] text-white"
+                placeholder="Search"
+              />
+            </div>
+            <div>
+              <button className='absolute text-center ml-[-3rem] mt-[0.60rem]'>
+                <img className='' src="search.svg" alt="" />
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div className={`${coverAll}`}>
           <aside id="logo-sidebar" className={`fixed overflow-hidden top-0 ${toggleBarCss} w-64 h-screen transition-all`} aria-label="Sidebar">
-            <div className="h-full px-3 py-4 bg-gray-50 dark:bg-[#0e0e0e]">
+            <div className="h-full px-3 py-4 bg-gray-50 dark:bg-[#13151a]">
 
               <div className='flex items-center pb-5 gap-5 pl-1'>
                 <div>
-                  <img onClick={toggleSideBar} className='cursor-pointer' src="menubar.svg" alt="" />
+                  <img className='cursor-pointer slideLeft' src="menubar.svg" alt="" />
                 </div>
 
-                <a href="https://flowbite.com/" className="flex items-center ps-2.5">
+                <Link to={""} className="flex items-center ps-2.5">
                   <div className='flex items-center gap-1'>
                     <img className='w-[2.5rem]' src="youtube-video.svg" alt="" srcSet="" />
                     <span className='text-white text-[1.1rem]'>Watch-here</span>
                   </div>
-                </a>
+                </Link>
               </div>
 
               <ul className="space-y-2 h-[88vh] font-medium pb-3 overflow-auto">
                 <li>
-                  <Link to="/" className="flex slideLeft items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-[#100628] group">
+                  <Link to="" className="flex slideLeft items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-[#100628] group">
                     <img src="home.svg" alt="" />
                     <span className="ms-3">Home</span>
                   </Link>

@@ -1,25 +1,16 @@
-import { useRef } from 'react'
+// import CategoryCarousel from '../subComponents/Category'
+import { useState } from 'react'
 import SideBar from '../subComponents/SideBar'
 import { useNavigate } from 'react-router-dom'
+import Wrapper from '../components/Wrapper'
 // use NavLink to focus on current button
 
 
 function Home() {
+
+  const [hasVideo, setHasVideo] = useState(true)
+
   const navigate = useNavigate()
-  // const categoryRef = useRef()
-  // const [loading, setLoading] = useState(true)
-
-  const categories = [
-    "All",
-    "Music",
-    "Source code",
-    "Computer programming",
-    "Mixes",
-    "Live gaming",
-    "Hans zimmer",
-    "Annison",
-  ]
-
   const videoClick = (e) => {
     const target = e?.target.id
     if (target !== "profile" && target !== "dot") {
@@ -28,60 +19,43 @@ function Home() {
     if (target == "profile") {
       navigate("userSection")
     }
-    // navigate("video")
   }
 
   const arr = [
-    "123",
-    "123",
-    "123",
-    "123",
-    "878",
-    "878",
-    "878",
-    "878",
-    "12312",
-    "12312",
-    "12312",
-    "12312",
-    "890",
-    "890",
-    "890",
-    "890",
+    "https://th.bing.com/th/id/OIP.NZtfot858OjoU8G0Y5TE9AHaEo?w=242&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
+    "https://th.bing.com/th/id/OIP.wg4R0mAD1_DQAII9hCM-8AHaDk?w=341&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
+    "https://th.bing.com/th/id/OIP.IHY4jIGoaywV1CkIYxzsNQHaEo?w=299&h=187&c=7&r=0&o=5&dpr=1.5&pid=1.7",
+    "https://th.bing.com/th/id/OIP.YMuauF2NaoHPNikNQyavFAHaEo?w=279&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
+    "https://th.bing.com/th/id/OIP.t_kb1S2P60S7gaKnEqQOjQHaEK?w=309&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
+    "https://th.bing.com/th/id/OIP.otQVzr8T480Dyttw-acdjgHaEP?w=312&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
+    "https://th.bing.com/th/id/OIP.BMXp9yc1JYylds7IvkyDrgHaGT?w=261&h=220&c=7&r=0&o=5&dpr=1.5&pid=1.7",
+    "https://th.bing.com/th/id/OIP.amEbZWd9JRcIxkyVtYNODwHaE8?w=272&h=181&c=7&r=0&o=5&dpr=1.5&pid=1.7",
+    "https://th.bing.com/th/id/OIP.hyOp4DHwU808lVPQ7qaZJAHaHa?w=194&h=195&c=7&r=0&o=5&dpr=1.5&pid=1.7",
+    "https://th.bing.com/th/id/OIP.bPsFZEaqlxRKQ9qrj9O57QHaFl?w=226&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
+    "https://th.bing.com/th/id/OIP.P_EOEXQab_37lelWDioz9QHaDf?w=330&h=164&c=7&r=0&o=5&dpr=1.5&pid=1.7",
+    "https://th.bing.com/th/id/OIP.Yit4ehVET_xvmHYDJvYTpgAAAA?w=267&h=181&c=7&r=0&o=5&dpr=1.5&pid=1.7",
+    "https://th.bing.com/th/id/OIP.A4dsv6AkIGssWk1TwfS97gHaEK?w=326&h=183&c=7&r=0&o=5&dpr=1.5&pid=1.7",
   ]
 
-  function getCurrentValue(e) {
-    console.log(e.target.innerText);
-  }
-
-  return (
-    <>
+  return hasVideo ? (
+    <Wrapper>
       <div className='flex'>
-        <div className='left fixed hidden md:block'>
+
+        <div className='left fixed sm:hidden lg:block bottom-0 lg:bottom-auto w-full lg:w-[4rem]'>
           <SideBar />
         </div>
 
-        <div className='text-white fixed md:ml-[6rem] m-0 bg-[#0c0c0d] w-full py-3 top-[3.8rem] flex'>
-          <button>left</button>
-          <div className='flex gap-4 w-[1000px]'>
-            {categories && categories.map((category, i) => {
-              return <div key={i}>
-                <button className='bg-[#32313180] hover:bg-[#323131dc] px-3 py-[0.300rem] rounded-md text-[1.1rem]' onClick={getCurrentValue}>{category}</button>
-              </div>
-            })}
-          </div>
-          <button>right</button>
-        </div>
+        {/* <CategoryCarousel/> */}
 
-        <div className='right mt-10 pt-3'>
-          <div className='md:ml-[6rem] ml-0 flex flex-wrap gap-[1.5rem] cursor-pointer'>
+        <div className='right w-full pt-3 overflow-hidden sm:mx-3'>
+          <div className='lg:ml-[6rem] max-w-full ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 cursor-pointer'>
             {arr.map((value, i) => {
-              return <div key={i}>
+              return <div key={i} className=''>
                 <div onClick={(e) => {
                   videoClick(e)
-                }} className="w-[22rem] rounded-xl overflow-hidden shadow-lg">
+                }} className="rounded-xl shadow-lg">
                   <div className=''>
-                    <img className="object-cover rounded-xl" src="https://th.bing.com/th/id/OIP.HLuY60jzx5puuKjbqmWRRwHaEK?w=328&h=185&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Sunset in the mountains" />
+                    <img className="object-cover w-full h-[13rem] rounded-sm" src={value} alt="Sunset in the mountains" />
                   </div>
                   <div className="py-4">
                     <div className="flex gap-1">
@@ -91,9 +65,9 @@ function Home() {
                       <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                         <div className='flex gap-2'>
                           <div className="text-lg">Learn how to use Tailwind CSS card Learn how to use Tail...</div>
-                          <div>
+                          {/* <div>
                             <img className='hover:bg-[#162b45] hover:rounded-full' id='dot' src="dots.svg" alt="" />
-                          </div>
+                          </div> */}
                         </div>
                         <p className="leading-none text-[#a1a1a1]">Jonathan Reinink</p>
                         <div className='flex gap-1 text-[#a1a1a1]'>
@@ -109,8 +83,17 @@ function Home() {
           </div>
         </div>
       </div>
-    </>
-  )
+    </Wrapper>
+  ) : <div className='flex h-[57vh] justify-center flex-col text-white items-center'>
+    <div className='flex flex-col justify-center items-center w-[18rem] gap-2'>
+      <p>
+        <img className='bg-[#45434370] p-2 rounded-full' src="play.svg" alt="" />
+      </p>
+
+      <p>No videos available</p>
+      <p className='text-sm text-center'>There is no video available here. please try again somtimes</p>
+    </div>
+  </div>
 }
 
 export default Home

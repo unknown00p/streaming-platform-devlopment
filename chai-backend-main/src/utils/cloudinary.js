@@ -11,6 +11,7 @@ cloudinary.config({
 });
 
 const uploadVideoOnCloudinary = async (localFilePath) => {
+    console.log(localFilePath);    
     try {
         if (!localFilePath) return null
         const response = await cloudinary.uploader.upload(localFilePath, {
@@ -23,7 +24,7 @@ const uploadVideoOnCloudinary = async (localFilePath) => {
                         {
                             width: 1920,
                             height: 1080,
-                            crop: "limit", // Prevents upscaling
+                            crop: "limit",
                             video_codec:"h265",
                             bit_rate: "3000k"
                         },
@@ -63,6 +64,8 @@ const uploadVideoOnCloudinary = async (localFilePath) => {
             eager_async: true,
         })
         fs.unlinkSync(localFilePath)
+        // console.log(response);
+        
         return response;
 
     } catch (error) {

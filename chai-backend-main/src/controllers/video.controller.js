@@ -40,6 +40,8 @@ const publishAVideo = asyncHandler(async (req, res) => {
     const thumbnail = req.files?.thumbnail[0]?.path
 
     const returnedVideoDeatilsFromCloudinary = await uploadVideoOnCloudinary(video)
+    console.log(returnedVideoDeatilsFromCloudinary);
+    
     const returnedThumbnailDeatilsFromCloudinary = await uploadImagesOnCloudinary(thumbnail)
     if (!returnedVideoDeatilsFromCloudinary) {
         throw new ApiError(404, "video is undefined")
