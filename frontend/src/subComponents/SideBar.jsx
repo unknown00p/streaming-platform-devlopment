@@ -5,23 +5,23 @@ function SideBar() {
     const sidebarVal = [
         {
             "name": "Home",
-            "src": "home.svg",
-            "link": ""
+            "src": "/home.svg",
+            "link": "/"
         },
         {
             "name": "Subscriptions",
-            "src": "subscription.svg",
-            "link": ""
+            "src": "/subscription.svg",
+            "link": "/"
         },
         {
             "name": "You",
-            "src": "currentUser.svg",
+            "src": "/currentUser.svg",
             "link": "/desktop"
         },
         {
             "name": "Downloads",
-            "src": "download.svg",
-            "link": ""
+            "src": "/download.svg",
+            "link": "/"
         },
     ]
 

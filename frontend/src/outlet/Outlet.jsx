@@ -7,7 +7,7 @@ function OutletComp() {
         <div className='fixed z-20 w-full'>
         <Header />
         </div>
-        <div className=''>
+        <div className='overflow-x-hidden'>
             <Outlet />
         </div>
         </>

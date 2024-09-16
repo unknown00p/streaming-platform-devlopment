@@ -1,6 +1,6 @@
 import SideBar from '../subComponents/SideBar'
 import Wrapper from '../components/Wrapper'
-import { Link, NavLink,Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 
 
 function Desktop() {
@@ -9,13 +9,11 @@ function Desktop() {
         {
             "id": 0,
             "name": "Videos",
-            "content": <div>Videos</div>,
             "url": "videos"
         },
         {
             "id": 1,
             "name": "Playlist",
-            "content": <div>Playlist</div>,
             "url": "playlist"
         },
         {
@@ -27,21 +25,20 @@ function Desktop() {
         {
             "id": 3,
             "name": "Following",
-            "content": <div>Following</div>,
             "url": "following"
         },
     ]
-    
+
     return (
         <div className=''>
 
             <div>
-                <div className='left sm:top-20 fixed sm:hidden z-40 sm:z-0 lg:block bottom-[-3px] lg:bottom-auto w-full lg:w-[4rem] pl-2'>
+                <div className='sm:left-[8px] sm:top-20 fixed sm:hidden z-40 sm:z-0 lg:block bottom-[0px] lg:bottom-auto w-full lg:w-[5rem]'>
                     <SideBar />
                 </div>
             </div>
 
-            <div className='lg:ml-[5rem]'>
+            <div className='lg:ml-[6rem]'>
 
                 <div className='coverImage relative'>
                     <img className='w-full h-[14rem]' src="https://ts4.mm.bing.net/th?id=OIP.48MZ3Hs-Q9SB5K0M2AdEkgHaEo&pid=15.1" alt="" />
@@ -60,7 +57,7 @@ function Desktop() {
 
                                     <Link to={"/"}>
                                         <div className='text-white gap-2 flex sm:hidden'>
-                                            <img src="leftArrow.svg" alt="" />
+                                            <img src="/leftArrow.svg" alt="" />
                                             <p>
                                                 back
                                             </p>
@@ -86,23 +83,27 @@ function Desktop() {
 
             </div>
 
-            <div className='flex justify-center'>
-                <div className='flex justify-between text-white border-b-2 w-[90%] gap-1'>
-                    {deskCategories && deskCategories.map((value) => (
-                        <div key={value.id} className=''>
-                            <NavLink 
-                            to={value.url} 
-                            className={({isActive})=> isActive? "bg-white text-black": ""}
-                            >
-                                {value.name}
-                            </NavLink>
-                        </div>
-                    ))}
+            <div className='lg:ml-[6rem]'>
+                <div className='flex justify-center'>
+                    <div className='flex justify-between text-white border-b-2 w-[95%] gap-1 py-2'>
+                        {deskCategories && deskCategories.map((value) => (
+                            <div key={value.id} className='text-center w-full'>
+                                <NavLink
+                                    to={value.url}
+                                    className={({ isActive }) => isActive ? "bg-white w-full inline-block text-black py-2 px-4 shadow-md"
+                                    : "py-2 transition-colors inline-block duration-200 rounded-lg"}
+                                >
+                                    {value.name}
+                                </NavLink>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className='text-white pb-20 sm:pb-0 w-[95%] m-auto'>
+                    <Outlet />
                 </div>
             </div>
-                <div>
-                    <Outlet/>
-                </div>
 
         </div>
     )

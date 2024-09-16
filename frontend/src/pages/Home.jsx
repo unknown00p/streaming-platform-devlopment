@@ -58,7 +58,7 @@ function Home() {
                     <img className="object-cover w-full h-[13rem] rounded-sm" src={value} alt="Sunset in the mountains" />
                   </div>
                   <div className="py-4">
-                    <div className="flex gap-1">
+                    <div className="flex gap-0">
                       <img onClick={() => {
                         console.log("Hola");
                       }} id='profile' className="w-11 h-11 rounded-full mr-4" src="https://th.bing.com/th/id/OIP.HLuY60jzx5puuKjbqmWRRwHaEK?w=328&h=185&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Avatar of Jonathan Reinink" />
@@ -87,7 +87,7 @@ function Home() {
   ) : <div className='flex h-[57vh] justify-center flex-col text-white items-center'>
     <div className='flex flex-col justify-center items-center w-[18rem] gap-2'>
       <p>
-        <img className='bg-[#45434370] p-2 rounded-full' src="play.svg" alt="" />
+        <img className='bg-[#45434370] p-2 rounded-full' src="/play.svg" alt="" />
       </p>
 
       <p>No videos available</p>

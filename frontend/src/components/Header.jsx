@@ -35,10 +35,10 @@ function Header() {
           <div className='flex text-white items-center justify-between px-7 pt-2 pb-5 text-[1.11rem] bg-[#13151a]'>
             <div className='flex items-center gap-8'>
               <button className='hidden sm:block' id='mainMenu' onClick={toggleSideBar}>
-                <img src="menubar.svg" alt="" />
+                <img src="/menubar.svg" alt="" />
               </button>
               <Link to={""} className='flex items-center gap-1'>
-                <img className='w-[2.3rem]' src="youtube-video.svg" alt="" srcSet="" />
+                <img className='w-[2.3rem]' src="/youtube-video.svg" alt="" srcSet="" />
                 <span>Watch-here</span>
               </Link>
             </div>
@@ -50,20 +50,20 @@ function Header() {
               />
               <div>
                 <button className='absolute right-0 text-center mt-[0.60rem] mr-6'>
-                  <img className='' src="search.svg" alt="" />
+                  <img className='' src="/search.svg" alt="" />
                 </button>
               </div>
             </div>
 
             <div className='flex gap-3 sm:gap-5'>
               <button onClick={toggleSearch} className='md:hidden'>
-                <img src="search.svg" alt="" />
+                <img src="/search.svg" alt="" />
               </button>
               <button>
-                <img src="uploadVideo.svg" alt="" />
+                <img src="/uploadVideo.svg" alt="" />
               </button>
               <button>
-                <img src="avatar.svg" alt="" />
+                <img src="/avatar.svg" alt="" />
               </button>
             </div>
           </div>
@@ -74,7 +74,7 @@ function Header() {
           <div className='flex relative pt-3 pb-[0.8rem] bg-[#13151a] justify-center'>
             <div className='flex gap-6'>
               <button onClick={backToHeader}>
-                <img src="leftArrow.svg" alt="" />
+                <img src="/leftArrow.svg" alt="" />
               </button>
               <Input
                 className="w-[80vw] md:block  rounded-full bg-[#13131497] h-11 px-5 text-[1.1rem] outline-none border-[#8d8d8d8b] border-[1px] text-white"
@@ -83,7 +83,7 @@ function Header() {
             </div>
             <div>
               <button className='absolute text-center ml-[-3rem] mt-[0.60rem]'>
-                <img className='' src="search.svg" alt="" />
+                <img className='' src="/search.svg" alt="" />
               </button>
             </div>
           </div>
@@ -95,12 +95,12 @@ function Header() {
 
               <div className='flex items-center pb-5 gap-5 pl-1'>
                 <div>
-                  <img className='cursor-pointer slideLeft' src="menubar.svg" alt="" />
+                  <img className='cursor-pointer slideLeft' src="/menubar.svg" alt="" />
                 </div>
 
                 <Link to={""} className="flex items-center ps-2.5">
                   <div className='flex items-center gap-1'>
-                    <img className='w-[2.5rem]' src="youtube-video.svg" alt="" srcSet="" />
+                    <img className='w-[2.5rem]' src="/youtube-video.svg" alt="" srcSet="" />
                     <span className='text-white text-[1.1rem]'>Watch-here</span>
                   </div>
                 </Link>
@@ -109,13 +109,13 @@ function Header() {
               <ul className="space-y-2 h-[88vh] font-medium pb-3 overflow-auto">
                 <li>
                   <Link to="" className="flex slideLeft items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-[#100628] group">
-                    <img src="home.svg" alt="" />
+                    <img src="/home.svg" alt="" />
                     <span className="ms-3">Home</span>
                   </Link>
                 </li>
                 <li>
                   <Link to={""} className="flex slideLeft items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-[#100628] group">
-                    <img src="subscription.svg" alt="" />
+                    <img src="/subscription.svg" alt="" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Subscriptions</span>
                   </Link>
                 </li>
@@ -125,41 +125,41 @@ function Header() {
                   <div className=''>
                     You
                   </div>
-                  <img src="chevronRight.svg" alt="" />
+                  <img src="/chevronRight.svg" alt="" />
                 </div>
                 <li>
                   <Link to={""} className="flex slideLeft items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-[#100628] group">
-                    <img src="currentUser.svg" alt="" />
+                    <img src="/currentUser.svg" alt="" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Your channel</span>
                   </Link>
                 </li>
                 <li>
                   <Link to={""} className="flex slideLeft items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-[#100628] group">
-                    <img src="history.svg" alt="" />
+                    <img src="/history.svg" alt="" />
                     <span className="flex-1 ms-3 whitespace-nowrap">History</span>
                   </Link>
                 </li>
                 <li>
                   <Link to={""} className="flex slideLeft items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-[#100628] group">
-                    <img src="playlist.svg" alt="" />
+                    <img src="/playlist.svg" alt="" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Playlist</span>
                   </Link>
                 </li>
                 <li>
                   <Link to={""} className="flex slideLeft items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-[#100628] group">
-                    <img src="videos.svg" alt="" />
+                    <img src="/videos.svg" alt="" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Your videos</span>
                   </Link>
                 </li>
                 <li>
                   <Link to={""} className="flex slideLeft items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-[#100628] group">
-                    <img src="like.svg" alt="" />
+                    <img src="/like.svg" alt="" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Liked videos</span>
                   </Link>
                 </li>
                 <li>
                   <Link to={""} className="flex slideLeft items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-[#100628] group">
-                    <img src="download.svg" alt="" />
+                    <img src="/download.svg" alt="" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Downloads</span>
                   </Link>
                 </li>
@@ -173,13 +173,13 @@ function Header() {
 
                 <li>
                   <Link to={""} className="flex slideLeft items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-[#100628] group">
-                    <img src="like.svg" alt="" />
+                    <img src="/like.svg" alt="" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Liked videos</span>
                   </Link>
                 </li>
                 <li>
                   <Link to={""} className="flex slideLeft items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-[#100628] group">
-                    <img src="download.svg" alt="" />
+                    <img src="/download.svg" alt="" />
                     <span className="flex-1 ms-3 whitespace-nowrap">Downloads</span>
                   </Link>
                 </li>
