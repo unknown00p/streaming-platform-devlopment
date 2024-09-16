@@ -29,7 +29,7 @@ function ProfileVideos() {
     ]
     return hasVideo ? (
         <div>
-            <div className='right w-full pt-3 overflow-hidden sm:mx-3'>
+            <div className='right w-full overflow-hidden'>
                 <div className='max-w-full ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 cursor-pointer'>
                     {arr.map((value, i) => {
                         return <div key={i} className=''>

@@ -23,7 +23,6 @@ function CustomVideoPlayer({ qualityArr }) {
     if (Hls.isSupported() && videoElement) {
       const hls = new Hls();
       hls.loadSource(qualityArr[videoIndex]);
-      console.log(qualityArr[videoIndex]);
       hls.attachMedia(videoElement);
       // videoElement.play();
     } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {

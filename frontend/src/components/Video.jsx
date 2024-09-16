@@ -158,7 +158,7 @@ function Video() {
           {imageUrl.map((url, index) => (
             <div key={index} className="flex gap-3 rounded-md bg-[#13151a]">
               <div className="flex-shrink-0">
-                <img className="rounded-md w-32 h-24 object-cover" src={url} alt="" />
+                <img className="rounded-sm w-32 h-24 object-cover" src={url} alt="" />
               </div>
               <div className="text-white flex-grow">
                 <p className="text-sm lg:text-base">Lorem ipsum dolor sit amet consec</p>

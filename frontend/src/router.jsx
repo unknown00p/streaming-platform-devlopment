@@ -1,4 +1,4 @@
-import { createBrowserRouter, createRoutesFromElements, Navigate, Route, Router } from "react-router-dom"
+import { createBrowserRouter, createRoutesFromElements, Navigate, Route } from "react-router-dom"
 import SignUp from './pages/SignUp'
 import OutletComp from './outlet/Outlet'
 import Home from './pages/Home'
@@ -21,12 +21,11 @@ export const router = createBrowserRouter(
             <Route path='desktop' element={<Desktop />} >
                 <Route index element={<Navigate to="videos" replace />} />
                 <Route path="videos" element={<ProfileVideos />} />
-                <Route path="playlist" element={<Playlists />} >
-                    <Route path="PlaylistVideos" element={<PlaylistVideos/>}/>
-                </Route>
+                <Route path="playlist" element={<Playlists />} />
                 <Route path="tweets" element={<div>tweets</div>} />
                 <Route path="following" element={<div>following</div>} />
             </Route>
+            <Route path="PlaylistVideos" element={<PlaylistVideos />} />
         </Route>
     )
 )
