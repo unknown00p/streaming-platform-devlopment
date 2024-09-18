@@ -11,6 +11,7 @@ import Playlists from "./components/Playlists"
 import PlaylistVideos from "./components/PlaylistVideos"
 import Tweets from "./components/Tweets"
 import Following from "./components/Following"
+import Dashboard from "./pages/Dashboard"
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -28,6 +29,7 @@ export const router = createBrowserRouter(
                 <Route path="following" element={<Following/>} />
             </Route>
             <Route path="PlaylistVideos" element={<PlaylistVideos />} />
+            <Route path="dashboard" element={<Dashboard />} />
         </Route>
     )
 )

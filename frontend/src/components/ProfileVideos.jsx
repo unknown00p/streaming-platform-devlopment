@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import UploadVideo from '../subComponents/UploadVideo'
 
 function ProfileVideos() {
     const [hasVideo, setHasVideo] = useState(false)
@@ -13,6 +12,12 @@ function ProfileVideos() {
         if (target !== "dot") {
             navigate("/video")
         }
+    }
+
+    function navigateAndToggle() {
+        const navigated = navigate("/dashboard")
+        console.log(navigated);        
+        setShowUpload(!showUpload)
     }
 
     const arr = [
@@ -77,15 +82,11 @@ function ProfileVideos() {
             {currentUser &&
                 <div>
                     <div>
-                        <button onClick={() => setShowUpload(!showUpload)} className='text-[#c6c1c1] bg-[rgb(102,31,189)] font-medium rounded-sm text-sm px-5 py-1.5 focus:outline-none flex gap-3'>
+                        <button onClick={navigateAndToggle} className='text-[#c6c1c1] bg-[rgb(102,31,189)] font-medium rounded-sm text-sm px-5 py-1.5 focus:outline-none flex gap-3'>
                             <img src="/plus.svg" alt="" />
                             New Video
                         </button>
                     </div>
-
-                    {showUpload && <div className=''>
-                        <UploadVideo/>
-                    </div>}
                 </div>
             }
         </div>

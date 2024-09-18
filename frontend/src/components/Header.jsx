@@ -106,7 +106,7 @@ function Header() {
                 </Link>
               </div>
 
-              <ul className="space-y-2 h-[88vh] font-medium pb-3 overflow-auto">
+              <ul className="space-y-2 h-[88vh] font-medium pb-3 overflow-auto scrollbar">
                 <li>
                   <Link to="" className="flex slideLeft items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-[#100628] group">
                     <img src="/home.svg" alt="" />
