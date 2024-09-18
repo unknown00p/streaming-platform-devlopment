@@ -14,83 +14,57 @@ function PlaylistVideos() {
   ]
   return (
     <Wrapper>
-      <div>
-
-        <div>
-          <div className='sm:left-[8px] sm:top-20 fixed sm:hidden z-40 sm:z-0 lg:block bottom-[0px] lg:bottom-auto w-full lg:w-[5rem]'>
-            <SideBar />
-          </div>
+      <div className="flex flex-col lg:flex-row">
+        <div className="sm:left-[8px] sm:top-20 fixed sm:hidden z-40 sm:z-0 lg:block bottom-[0px] lg:bottom-auto w-full lg:w-[5rem]">
+          <SideBar />
         </div>
-
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:ml-[6rem] gap-4'>
-          <div className='right w-full overflow-hidden'>
-            <div className='max-w-full ml-0 items-center grid cursor-pointer'>
-              <div className=''>
-                <div className="rounded-xl shadow-lg">
-                  <div className='relative'>
-                    <img className="object-cover w-full h-[13rem] rounded-sm" src="https://th.bing.com/th/id/OIP.YMuauF2NaoHPNikNQyavFAHaEo?w=279&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Sunset in the mountains" />
-                    <div className='absolute bottom-0 bg-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[5.5px] border border-white/30 w-full p-5'>
-                      <div className='flex justify-between text-white items-center'>
-                        <div>
-                          <p>Playlist</p>
-                          <div className='flex gap-1'>
-                            <p>173K views.</p>
-                            <p>3 weaks ago</p>
-                          </div>
-                        </div>
-
-                        <div>22 Videos</div>
+        
+        <div className="lg:ml-20 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-4">
+            <div className="w-full">
+              <div className="rounded-xl shadow-lg overflow-hidden">
+                <div className="relative">
+                  <img 
+                    className="w-full h-48 sm:h-64 object-cover" 
+                    src="https://th.bing.com/th/id/OIP.YMuauF2NaoHPNikNQyavFAHaEo?w=279&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7" 
+                    alt="Playlist cover" 
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[5.5px] border border-white/30 text-white p-4">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="text-lg font-semibold">Playlist</p>
+                        <p className="text-sm">173K views • 3 weeks ago</p>
                       </div>
+                      <div className="text-sm font-semibold">22 Videos</div>
                     </div>
                   </div>
-
-
-                  <div className="py-4">
-                    <div className="flex gap-1">
-                      <div className="text-base flex flex-col gap-1 text-[#dfdede]">
-                        <div className='flex gap-2 items-baseline'>
-                          <div className="text-2xl font-bold">Learn how to use Tailwind CSS card Learn how to...</div>
-                        </div>
-                        <p className="leading-none text-[#e5e4e4] font-thin">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquam quam perferendis quisquam. Dicta recusandae reiciendis in.</p>
-                      </div>
-                    </div>
-                  </div>
+                </div>
+                <div className="p-4 bg-[#00000000] text-white">
+                  <h2 className="text-xl font-bold mb-2">Learn how to use Tailwind CSS card</h2>
+                  <p className="">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquam quam perferendis quisquam. Dicta recusandae reiciendis in.</p>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className='flex flex-col gap-4'>
-            {imageUrl && imageUrl.map((value,i) => (
-              <div key={i} className='grid gap-3 grid-cols-1 sm:grid-cols-2'>
-                <img className='w-full h-full object-cover rounded-md' src={value} alt="" />
-
-                <div className='flex gap-4 items-start'>
-                  <div>
-                    <p className='pb-1 xl:text-3xl text-white'>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.?
-                    </p>
-
-                    <div className='text-sm text-[#dfdede] flex flex-col gap-2'>
-                      <div className='flex gap-2 items-center'>
-                        <p>100k views</p>
-                        <img src="dot.svg" alt="" />
-                        <p>18 hours ago</p>
+            <div className="space-y-4">
+              {imageUrl.map((value, i) => (
+                <div key={i} className="flex flex-col sm:flex-row gap-4 bg-[#bbbbbb17] text-white rounded-lg shadow-md overflow-hidden">
+                  <img className="w-full sm:w-40 h-48 sm:h-auto object-cover" src={value} alt={`Video thumbnail ${i + 1}`} />
+                  <div className="p-4 flex flex-col justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold mb-2">Lorem ipsum dolor sit amet consectetur adipisicing elit?</h3>
+                      <div className="text-sm flex items-center space-x-2">
+                        <span>100k views</span>
+                        <span>•</span>
+                        <span>18 hours ago</span>
                       </div>
-                      {/* <div className='flex items-center gap-2'>
-                        <img src="https://th.bing.com/th/id/OIP.PA_USRL68UjTfF0kRo5ImQHaEo?w=296&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7" className='w-11 h-11 rounded-full sm:block hidden' alt="" />
-                        <p>Raj alam</p>
-                      </div> */}
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-
-
-
       </div>
     </Wrapper>
   )

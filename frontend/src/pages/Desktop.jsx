@@ -1,9 +1,13 @@
 import SideBar from '../subComponents/SideBar'
 import Wrapper from '../components/Wrapper'
 import { Link, NavLink, Outlet } from 'react-router-dom'
+import { useState } from 'react'
+import UploadVideo from '../subComponents/UploadVideo'
 
 
 function Desktop() {
+    const [currentUser, setCurrentUser] = useState(true)
+
 
     const deskCategories = [
         {
@@ -76,7 +80,7 @@ function Desktop() {
 
 
                         <div>
-                            <button type="button" className="text-[#c6c1c1] bg-[#661fbd] font-medium rounded-lg text-sm px-5 py-2.5 me-2 focus:outline-none top-[-3rem] relative sm:static pl-2">Subscribe</button>
+                            <button type="button" className="text-[#c6c1c1] bg-[#661fbd] font-medium rounded-lg text-sm px-5 py-2.5 me-2 focus:outline-none top-[-3rem] relative sm:static pl-2">{currentUser?<div className='flex items-center gap-2'><img src="/edit.svg"/> <p>Edit</p></div>:'Subscribe'}</button>
                         </div>
                     </div>
                 </div>
@@ -90,7 +94,7 @@ function Desktop() {
                             <div key={value.id} className='text-center w-full'>
                                 <NavLink
                                     to={value.url}
-                                    className={({ isActive }) => isActive ? "bg-white w-full inline-block text-black py-2 px-4 shadow-md"
+                                    className={({ isActive }) => isActive ? "bg-white w-full inline-block rounded-sm text-black py-2 px-4 shadow-md"
                                     : "py-2 transition-colors inline-block duration-200 rounded-lg"}
                                 >
                                     {value.name}

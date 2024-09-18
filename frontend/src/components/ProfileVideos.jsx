@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import UploadVideo from '../subComponents/UploadVideo'
 
 function ProfileVideos() {
-    const [hasVideo, setHasVideo] = useState(true)
+    const [hasVideo, setHasVideo] = useState(false)
+    const [currentUser, setCurrentUser] = useState(true)
+    const [showUpload, setShowUpload] = useState(false)
 
     const navigate = useNavigate()
     const videoClick = (e) => {
@@ -68,8 +71,23 @@ function ProfileVideos() {
                 <img className='bg-[#45434370] p-2 rounded-full' src="/play.svg" alt="" />
             </p>
 
-            <p>No videos available</p>
-            <p className='text-sm text-center'>There is no video available here. please try again somtimes</p>
+            <p>No videos uploaded</p>
+            <p className='text-sm text-center'>{currentUser ? 'click to upload new video. you have yet to upload a video' : 'This page yet to upload a video search another page in order to find more videos'}</p>
+
+            {currentUser &&
+                <div>
+                    <div>
+                        <button onClick={() => setShowUpload(!showUpload)} className='text-[#c6c1c1] bg-[rgb(102,31,189)] font-medium rounded-sm text-sm px-5 py-1.5 focus:outline-none flex gap-3'>
+                            <img src="/plus.svg" alt="" />
+                            New Video
+                        </button>
+                    </div>
+
+                    {showUpload && <div className=''>
+                        <UploadVideo/>
+                    </div>}
+                </div>
+            }
         </div>
     </div>
 }

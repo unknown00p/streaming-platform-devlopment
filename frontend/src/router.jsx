@@ -7,8 +7,10 @@ import UserSection from "./components/UserSection"
 import SearchResult from "./pages/SearchResult"
 import Desktop from "./pages/Desktop"
 import ProfileVideos from "./components/ProfileVideos"
-import Playlists from "./pages/Playlists"
+import Playlists from "./components/Playlists"
 import PlaylistVideos from "./components/PlaylistVideos"
+import Tweets from "./components/Tweets"
+import Following from "./components/Following"
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -22,8 +24,8 @@ export const router = createBrowserRouter(
                 <Route index element={<Navigate to="videos" replace />} />
                 <Route path="videos" element={<ProfileVideos />} />
                 <Route path="playlist" element={<Playlists />} />
-                <Route path="tweets" element={<div>tweets</div>} />
-                <Route path="following" element={<div>following</div>} />
+                <Route path="tweets" element={<Tweets/>} />
+                <Route path="following" element={<Following/>} />
             </Route>
             <Route path="PlaylistVideos" element={<PlaylistVideos />} />
         </Route>

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import SideBar from '../subComponents/SideBar'
 import { useNavigate } from 'react-router-dom'
 import Wrapper from '../components/Wrapper'
+import UploadVideo from '../subComponents/UploadVideo'
 // use NavLink to focus on current button
 
 
@@ -45,9 +46,7 @@ function Home() {
           <SideBar />
         </div>
 
-        {/* <CategoryCarousel/> */}
-
-        <div className='right w-full pt-3 overflow-hidden sm:mx-3'>
+        <div className='right w-full pt-3 overflow-hidden sm:mx-3 pb-16 sm:pb-0'>
           <div className='lg:ml-[6rem] max-w-full ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 cursor-pointer'>
             {arr.map((value, i) => {
               return <div key={i} className=''>

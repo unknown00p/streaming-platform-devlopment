@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom'
 
 function Playlists() {
   const [hasVideo, setHasVideo] = useState(true)
+  // const [currentUser, setCurrentUser] = useState(false)
+
 
   const navigate = useNavigate()
   const videoClick = () => {
     // const target = e?.target.id
     // if (target !== "dot") {
-      navigate("/PlaylistVideos")
+    navigate("/PlaylistVideos")
     // }
   }
 
@@ -76,8 +78,8 @@ function Playlists() {
         <img className='bg-[#45434370] p-2 rounded-full' src="/play.svg" alt="" />
       </p>
 
-      <p>No videos available</p>
-      <p className='text-sm text-center'>There is no video available here. please try again somtimes</p>
+      <p>No libraries created</p>
+      <p className='text-sm text-center'>There are no Playlists inside this library</p>
     </div>
   </div>
 }
