@@ -1,8 +1,9 @@
 import { create } from "zustand"
 
-const useCounterStore = create((set) => ({
+const useHandleCssStore = create((set) => ({
     toggelBarCss: "left-[-20rem]",
     coverAll: "",
+    showUploadVideoCss: "hidden",
     toggleSideBar: () => set((state) => {
         const newToggelBarCss = state.toggelBarCss === "left-[-20rem]" ? "left-[0]" : "left-[-20rem]";
         return {
@@ -17,7 +18,10 @@ const useCounterStore = create((set) => ({
                 toggelBarCss: newToggelBarCss,
                 coverAll: newToggelBarCss === "left-[0]" ? "!bg-[#2c2c2c3f] h-screen top-[-73px] relative" : ""
             }
-        })
+        }),
+        showUploadVideo: (value)=> set(()=> ({
+            showUploadVideoCss: value
+        }))
 }))
 
-export default useCounterStore
+export default useHandleCssStore

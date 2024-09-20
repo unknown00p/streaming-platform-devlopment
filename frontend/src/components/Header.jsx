@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { Input } from "../index"
-import useCounterStore from '../zustand/useCounterStore';
+import useHandleCssStore from '../zustand/useHandleCssStore';
 
 function Header() {
-  const toggleBarCss = useCounterStore((state) => state.toggelBarCss)
-  const toggleSideBar = useCounterStore((state) => state.toggleSideBar)
-  const coverAll = useCounterStore((state) => state.coverAll)
-  const handleClickOutside = useCounterStore((state) => state.handleClickOutside)
+  const toggleBarCss = useHandleCssStore((state) => state.toggelBarCss)
+  const toggleSideBar = useHandleCssStore((state) => state.toggleSideBar)
+  const coverAll = useHandleCssStore((state) => state.coverAll)
+  const handleClickOutside = useHandleCssStore((state) => state.handleClickOutside)
   const [mobileSearch, setMobileSearch] = useState("hidden")
   const [headerClass, setHeaderClass] = useState("block")
+  const navigate = useNavigate()
+  const showUploadVideo = useHandleCssStore((state)=> state.showUploadVideo)
 
   useEffect(() => {
     handleClickOutside()
@@ -26,6 +28,11 @@ function Header() {
   function backToHeader() {
     setMobileSearch("hidden")
     setHeaderClass("block")
+  }
+
+  function uploadVideo() {
+    navigate("/dashboard")
+    showUploadVideo("block")
   }
 
   return (
@@ -60,11 +67,11 @@ function Header() {
                 <img src="/search.svg" alt="" />
               </button>
               <button>
-                <img src="/uploadVideo.svg" alt="" />
+                <img onClick={uploadVideo} className='uploadVideoBtn' src="/uploadVideo.svg" alt="" />
               </button>
-              <button>
+              <Link to={"dashboard"}>
                 <img src="/avatar.svg" alt="" />
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -189,6 +196,7 @@ function Header() {
           </aside>
         </div>
       </div>
+
     </>
 
   )

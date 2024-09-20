@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import useHandleCssStore from '../zustand/useHandleCssStore'
 
 function ProfileVideos() {
-    const [hasVideo, setHasVideo] = useState(false)
+    const [hasVideo, setHasVideo] = useState(true)
     const [currentUser, setCurrentUser] = useState(true)
-    const [showUpload, setShowUpload] = useState(false)
+    const showUploadVideo = useHandleCssStore((state)=> state.showUploadVideo)
 
     const navigate = useNavigate()
     const videoClick = (e) => {
@@ -15,9 +16,8 @@ function ProfileVideos() {
     }
 
     function navigateAndToggle() {
-        const navigated = navigate("/dashboard")
-        console.log(navigated);        
-        setShowUpload(!showUpload)
+        showUploadVideo("block")
+        navigate("/dashboard")
     }
 
     const arr = [
@@ -82,7 +82,7 @@ function ProfileVideos() {
             {currentUser &&
                 <div>
                     <div>
-                        <button onClick={navigateAndToggle} className='text-[#c6c1c1] bg-[rgb(102,31,189)] font-medium rounded-sm text-sm px-5 py-1.5 focus:outline-none flex gap-3'>
+                        <button onClick={navigateAndToggle} className='text-[#c6c1c1] bg-[rgb(102,31,189)] font-medium rounded-sm text-sm px-5 py-1.5 focus:outline-none flex gap-3 uploadVideoBtn'>
                             <img src="/plus.svg" alt="" />
                             New Video
                         </button>
