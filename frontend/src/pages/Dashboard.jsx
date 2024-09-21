@@ -2,13 +2,15 @@
 import UploadVideo from '../subComponents/UploadVideo'
 import useHandleCssStore from '../zustand/useHandleCssStore'
 import Wrapper from '../components/Wrapper';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Input from '../subComponents/Input';
 import Button from '../subComponents/Button';
 
 function Dashboard() {
   const showUploadVideoCss = useHandleCssStore((state) => state.showUploadVideoCss)
   const showUploadVideo = useHandleCssStore((state) => state.showUploadVideo)
+  const [hidden, setHidden] = useState("hidden")
+  const [toggleDelete, setToggleDelete] = useState("hidden")
 
   const arr = [
     "https://th.bing.com/th/id/OIP.NZtfot858OjoU8G0Y5TE9AHaEo?w=242&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
@@ -36,6 +38,19 @@ function Dashboard() {
       else if (!e.target.closest(".uploadVideoBtn")) {
         showUploadVideo("hidden")
       }
+
+      if (e.target.closest("#updateVideo") && !e.target.closest(".CloseUpdateVideo")) {
+        setHidden("block")
+      } else if (!e.target.closest(".pen")) {
+        setHidden("hidden")
+      }
+
+      if (e.target.closest("#deleteVideoMain") && !e.target.closest(".closeDeleteBtn")) {
+        setToggleDelete("block")
+      } else if (!e.target.closest(".trashCan")) {
+        setToggleDelete("hidden")
+      }
+
     }
 
     document.addEventListener("click", handleClickOutside);
@@ -135,11 +150,11 @@ function Dashboard() {
 
                             <div className='flex gap-5'>
                               <div>
-                                <img src="trash.svg" alt="" />
+                                <img onClick={() => setToggleDelete("block")} className='cursor-pointer trashCan' src="trash.svg" alt="" />
                               </div>
 
                               <div>
-                                <img src="pencil.svg" alt="" />
+                                <img onClick={() => setHidden("block")} className='cursor-pointer pen' src="pencil.svg" alt="" />
                               </div>
                             </div>
 
@@ -160,31 +175,61 @@ function Dashboard() {
 
         <div>
           <form>
-            <div id='uploadVideo' className="fixed top-24 left-0 right-0 max-w-md mx-auto bg-[#0f141f] text-white p-6 rounded-lg">
+            <div id="updateVideo" className={`${hidden} fixed top-24 left-0 right-0 max-w-md sm:m-auto m-4 bg-[#0f141f] text-white p-6 rounded-lg`}>
               <div className="flex flex-col h-full space-y-4">
                 {/* Header */}
                 <div className="flex justify-between items-center">
                   <p className="text-md font-semibold">Edit Video</p>
-                  <img className="cursor-pointer w-5 h-5 uploadVideoBtn" src="x.svg" alt="Close" />
+                  <img onClick={() => setHidden("hidden")} className="cursor-pointer w-5 h-5 CloseUpdateVideo" src="x.svg" alt="Close" />
                 </div>
 
                 {/* Form Inputs */}
                 <div className="space-y-4 overflow-y-auto">
-                  <Input className="rounded-md border-2 p-2 w-full bg-transparent" type="file" label="Video" />
-                  <Input className="rounded-md border-2 p-2 w-full bg-transparent" type="file" label="Thumbnail" />
+                  <Input className="rounded-md bg-transparent" type="file" label="Thumbnail" />
                   <Input className="rounded-md border-2 p-2 w-full bg-transparent outline-none" type="text" placeholder="Title" />
-                  <Input className="rounded-md border-2 p-2 w-full bg-transparent outline-none" type="text" placeholder="Description" />
+                  <textarea className="rounded-md border-2 p-2 w-full h-48 bg-transparent outline-none resize-none" type="text" placeholder="Description" />
                 </div>
 
                 {/* Save Button */}
                 <Button
                   className="w-full bg-purple-700 text-white font-medium rounded-sm text-sm px-4 py-2 hover:bg-purple-600 transition-colors"
-                  buttonTxt="Upload"
+                  buttonTxt="Update"
                 />
               </div>
             </div>
           </form>
         </div>
+
+        <div>
+          <form>
+            <div id='deleteVideoMain' className={`${toggleDelete} fixed top-24 left-0 right-0 max-w-md sm:m-auto m-4 bg-[#0f141f] text-white p-6 rounded-lg`}>
+              <div className="flex flex-col h-full space-y-4">
+                {/* Header */}
+                <div className="flex justify-between">
+                  <div className='flex items-baseline gap-2'>
+                    <div>
+                      <div className="flex items-center gap-2 sm:flex-nowrap flex-wrap">
+                        <div className='bg-red-100 p-1 rounded-full'>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="red" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+                        </div>
+
+                        <p className="text-lg font-semibold">Delete Video</p>
+                      </div>
+                      <p className="text-sm text-gray-400">Are you sure you want to delete this video? once deleted you will not be able to recover it.</p>
+                    </div>
+                  </div>
+                  <img onClick={() => setHidden("hidden")} className="cursor-pointer w-5 h-5 closeDeleteBtn" src="x.svg" alt="Close" />
+                </div>
+
+                <Button
+                  className="w-full bg-purple-700 text-white font-medium rounded-sm text-sm px-4 py-2 hover:bg-purple-600 transition-colors"
+                  buttonTxt="Delete"
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+
       </div>
     </Wrapper>
   )

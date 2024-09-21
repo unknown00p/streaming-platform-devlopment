@@ -24,7 +24,7 @@ function UploadVideo() {
 
   return (
     <form onSubmit={handleSubmit(SubFunc)}>
-      <div id='uploadVideo' className="fixed top-24 left-0 right-0 max-w-md mx-auto bg-[#0f141f] text-white p-6 rounded-lg">
+      <div id='uploadVideo' className="fixed top-24 left-0 right-0 max-w-md sm:mx-auto mx-4 bg-[#0f141f] text-white p-6 rounded-lg">
         <div className="flex flex-col h-full space-y-4">
           {/* Header */}
           <div className="flex justify-between items-center">

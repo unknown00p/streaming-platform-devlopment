@@ -34,7 +34,9 @@ const registerUser = asyncHandler(async (req, res) => {
     // remove password and refresh token field from response
     // check for user creation
     // return res
-
+    
+    console.log(req.files);
+    console.log(req.body);
 
     const { fullName, email, username, password } = req.body
 
@@ -51,9 +53,6 @@ const registerUser = asyncHandler(async (req, res) => {
     if (existedUser) {
         throw new ApiError(409, "User with email or username already exists")
     }
-
-    console.log(req.files);
-    
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
     console.log("avtarLocal",avatarLocalPath);

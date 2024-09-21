@@ -3,13 +3,13 @@ import { useState } from 'react'
 import SideBar from '../subComponents/SideBar'
 import { useNavigate } from 'react-router-dom'
 import Wrapper from '../components/Wrapper'
-import UploadVideo from '../subComponents/UploadVideo'
+// import UploadVideo from '../subComponents/UploadVideo'
 // use NavLink to focus on current button
 
 
 function Home() {
 
-  const [hasVideo, setHasVideo] = useState(true)
+  const [hasVideo, setHasVideo] = useState(true)  
 
   const navigate = useNavigate()
   const videoClick = (e) => {
