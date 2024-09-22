@@ -34,9 +34,6 @@ const registerUser = asyncHandler(async (req, res) => {
     // remove password and refresh token field from response
     // check for user creation
     // return res
-    
-    console.log(req.files);
-    console.log(req.body);
 
     const { fullName, email, username, password } = req.body
 
@@ -55,9 +52,10 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    console.log("avtarLocal",avatarLocalPath);
     
-    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    const coverImgLocalPath = req.files?.coverImage[0]?.path;
+    console.log("1st one coverImgLocalPath",coverImgLocalPath);
+    
 
     let coverImageLocalPath;
 
@@ -65,16 +63,15 @@ const registerUser = asyncHandler(async (req, res) => {
         coverImageLocalPath = req.files.coverImage[0].path
     }
 
-    console.log(coverImageLocalPath);
+    console.log(coverImageLocalPath);    
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required")
     }
 
     const avatar = await uploadImagesOnCloudinary(avatarLocalPath)
-    const coverImage = await uploadImagesOnCloudinary(coverImageLocalPath)
-
-    console.log("avatar",avatar);
+    const coverImage = await uploadImagesOnCloudinary(coverImgLocalPath)
+    console.log("coverImage",coverImage);
     
 
     if (!avatar) {

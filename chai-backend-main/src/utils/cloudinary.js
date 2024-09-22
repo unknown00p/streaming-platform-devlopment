@@ -75,12 +75,15 @@ const uploadVideoOnCloudinary = async (localFilePath) => {
 }
 
 const uploadImagesOnCloudinary = async (localFilePath) => {
+    console.log("clodinary local file path",localFilePath);
+    
     try {
         if (!localFilePath) return null
         const response = await cloudinary.uploader.upload(localFilePath, {
             resource_type: "image",
         })
         fs.unlinkSync(localFilePath)
+                
         return response;
 
     } catch (error) {

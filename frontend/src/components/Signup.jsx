@@ -19,7 +19,8 @@ function Signup() {
                 <div className='flex flex-col items-center justify-center'>
                     <form className="flex flex-col gap-4 px-7 py-6 bg-slate-800 rounded-md w-full max-w-md" onSubmit={handleSubmit(InputValues)}>
 
-                    <h1 className='text-white text-[1.3rem] mb-4'>Sign up</h1>
+                    <h1 className='text-white text-[1.3rem]'>Sign up</h1>
+                    <hr />
                         <Input
                             id="username"
                             type="text"
@@ -58,15 +59,6 @@ function Signup() {
                             labelClass="text-white"
                             placeholder="Enter your password"
                             {...register("password")}
-                        />
-
-                        <Input
-                            id="avatar"
-                            type="file"
-                            className="bg-transparent h-10 px-3 w-full text-[1.1rem] outline-none border-white border-[1.5px] text-white rounded-sm"
-                            label="Avatar File"
-                            labelClass="text-white"
-                            {...register("avatar")}
                         />
 
                         <Button type="submit" buttonTxt="Submit" className="bg-white rounded-sm mt-2 py-2 w-full" />
