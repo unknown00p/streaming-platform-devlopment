@@ -6,7 +6,6 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
 
-
 const generateAccessAndRefereshTokens = async (userId) => {
     try {
         const user = await User.findById(userId)
@@ -110,22 +109,17 @@ const loginUser = asyncHandler(async (req, res) => {
     //access and referesh token
     //send cookie
 
-    const { email, username, password } = req.body
-    console.log(email);
+    const { email , password } = req.body
+    console.log(email,password);
 
-    if (!username && !email) {
-        throw new ApiError(400, "username or email is required")
+    if (!email) {
+        throw new ApiError(400, "email is required")
     }
 
-    // Here is an alternative of above code based on logic discussed in video:
-    // if (!(username || email)) {
-    //     throw new ApiError(400, "username or email is required")
+    const user = await User.findOne({email})
 
-    // }
-
-    const user = await User.findOne({
-        $or: [{ username }, { email }]
-    })
+    console.log("userFinded", user);
+    
 
     if (!user) {
         throw new ApiError(404, "User does not exist")

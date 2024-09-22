@@ -1,5 +1,4 @@
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route } from "react-router-dom"
-import SignUp from './pages/SignUp'
 import OutletComp from './outlet/Outlet'
 import Home from './pages/Home'
 import Video from "./components/Video"
@@ -12,12 +11,15 @@ import PlaylistVideos from "./components/PlaylistVideos"
 import Tweets from "./components/Tweets"
 import Following from "./components/Following"
 import Dashboard from "./pages/Dashboard"
+import Register from "./components/Register"
+import Login from "./components/Login"
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
         <Route element={<OutletComp />}>
             <Route path='' element={<Home />} />
-            <Route path='signup' element={<SignUp />} />
+            <Route path='register' element={<Register />} />
+            <Route path='login' element={<Login />} />
             <Route path='video' element={<Video />} />
             <Route path='userSection' element={<UserSection />} />
             <Route path='searchResult' element={<SearchResult />} />
