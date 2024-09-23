@@ -6,7 +6,8 @@ function BaseUrl() {
         baseURL: url,
         headers:{
             "Content-Type": "application/json"
-        }
+        },
+        withCredentials: true
     })
 
     return baseUrl

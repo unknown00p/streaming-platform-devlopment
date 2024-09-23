@@ -5,6 +5,7 @@ import { deletePreviousImage, uploadImagesOnCloudinary } from "../utils/cloudina
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
+import e from "express";
 
 const generateAccessAndRefereshTokens = async (userId) => {
     try {
@@ -116,10 +117,7 @@ const loginUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "email is required")
     }
 
-    const user = await User.findOne({email})
-
-    console.log("userFinded", user);
-    
+    const user = await User.findOne({email})    
 
     if (!user) {
         throw new ApiError(404, "User does not exist")
@@ -128,7 +126,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const isPasswordValid = await user.isPasswordCorrect(password)
 
     if (!isPasswordValid) {
-        throw new ApiError(401, "Invalid user credentials")
+        throw new ApiError(401, "Invalid password")
     }
 
     const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)

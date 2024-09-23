@@ -5,6 +5,7 @@ import Wrapper from '../components/Wrapper';
 import { useEffect, useState } from 'react';
 import Input from '../subComponents/Input';
 import Button from '../subComponents/Button';
+import SignOut from '../api/authentication/SignOut';
 
 function Dashboard() {
   const showUploadVideoCss = useHandleCssStore((state) => state.showUploadVideoCss)
@@ -57,6 +58,11 @@ function Dashboard() {
     return () => document.removeEventListener("click", handleClickOutside);
 
   }, [])
+
+  async function logout() {
+    const response = await SignOut()
+    console.log(response);    
+  }
 
   return (
     <Wrapper>
@@ -114,6 +120,9 @@ function Dashboard() {
                       </button>
                       <button className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 dark:text-gray-300">
                         Drafts
+                      </button>
+                      <button onClick={logout} className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 dark:text-gray-300">
+                        Log Out
                       </button>
                     </div>
                     <div className="space-y-4">
