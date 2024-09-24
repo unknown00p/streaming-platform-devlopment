@@ -2,7 +2,7 @@ import BaseUrl from "../baseUrl/BaseUrl"
 
 async function SignOut() {
     try {
-        const response = await BaseUrl().post("/users/logout")
+        const response = await BaseUrl.post("/users/logout",{},{withCredentials: true})
         console.log(response);        
         return response
     } catch (error) {

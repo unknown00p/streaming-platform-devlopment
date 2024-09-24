@@ -24,7 +24,7 @@ async function SignUp({ username, fullname, email, password }) {
   formData.append("avatar", defaultAvatar);
   formData.append("coverImage", defaultCoverImage);
   try {
-    const register = await BaseUrl().post("/users/register", formData, {
+    const register = await BaseUrl.post("/users/register", formData, {
       headers:{
         "Content-Type":"multipart/form-data"
       }

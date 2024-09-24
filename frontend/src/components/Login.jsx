@@ -3,12 +3,17 @@ import { Input, Button } from '../index'
 import { Link } from "react-router-dom";
 import Wrapper from './Wrapper';
 import SignIn from "../api/authentication/SignIn";
+import { useNavigate } from 'react-router-dom'
 
 function Login() {
     const { register, handleSubmit } = useForm()
+    const navigate = useNavigate()
 
     async function InputValues(data) {
        const responseData = await SignIn(data)
+       if (responseData.status === 200) {
+        navigate("/")        
+       }
        console.log(responseData);       
     }
 

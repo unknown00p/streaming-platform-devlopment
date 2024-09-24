@@ -1,15 +1,21 @@
 // import CategoryCarousel from '../subComponents/Category'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SideBar from '../subComponents/SideBar'
 import { useNavigate } from 'react-router-dom'
 import Wrapper from '../components/Wrapper'
+import RefreshAccessToken from '../api/authentication/RefreshAccessToken'
 // import UploadVideo from '../subComponents/UploadVideo'
 // use NavLink to focus on current button
 
 
 function Home() {
 
-  const [hasVideo, setHasVideo] = useState(true)  
+  const [hasVideo, setHasVideo] = useState(true)
+
+  useEffect(() => {
+    RefreshAccessToken()
+  }, [])
+
 
   const navigate = useNavigate()
   const videoClick = (e) => {
