@@ -5,7 +5,7 @@ const useAuth = create((set)=> (
         isAuth: false,
         authData: null,
 
-        setAuth: (data) => set(()=> (
+        setAuthData: (data) => set(()=> (
             {
                 isAuth: true,
                 authData: data

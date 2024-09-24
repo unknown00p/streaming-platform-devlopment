@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom"
+import useRefreshToken from "../hooks/useRefreshToken"
 
 function SideBar() {
+    const refresh = useRefreshToken()
 
     const sidebarVal = [
         {
@@ -27,6 +29,7 @@ function SideBar() {
 
     return (
         <div className='flex lg:flex-col bg-[#13151a] lg:bg-[#0000] w-full lg:w-[4rem] gap-10 text-white justify-center lg:justify-normal lg:gap-8 p-3 pr-6 lg:p-0'>
+            <button onClick={()=> refresh()}>Refresh</button>
             {sidebarVal.map((value) => (
                 <Link key={value.name} to={value.link}>
                 <div className='flex flex-col items-center'>
