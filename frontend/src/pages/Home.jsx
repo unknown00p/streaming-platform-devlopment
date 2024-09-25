@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import SideBar from '../subComponents/SideBar'
 import { useNavigate } from 'react-router-dom'
 import Wrapper from '../components/Wrapper'
-import RefreshAccessToken from '../api/authentication/RefreshAccessToken'
 import CurrentUser from '../api/authentication/CurrentUser'
 // import UploadVideo from '../subComponents/UploadVideo'
 // use NavLink to focus on current button
@@ -12,10 +11,6 @@ import CurrentUser from '../api/authentication/CurrentUser'
 function Home() {
 
   const [hasVideo, setHasVideo] = useState(true)
-
-  useEffect(() => {
-    RefreshAccessToken()
-  }, [])
 
 
   const navigate = useNavigate()

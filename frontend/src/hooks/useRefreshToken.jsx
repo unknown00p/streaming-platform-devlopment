@@ -3,10 +3,7 @@ import useAuth from "../zustand/useAuth";
 
 const useRefreshToken = () => {
     const setAuthData = useAuth(state => state.setAuthData)
-    const authData = useAuth(state => state.authData)
-    console.log(authData);
-    
-
+    const authData = useAuth(state => state.authData) 
 
     const refresh = async () => {
         try {
