@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Link,useNavigate } from 'react-router-dom';
-import { Input } from "../index"
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Button, Input } from "../index"
 import useHandleCssStore from '../zustand/useHandleCssStore';
+import SignOut from '../api/authentication/SignOut';
 
 function Header() {
   const toggleBarCss = useHandleCssStore((state) => state.toggelBarCss)
@@ -11,13 +12,34 @@ function Header() {
   const [mobileSearch, setMobileSearch] = useState("hidden")
   const [headerClass, setHeaderClass] = useState("block")
   const navigate = useNavigate()
-  const showUploadVideo = useHandleCssStore((state)=> state.showUploadVideo)
+  const showUploadVideo = useHandleCssStore((state) => state.showUploadVideo)
+  const [dropDownCss, setDropDownCss] = useState("hidden")
 
   useEffect(() => {
     handleClickOutside()
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, [handleClickOutside])
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (e.target.closest("#userDropdown") && !e.target.closest(".SelectedLinks")) {  
+        setDropDownCss("block");
+      } else if (e.target.closest(".userDropdownBtn")) {
+        setDropDownCss(dropDownCss === "hidden" ? "block" : "hidden")
+      } else if(e.target.closest(".SelectedLinks")){
+        setDropDownCss("hidden");
+      }
+      else {
+        setDropDownCss("hidden");
+      }
+    }
+
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside)
+
+  }, [dropDownCss])
+
 
 
   function toggleSearch() {
@@ -30,8 +52,11 @@ function Header() {
     setHeaderClass("block")
   }
 
-  function uploadVideo() {
-    navigate("/dashboard")
+  const location = useLocation();
+  function DashboardFunc() {
+    if (location.pathname !== "/dashboard/videoDashboard") {
+      navigate("/dashboard/videoDashboard");
+    }
     showUploadVideo("block")
   }
 
@@ -67,11 +92,37 @@ function Header() {
                 <img src="/search.svg" alt="" />
               </button>
               <button>
-                <img onClick={uploadVideo} className='uploadVideoBtn' src="/uploadVideo.svg" alt="" />
+                <img onClick={DashboardFunc} className='uploadVideoBtn' src="/uploadVideo.svg" alt="" />
               </button>
-              <Link to={"dashboard"}>
-                <img src="/avatar.svg" alt="" />
-              </Link>
+              <div>
+                <img className='relative cursor-pointer userDropdownBtn' src="/avatar.svg" alt="" />
+
+                <div id="userDropdown" className={`z-10 ${dropDownCss} absolute right-7 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-[#252934] dark:divide-gray-600 top-14`}>
+                  <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
+                    <div className='flex items-center gap-2'>
+                      <img src="https://th.bing.com/th/id/OIP.7ITF2gx8_a3s4NbnDOpZzAHaHa?w=238&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7" className='w-9 h-9 rounded-full' alt="" />
+                      <div>
+                        <div>Bonnie Green</div>
+                        <div className="font-medium truncate">name@flowbite.com</div>
+                      </div>
+                    </div>
+                  </div>
+                  <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="avatarButton">
+                    <li>
+                      <button onClick={DashboardFunc} className="block w-full text-left px-4 py-2 SelectedLinks hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</button>
+                    </li>
+                    <li>
+                      <Link to={""} className="block px-4 py-2 SelectedLinks hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</Link>
+                    </li>
+                    <li>
+                      <Link to={""} className="block px-4 py-2 SelectedLinks hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</Link>
+                    </li>
+                  </ul>
+                  <div className="py-1">
+                    <Link to={"/login"} onClick={()=> SignOut()} className="block px-4 py-2 SelectedLinks text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -196,7 +247,6 @@ function Header() {
           </aside>
         </div>
       </div>
-
     </>
 
   )

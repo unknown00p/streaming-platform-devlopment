@@ -1,6 +1,15 @@
-import { Link } from "react-router-dom"
+import React from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 function SideBar() {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const handleDesktopNavigation = () => {
+        if (location.pathname !== '/desktop/videos') {
+            navigate('/desktop/videos');
+        }
+    };
 
     const sidebarVal = [
         {
@@ -16,29 +25,46 @@ function SideBar() {
         {
             "name": "You",
             "src": "/currentUser.svg",
-            "link": "/desktop"
+            "link": "/desktop/videos",
+            "onClick": handleDesktopNavigation
         },
         {
             "name": "Downloads",
             "src": "/download.svg",
             "link": "/"
         },
-    ]
+    ];
 
     return (
         <div className='flex lg:flex-col bg-[#13151a] lg:bg-[#0000] w-full lg:w-[4rem] gap-10 text-white justify-center lg:justify-normal lg:gap-8 p-3 pr-6 lg:p-0'>
             {sidebarVal.map((value) => (
-                <Link key={value.name} to={value.link}>
-                <div className='flex flex-col items-center'>
-                    <button aria-label={value.name} title={value.name} className='flex items-center flex-col hover:opacity-75 focus:opacity-100'>
-                        <img src={value.src} alt={value.name} />
-                        <p className='text-[0.70rem]'>{value.name}</p>
-                    </button>
+                <div key={value.name} className='flex flex-col items-center'>
+                    {value.onClick ? (
+                        <button 
+                            onClick={value.onClick}
+                            aria-label={value.name} 
+                            title={value.name} 
+                            className='flex items-center flex-col hover:opacity-75 focus:opacity-100'
+                        >
+                            <img src={value.src} alt={value.name} />
+                            <p className='text-[0.70rem]'>{value.name}</p>
+                        </button>
+                    ) : (
+                        <Link to={value.link}>
+                            <button 
+                                aria-label={value.name} 
+                                title={value.name} 
+                                className='flex items-center flex-col hover:opacity-75 focus:opacity-100'
+                            >
+                                <img src={value.src} alt={value.name} />
+                                <p className='text-[0.70rem]'>{value.name}</p>
+                            </button>
+                        </Link>
+                    )}
                 </div>
-                </Link>
             ))}
         </div>
-    )
+    );
 }
 
-export default SideBar
+export default SideBar;
