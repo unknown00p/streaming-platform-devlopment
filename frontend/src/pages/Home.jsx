@@ -1,9 +1,8 @@
 // import CategoryCarousel from '../subComponents/Category'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import SideBar from '../subComponents/SideBar'
 import { useNavigate } from 'react-router-dom'
 import Wrapper from '../components/Wrapper'
-import CurrentUser from '../api/authentication/CurrentUser'
 // import UploadVideo from '../subComponents/UploadVideo'
 // use NavLink to focus on current button
 
@@ -42,7 +41,6 @@ function Home() {
 
   return hasVideo ? (
     <Wrapper>
-      <CurrentUser/>
       <div className='flex'>
 
         <div className='left fixed sm:hidden lg:block bottom-0 lg:bottom-auto w-full lg:w-[4rem]'>

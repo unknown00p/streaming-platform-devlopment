@@ -8,7 +8,7 @@ function CurrentUser() {
 
     useEffect(() => {
         const controller = new AbortController()
-        let isMounted = true
+        // let isMounted = true
         async function getUser() {
             try {
                 const response = await PrivetBaseUrl.get("/users/current-user", {
@@ -17,9 +17,9 @@ function CurrentUser() {
                 })
                 console.log(response);
                 
-                if (isMounted) {
-                    return response.data
-                }
+                // if (isMounted) {
+                //     return response.data
+                // }
             } catch (error) {
                 if (error.code !== "ERR_CANCELED") {
                     navigate("/login", { state: { form: location }, replace: true })
@@ -30,7 +30,7 @@ function CurrentUser() {
         getUser()
 
         return () => {
-            isMounted = false
+            // isMounted = false
             controller.abort()
         }
     }, [])
