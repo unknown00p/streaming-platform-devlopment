@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import userDataStore from '../zustand/userData';
-import {UpdateEmailPassword,UpdateAvatar,UpdateCoverImage} from '../api/authentication/UpdateAccountDetails';
+import {UpdateEmailPassword,UpdateAvatar,UpdateCoverImage,changeCurrentPassword} from '../api/authentication/UpdateAccountDetails';
 import { useForm } from 'react-hook-form';
 
 function UserDashboard() {
@@ -42,10 +42,11 @@ function UserDashboard() {
   };
 
   const handleSubmitData = async (data) => {
-    // e.preventDefault();
     console.log(data);
-    // Here you would typically send the updated data to your backend
-    await UpdateEmailPassword(data.fullName, data.email)
+    if (data.fullName !== currentUserData.fullName || data.email !== currentUserData.email) {
+      const response = await UpdateEmailPassword(data.fullName, data.email)
+      console.log("responseData",response);
+    }
     if (data.avatar[0]) {
       const response = await UpdateAvatar(data.avatar[0])
       console.log("responseData",response);
@@ -53,6 +54,10 @@ function UserDashboard() {
     if (data.coverImage[0]) {
       const responseCover = await UpdateCoverImage(data.coverImage[0])
       console.log("responseData",responseCover);
+    }
+    if (data.currentPassword && data.newPassword) {
+      const response = await changeCurrentPassword({oldPassword: data.currentPassword, newPassword: data.newPassword})
+      console.log(response);      
     }
     setIsEditing(false);
   };

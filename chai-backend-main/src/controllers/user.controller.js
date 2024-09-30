@@ -228,9 +228,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 const changeCurrentPassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body
-
-
-
+    console.log(oldPassword,newPassword);
+    
     const user = await User.findById(req.user?._id)
     const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
 
@@ -319,8 +318,9 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 })
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
+    console.log("whats here req.file",req.file);
     const coverImageLocalPath = req.file?.path   
-    console.log("whats here coverImageLocalPath",coverImageLocalPath);
+    // console.log("whats here coverImageLocalPath",coverImageLocalPath);
     if (!coverImageLocalPath) {
         throw new ApiError(400, "Cover image file is missing")
     }

@@ -20,29 +20,12 @@ async function UpdateEmailPassword(fullName, email) {
 
 async function UpdateAvatar(avatarFile) {
     try {
-            const formData = new FormData()
-            formData.append("avatar", avatarFile)
-            
-            const response = await baseUrl.patch("/users/avatar", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                },
-                withCredentials: true
-            })
-            return response
-    } catch (error) {
-        console.log(error);
-    }
-}
+        const formData = new FormData()
+        formData.append("avatar", avatarFile)
 
-async function UpdateCoverImage(CoverImage) {
-    const formData = new FormData()
-    formData.append("coverImageLocalPath", CoverImage)
-
-    try {
-        const response = await baseUrl.patch("/users/cover-image", formData, {
-            headers: { 
-                "Content-Type": "multipart/form-data" 
+        const response = await baseUrl.patch("/users/avatar", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data"
             },
             withCredentials: true
         })
@@ -52,11 +35,42 @@ async function UpdateCoverImage(CoverImage) {
     }
 }
 
-export default UpdateAvatar
+async function UpdateCoverImage(CoverImage) {
+    try {
+        console.log(CoverImage);
+
+        const formData = new FormData()
+        formData.append("coverImage", CoverImage)
+
+        const response = await baseUrl.patch("/users/cover-image",formData,{
+            headers: {"Content-Type":"multipart/form-data"},
+            withCredentials: true
+        })
+        return response
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function changeCurrentPassword({oldPassword,newPassword}) {
+    console.log(oldPassword, newPassword);
+    
+    try {
+        const response = await baseUrl.post("/users/change-password",{
+            oldPassword,
+            newPassword
+        },{withCredentials:true})
+
+        return response
+    } catch (error) {
+        console.log(error);                
+    }
+}
 
 
 export {
     UpdateEmailPassword,
     UpdateAvatar,
-    UpdateCoverImage
+    UpdateCoverImage,
+    changeCurrentPassword
 }
