@@ -9,7 +9,7 @@ app.use(morgan("dev"));
 
 const corsOptions = {
     origin: process.env.CORS_ORIGIN,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS','PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     optionsSuccessStatus: 204,
     credentials: true
@@ -51,7 +51,7 @@ app.use("/api/v1/appSubscription", appSubscriptionRouter)
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || "Internal Server Error";
-    const errors = err.errors || null; // Optional: include any specific errors
+    const errors = err.errors;
 
     res.status(statusCode).json({
         status: statusCode,

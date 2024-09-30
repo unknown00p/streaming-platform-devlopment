@@ -1,10 +1,11 @@
 import SideBar from '../subComponents/SideBar'
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet,useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 
 function Desktop() {
     const [currentUser, setCurrentUser] = useState(true)
+    const navigate = useNavigate();
 
     const deskCategories = [
         {
@@ -76,7 +77,7 @@ function Desktop() {
 
 
                         <div>
-                            <button type="button" className="text-[#c6c1c1] bg-[#661fbd] font-medium rounded-lg text-sm px-5 py-2.5 me-2 focus:outline-none top-[-3rem] relative sm:static pl-2">{currentUser ? <div className='flex items-center gap-2'><img src="/edit.svg" /> <p>Edit</p></div> : 'Subscribe'}</button>
+                            <button type="button" className="text-[#c6c1c1] bg-[#661fbd] font-medium rounded-lg text-sm px-5 py-2.5 me-2 focus:outline-none top-[-3rem] relative sm:static pl-2">{currentUser ? <div onClick={()=> navigate("/dashboard/userDashboard")} className='flex items-center gap-2'><img src="/edit.svg" /> <p>Edit</p></div> : 'Subscribe'}</button>
                         </div>
                     </div>
                 </div>

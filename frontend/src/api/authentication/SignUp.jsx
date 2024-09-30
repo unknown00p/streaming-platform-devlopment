@@ -15,14 +15,13 @@ async function SignUp({ username, fullname, email, password }) {
     { type: "image/jpg" }
   )
 
-  console.log("defaultAvatar",defaultAvatar);
-
   formData.append("username", username);
   formData.append("fullName", fullname);
   formData.append("email", email);
   formData.append("password", password);
   formData.append("avatar", defaultAvatar);
   formData.append("coverImage", defaultCoverImage);
+  
   try {
     const register = await BaseUrl.post("/users/register", formData, {
       headers:{
