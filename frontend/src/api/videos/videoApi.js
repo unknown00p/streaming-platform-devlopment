@@ -15,17 +15,17 @@ async function deleteVideo(videoId) {
     }
 }
 
-async function getAllVideosOfaUser(userId) {
+async function getAllVideosOfaUser(userId,page=1,limit=10,sortBy='isPublished',sortType='ascending') {
     try {
         if (userId) {
 
             const response = await baseUrl.get("/videos/getAllVideosOfaUser", {
                 params: {
                     userId,
-                    page: 1,
-                    limit: 10,
-                    sortType: 'ascending',
-                    sortBy: 'isPublished'
+                    page,
+                    limit,
+                    sortType,
+                    sortBy
                 },
                 withCredentials: true
             })
@@ -102,9 +102,17 @@ async function postVideo(title, description, videoFile, thumbnail) {
     }
 }
 
-async function getAllVideos() {
+async function getAllVideos(page=1,limit=2,sortBy='isPublished',query="ajab") {
+    let queryToLower = query.toLowerCase()
+    
     try {
         return await baseUrl.get("/videos",{
+            params:{
+                page,
+                limit,
+                sortBy,
+                query: queryToLower
+            },
             withCredentials: true
         })
     } catch (error) {

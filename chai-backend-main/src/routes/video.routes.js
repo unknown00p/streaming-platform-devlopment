@@ -3,6 +3,7 @@ import {
     deleteVideo,
     getAllVideos,
     getAllVideosOfaUser,
+    getSearchedVideos,
     getVideoById,
     publishAVideo,
     togglePublishStatus,
@@ -31,9 +32,10 @@ router
         publishAVideo
     );
 
-    router.route("/getAllVideosOfaUser").get(getAllVideosOfaUser)
-
+router.route("/getAllVideosOfaUser").get(getAllVideosOfaUser)
 router.route("/toggle/publish/:videoId").patch(togglePublishStatus);
+
+router.route("/searchVideos").get(getSearchedVideos)
 
 router
     .route("/:videoId")

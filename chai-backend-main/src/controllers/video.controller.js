@@ -4,20 +4,20 @@ import { User } from "../models/user.model.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
-import { deletePreviousVideo, uploadVideoOnCloudinary,uploadImagesOnCloudinary, deletePreviousImage } from "../utils/cloudinary.js"
+import { deletePreviousVideo, uploadVideoOnCloudinary, uploadImagesOnCloudinary, deletePreviousImage } from "../utils/cloudinary.js"
 import { response } from "express"
 
 
 const getAllVideosOfaUser = asyncHandler(async (req, res) => {
     const { page, limit, query, sortBy, sortType, userId } = req.query
-    
+
     //TODO: get all videos based on query, sort, pagination
 
     if (!userId) {
         throw new ApiError(400, "userId is undefined")
     }
 
-    const videos = await Video.find({owner: userId})
+    const videos = await Video.find({ owner: userId })
         .sort({ [sortBy]: sortType == "ascending" ? 1 : -1 })
         .skip((page - 1) * limit)
         .limit(parseInt(limit))
@@ -34,16 +34,38 @@ const getAllVideosOfaUser = asyncHandler(async (req, res) => {
 
 })
 
-const getAllVideos = asyncHandler(async(req, res)=>{
+const getAllVideos = asyncHandler(async (req, res) => {
+    const { page, limit } = req.query   
+
     const allvideos = await Video.find()
 
     if (!allvideos) {
-        throw new ApiError(404,"videos not found")
+        throw new ApiError(404, "videos not found")
     }
 
     res
-    .status(200)
-    .json(new ApiResponse(200,{allvideos},'all videos fetched successfully'))
+        .status(200)
+        .json(new ApiResponse(200, { allvideos }, 'all videos fetched successfully'))
+
+})
+
+const getSearchedVideos = asyncHandler(async (req, res) => {
+    const { page, limit, query, sortBy, sortType, } = req.query   
+
+    const searchCondition = query? { title: { $regex: query, $options: "i" }, description: {$regex: query, $options: "i"}}: {}
+
+    const allvideos = await Video.find(searchCondition)
+        .sort({ [sortBy]: sortType == "ascending" ? 1 : -1 })
+        .skip((page - 1) * limit)
+        .limit(parseInt(limit))
+
+    if (!allvideos) {
+        throw new ApiError(404, "videos not found")
+    }
+
+    res
+        .status(200)
+        .json(new ApiResponse(200, { allvideos }, 'all videos fetched successfully'))
 
 })
 
@@ -56,7 +78,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
 
     const returnedVideoDeatilsFromCloudinary = await uploadVideoOnCloudinary(video)
     console.log(returnedVideoDeatilsFromCloudinary);
-    
+
     const returnedThumbnailDeatilsFromCloudinary = await uploadImagesOnCloudinary(thumbnail)
     if (!returnedVideoDeatilsFromCloudinary) {
         throw new ApiError(404, "video is undefined")
@@ -71,7 +93,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
             title,
             description,
             thumbnail: returnedThumbnailDeatilsFromCloudinary.url,
-            videoFile:{default: returnedVideoDeatilsFromCloudinary.playback_url, allManualQuality: returnedVideoDeatilsFromCloudinary.eager.map((val)=> val.secure_url)},
+            videoFile: { default: returnedVideoDeatilsFromCloudinary.playback_url, allManualQuality: returnedVideoDeatilsFromCloudinary.eager.map((val) => val.secure_url) },
             duration: returnedVideoDeatilsFromCloudinary.duration,
             isPublished: true,
             owner: req.user?._id
@@ -100,12 +122,12 @@ const getVideoById = asyncHandler(async (req, res) => {
         throw new ApiError(404, "videoId not found")
     }
     console.log(videoId);
-    
+
 
     const video = await Video.findOne(new mongoose.Types.ObjectId(videoId))
 
     console.log(video);
-    
+
 
     if (!video) {
         throw new ApiError(500, "unable to get video from dataBase")
@@ -169,9 +191,9 @@ const deleteVideo = asyncHandler(async (req, res) => {
 
     if (!deleteVideo) {
         throw new ApiError(500, "server error failed to delete video")
-    }    
+    }
 
-    const clodinaryVideoId = deleteVideo.videoFile[0].default.split("/").pop().split(".").shift()  
+    const clodinaryVideoId = deleteVideo.videoFile[0].default.split("/").pop().split(".").shift()
     const clodinaryThumbnailId = deleteVideo.thumbnail.split("/").pop().split(".").shift()
 
     const deletedVideoFromCloudinary = deletePreviousVideo(clodinaryVideoId)
@@ -235,5 +257,6 @@ export {
     updateVideo,
     deleteVideo,
     togglePublishStatus,
-    getAllVideos
+    getAllVideos,
+    getSearchedVideos
 }
