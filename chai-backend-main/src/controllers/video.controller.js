@@ -8,8 +8,9 @@ import { deletePreviousVideo, uploadVideoOnCloudinary,uploadImagesOnCloudinary, 
 import { response } from "express"
 
 
-const getAllVideos = asyncHandler(async (req, res) => {
+const getAllVideosOfaUser = asyncHandler(async (req, res) => {
     const { page, limit, query, sortBy, sortType, userId } = req.query
+    
     //TODO: get all videos based on query, sort, pagination
 
     if (!userId) {
@@ -32,6 +33,20 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
 
 })
+
+const getAllVideos = asyncHandler(async(req, res)=>{
+    const allvideos = await Video.find()
+
+    if (!allvideos) {
+        throw new ApiError(404,"videos not found")
+    }
+
+    res
+    .status(200)
+    .json(new ApiResponse(200,{allvideos},'all videos fetched successfully'))
+
+})
+
 
 const publishAVideo = asyncHandler(async (req, res) => {
     // TODO: get video, upload to cloudinary, create video
@@ -112,7 +127,7 @@ const updateVideo = asyncHandler(async (req, res) => {
     const { title, description } = req.body
     const thumbnail = req.file?.path
     //TODO: update video details like title, description, thumbnail
-    const uploadedOnCloudinary = await uploadOnCloudinary(thumbnail)
+    const uploadedOnCloudinary = await uploadImagesOnCloudinary(thumbnail)
 
     const previousThumbnail = await Video.findById(videoId)
 
@@ -131,7 +146,7 @@ const updateVideo = asyncHandler(async (req, res) => {
     const currentThumbnailId = updatedVideo.thumbnail.split("/").pop().split(".").shift()
 
     if (previousThumbnailId !== currentThumbnailId) {
-        await deletePreviousFile(previousThumbnailId)
+        await deletePreviousImage(previousThumbnailId)
     }
 
     res
@@ -214,10 +229,11 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 })
 
 export {
-    getAllVideos,
+    getAllVideosOfaUser,
     publishAVideo,
     getVideoById,
     updateVideo,
     deleteVideo,
-    togglePublishStatus
+    togglePublishStatus,
+    getAllVideos
 }
