@@ -35,9 +35,11 @@ const getAllVideosOfaUser = asyncHandler(async (req, res) => {
 })
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    const { page, limit } = req.query   
+    const { page, limit } = req.query
 
     const allvideos = await Video.find()
+        .skip((page - 1) * limit)
+        .limit(parseInt(limit))
 
     if (!allvideos) {
         throw new ApiError(404, "videos not found")
@@ -50,9 +52,9 @@ const getAllVideos = asyncHandler(async (req, res) => {
 })
 
 const getSearchedVideos = asyncHandler(async (req, res) => {
-    const { page, limit, query, sortBy, sortType, } = req.query   
+    const { page, limit, query, sortBy, sortType, } = req.query
 
-    const searchCondition = query? { title: { $regex: query, $options: "i" }, description: {$regex: query, $options: "i"}}: {}
+    const searchCondition = query ? { title: { $regex: query, $options: "i" }, description: { $regex: query, $options: "i" } } : {}
 
     const allvideos = await Video.find(searchCondition)
         .sort({ [sortBy]: sortType == "ascending" ? 1 : -1 })

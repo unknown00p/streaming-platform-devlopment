@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form"
 import { Input, Button, SelectImage } from '../index'
 import { Link } from "react-router-dom";
-import SignUp from '../api/authentication/SignUp';
+import {SignUp} from '../api/authentication/authApi';
 import Wrapper from './Wrapper';
 
 function Register() {

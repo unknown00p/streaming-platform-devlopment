@@ -69,7 +69,6 @@ async function updateVideo({ videoId, title, description, thumbnail }) {
     }
 }
 
-
 async function togglePublicStatus({ videoId }) {
     try {
         const response = await baseUrl.patch(`/videos/toggle/publish/${videoId}`, {
@@ -102,7 +101,7 @@ async function postVideo(title, description, videoFile, thumbnail) {
     }
 }
 
-async function getAllVideos(page=1,limit=2,sortBy='isPublished',query="ajab") {
+async function getAllSearchVideos(page=1,limit=2,sortBy='isPublished',query="ajab") {
     let queryToLower = query.toLowerCase()
     
     try {
@@ -120,6 +119,20 @@ async function getAllVideos(page=1,limit=2,sortBy='isPublished',query="ajab") {
     }
 }
 
+async function getAllVideos(page=1,limit=10) {
+    try {
+        return await baseUrl.get("/videos",{
+            params:{
+                page,
+                limit,
+            },
+            withCredentials: true
+        })
+    } catch (error) {
+        console.log(error);                
+    }
+}
+
 export {
     deleteVideo,
     getAllVideosOfaUser,
@@ -127,5 +140,6 @@ export {
     updateVideo,
     togglePublicStatus,
     postVideo,
-    getAllVideos
+    getAllVideos,
+    getAllSearchVideos
 }

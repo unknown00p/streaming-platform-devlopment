@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form"
 import { Input, Button } from '../index'
 import { Link } from "react-router-dom";
 import Wrapper from './Wrapper';
-import SignIn from "../api/authentication/SignIn";
+import {SignIn} from "../api/authentication/authApi";
 import { useNavigate } from 'react-router-dom'
 
 function Login() {

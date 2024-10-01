@@ -1,6 +1,6 @@
 // import React from 'react'
 import Wrapper from '../components/Wrapper';
-import SignOut from '../api/authentication/SignOut';
+import {SignOut} from '../api/authentication/authApi';
 import { Link, Outlet } from 'react-router-dom';
 
 function Dashboard() {

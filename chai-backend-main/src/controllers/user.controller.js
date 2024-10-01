@@ -355,7 +355,6 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         )
 })
 
-
 const getUserChannelProfile = asyncHandler(async (req, res) => {
     const { username } = req.params
 
@@ -428,6 +427,28 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         )
 })
 
+const getUserById = asyncHandler(async(req,res)=>{
+    try {
+        const userId = req.params
+        if (!userId) {
+            throw new ApiError(400, "user Id is undefined")
+        }
+
+        const userData = User.findById(userId)
+
+        if (!userData) {
+            throw new ApiError(404, "No user founded")
+        }
+
+        res
+        .status(200)
+        .json(new ApiResponse(200,{userData},"succesfully fetched userData"))
+
+    } catch (error) {
+        console.log(error);        
+    }
+})
+
 const getWatchHistory = asyncHandler(async (req, res) => {
     const user = await User.aggregate([
         {
@@ -494,5 +515,6 @@ export {
     updateUserAvatar,
     updateUserCoverImage,
     getUserChannelProfile,
-    getWatchHistory
+    getWatchHistory,
+    getUserById
 }

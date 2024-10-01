@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Input } from "../index"
 import useHandleCssStore from '../zustand/useHandleCssStore';
-import SignOut from '../api/authentication/SignOut';
+import {SignOut} from '../api/authentication/authApi';
 
 function Header() {
   const toggleBarCss = useHandleCssStore((state) => state.toggelBarCss)
