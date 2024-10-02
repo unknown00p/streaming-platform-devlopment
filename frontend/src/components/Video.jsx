@@ -1,11 +1,26 @@
-// import SaveToPlaylist from "../pages/SaveToPlaylist"
 import CustomVideoPlayer from "../subComponents/CustomVideoPlayer"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import SideBar from "../subComponents/SideBar"
 import Wrapper from "./Wrapper"
+import { useParams } from "react-router-dom"
+import { getVideobyId } from "../api/videos/videoApi"
 
 function Video() {
   const [saveToPlaylist, setSaveToPlaylist] = useState(false)
+  const [videoData, setVideoData] = useState([])
+  const { videoId } = useParams()
+
+  useEffect(() => {
+
+    async function videoByIdFunc() {
+      const response = await getVideobyId(videoId)
+      setVideoData(response.data.data.video) 
+    }
+    videoByIdFunc()
+
+  }, [videoId])
+
+  console.log(videoData && videoData?.videoFile?.[0]);
 
   const imageUrl = [
     "https://th.bing.com/th/id/OIP.c2yh-vjm-Ze872ygDBhg3QHaEK?w=326&h=183&c=7&r=0&o=5&dpr=1.5&pid=1.7",
@@ -45,7 +60,7 @@ function Video() {
               <p>
                 Lorem ipsum dolor sit amet Lorem, ipsum. Lor ipsum dolor sit. Lorem, ipsum dolor
               </p>
-              <img onClick={() => setSaveToPlaylist(true)} src="dots.svg" className="w-6 cursor-pointer" alt="" />
+              <img onClick={() => setSaveToPlaylist(true)} src="/dots.svg" className="w-6 cursor-pointer" alt="" />
             </div>
 
 

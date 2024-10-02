@@ -1,7 +1,9 @@
 import { useRef, useState, useEffect } from "react"
 import Hls from "hls.js"
 
-function CustomVideoPlayer({ qualityArr }) {
+function CustomVideoPlayer({qualityArr}) {
+  // console.log(qualityArr);
+  
   const videoRef = useRef(null)
   const frameIdRef = useRef(null)
   const divRef = useRef(null)
@@ -198,22 +200,22 @@ function CustomVideoPlayer({ qualityArr }) {
               <div className="flex items-center top-[-5rem] left-[14rem] sm:static gap-2">
 
                 <button className="focus:outline-none">
-                  <img src="backward.svg" alt="Backward" className="w-6 h-6" />
+                  <img src="/backward.svg" alt="Backward" className="w-6 h-6" />
                 </button>
                 <button onClick={togglePlayPause} className="focus:outline-none">
                   {!isPlaying ? (
-                    <img src="play.svg" alt="Play" className="w-[1.4rem] h-[1.4rem]" />
+                    <img src="/play.svg" alt="Play" className="w-[1.4rem] h-[1.4rem]" />
                   ) : (
-                    <img src="pause.svg" alt="Pause" className="w-[1.4rem] h-[1.4rem]" />
+                    <img src="/pause.svg" alt="Pause" className="w-[1.4rem] h-[1.4rem]" />
                   )}
                 </button>
                 <button className="focus:outline-none">
-                  <img onClick={playNextVideo} src="forward.svg" alt="Forward" className="w-6 h-6" />
+                  <img onClick={playNextVideo} src="/forward.svg" alt="Forward" className="w-6 h-6" />
                 </button>
 
               </div>
               <div className="flex items-center gap-5">
-                <img onClick={toggleMute} src={volumeUrl} alt="Volume" className="w-[1.5rem] hidden sm:block h-[1.5rem] cursor-pointer" />
+                <img onClick={toggleMute} src={`/${volumeUrl}`} alt="Volume" className="w-[1.5rem] hidden sm:block h-[1.5rem] cursor-pointer" />
                 <input
                   onChange={onSoundInputChange}
                   type="range"
@@ -228,7 +230,7 @@ function CustomVideoPlayer({ qualityArr }) {
               <div className="relative">
                 <img className="cursor-pointer hidden sm:block" onClick={() => (
                   setShowSetting(!showSetting)
-                )} src="dots2.svg" alt="" />
+                )} src="/dots2.svg" alt="" />
                 {showSetting && <div className="bg-[#211e1e7a] absolute w-[8.75rem] p-2 top-[-11rem] left-[-5rem] rounded-md">
                   <ul className="flex flex-col gap-3">
                     <button className="text-left">
@@ -246,7 +248,7 @@ function CustomVideoPlayer({ qualityArr }) {
                   </ul>
                 </div>}
               </div>
-              <img className="cursor-pointer" onClick={toggleScreen} src={toggleFullScreenImg} alt="" />
+              <img className="cursor-pointer" onClick={toggleScreen} src={`/${toggleFullScreenImg}`} alt="" />
             </div>
           </div>
         </div>}

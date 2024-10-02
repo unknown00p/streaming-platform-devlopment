@@ -10,55 +10,73 @@ import { userById } from '../api/authentication/authApi'
 function Home() {
   const [hasVideo, setHasVideo] = useState(true)
   const [videoArray, setVideoArray] = useState([])
-  const [userData, setuserData] = useState(null)
-  const [userId, setUserId] = useState(null)
 
   useEffect(() => {
     async function getAllVideosFunc() {
       const response = await getAllVideos()
       if (response) {
         setHasVideo(true)
-        setVideoArray(response.data.data.allvideos)
-      }
+        const videoData = response.data.data.allvideos
 
-      response.data.data.allvideos.map((val) => (
-        console.log(val?._id),
-        setUserId(val?._id)
-      ))
-      console.log(userId && userId);
-      
-      const responseData = await userById(userId)
-      console.log(responseData);      
+        const awaitResponse = videoData.map((val) => userById(val?.owner))
+        const userDataResponse = await Promise.all(awaitResponse)
+
+        const enrichedVideos = videoData.map((video, index) => (
+          {
+            ...video,
+            userData: userDataResponse[index].data.data.userData,
+          }));
+
+        // console.log(enrichedVideos);
+
+        setVideoArray(enrichedVideos)
+      } else {
+        setHasVideo(false)
+      }
     }
     getAllVideosFunc()
   }, [])
 
   const navigate = useNavigate()
-  const videoClick = (e) => {
+  const videoClick = (e,value) => {
     const target = e?.target.id
     if (target !== "profile" && target !== "dot") {
-      navigate("video")
+      navigate(`video/${value?._id}`)
     }
     if (target == "profile") {
       navigate("userSection")
     }
   }
 
-  // const arr = [
-  //   "https://th.bing.com/th/id/OIP.NZtfot858OjoU8G0Y5TE9AHaEo?w=242&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-  //   "https://th.bing.com/th/id/OIP.wg4R0mAD1_DQAII9hCM-8AHaDk?w=341&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-  //   "https://th.bing.com/th/id/OIP.IHY4jIGoaywV1CkIYxzsNQHaEo?w=299&h=187&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-  //   "https://th.bing.com/th/id/OIP.YMuauF2NaoHPNikNQyavFAHaEo?w=279&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-  //   "https://th.bing.com/th/id/OIP.t_kb1S2P60S7gaKnEqQOjQHaEK?w=309&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-  //   "https://th.bing.com/th/id/OIP.otQVzr8T480Dyttw-acdjgHaEP?w=312&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-  //   "https://th.bing.com/th/id/OIP.BMXp9yc1JYylds7IvkyDrgHaGT?w=261&h=220&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-  //   "https://th.bing.com/th/id/OIP.amEbZWd9JRcIxkyVtYNODwHaE8?w=272&h=181&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-  //   "https://th.bing.com/th/id/OIP.hyOp4DHwU808lVPQ7qaZJAHaHa?w=194&h=195&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-  //   "https://th.bing.com/th/id/OIP.bPsFZEaqlxRKQ9qrj9O57QHaFl?w=226&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-  //   "https://th.bing.com/th/id/OIP.P_EOEXQab_37lelWDioz9QHaDf?w=330&h=164&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-  //   "https://th.bing.com/th/id/OIP.Yit4ehVET_xvmHYDJvYTpgAAAA?w=267&h=181&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-  //   "https://th.bing.com/th/id/OIP.A4dsv6AkIGssWk1TwfS97gHaEK?w=326&h=183&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-  // ]
+  function formatTimeDifference(date) {
+    const now = new Date();
+    const timestamp = new Date(date);
+
+    const diffInMs = Math.abs(now - timestamp);
+    const diffInSeconds = Math.floor(diffInMs / 1000);
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+    const diffInWeeks = Math.floor(diffInDays / 7);
+    const diffInMonths = Math.floor(diffInDays / 30); // Approximate
+    const diffInYears = Math.floor(diffInDays / 365); // Approximate
+
+    if (diffInYears > 0) {
+      return `${diffInYears} year${diffInYears > 1 ? 's' : ''} ago`;
+    } else if (diffInMonths > 0) {
+      return `${diffInMonths} month${diffInMonths > 1 ? 's' : ''} ago`;
+    } else if (diffInWeeks > 0) {
+      return `${diffInWeeks} week${diffInWeeks > 1 ? 's' : ''} ago`;
+    } else if (diffInDays > 0) {
+      return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+    } else if (diffInHours > 0) {
+      return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+    } else if (diffInMinutes > 0) {
+      return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
+    } else {
+      return `just now`;
+    }
+  }
 
   return hasVideo ? (
     <Wrapper>
@@ -73,7 +91,7 @@ function Home() {
             {videoArray && videoArray.map((value) => {
               return <div key={value._id} className=''>
                 <div onClick={(e) => {
-                  videoClick(e)
+                  videoClick(e,value)
                 }} className="rounded-xl shadow-lg">
                   <div className=''>
                     <img className="object-cover w-full h-[13rem] rounded-sm" src={value?.thumbnail} alt="Sunset in the mountains" />
@@ -82,7 +100,7 @@ function Home() {
                     <div className="flex gap-0">
                       <img onClick={() => {
                         // console.log("Hola");
-                      }} id='profile' className="w-11 h-11 rounded-full mr-4" src="https://th.bing.com/th/id/OIP.HLuY60jzx5puuKjbqmWRRwHaEK?w=328&h=185&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Avatar of Jonathan Reinink" />
+                      }} id='profile' className="w-11 h-11 rounded-full mr-4" src={value?.userData?.avatar} alt="Avatar of Jonathan Reinink" />
                       <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                         <div className='flex gap-2'>
                           <div className="text-lg">{value?.title}</div>
@@ -90,10 +108,10 @@ function Home() {
                             <img className='hover:bg-[#162b45] hover:rounded-full' id='dot' src="dots.svg" alt="" />
                           </div> */}
                         </div>
-                        <p className="leading-none text-[#a1a1a1]">Jonathan Reinink</p>
+                        <p className="leading-none text-[#a1a1a1]">{value?.userData?.username}</p>
                         <div className='flex gap-1 text-[#a1a1a1]'>
-                          <p>173K views.</p>
-                          <p>3 weaks ago</p>
+                          <p>{value?.views} views.</p>
+                          <p>{formatTimeDifference(value?.createdAt)}</p>
                         </div>
                       </div>
                     </div>

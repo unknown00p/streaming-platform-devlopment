@@ -22,7 +22,7 @@ export const router = createBrowserRouter(
             <Route path='' element={<Home />} />
             <Route path='register' element={<Register />} />
             <Route path='login' element={<Login />} />
-            <Route path='video' element={<Video />} />
+            <Route path='video/:videoId' element={<Video />} />
             <Route path='userSection' element={<UserSection />} />
             <Route path='searchResult' element={<SearchResult />} />
             <Route path='desktop' element={<Desktop />} >

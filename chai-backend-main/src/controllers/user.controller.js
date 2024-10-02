@@ -430,14 +430,12 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
 const getUserById = asyncHandler(async (req, res) => {
 
     try {
-    const userId = req.params
-    console.log("userId",userId);
-
+    const {userId} = req.query
     if (!userId) {
         throw new ApiError(400, "user Id is undefined")
     }
 
-    const userData = User.findById(userId)
+    const userData = await User.findById(new mongoose.Types.ObjectId(userId)).select("-password -refreshToken -accessToken")
 
     if (!userData) {
         throw new ApiError(404, "No user founded")
