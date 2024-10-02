@@ -1,7 +1,7 @@
 import baseUrl from "../baseUrl/BaseUrl"
 
 async function UpdateEmailPassword(fullName, email) {
-    console.log(fullName, email);
+    // console.log(fullName, email);
 
     try {
         const updatedValue = await baseUrl.patch("/users/update-account",
@@ -14,7 +14,7 @@ async function UpdateEmailPassword(fullName, email) {
 
         return updatedValue
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
@@ -31,39 +31,39 @@ async function UpdateAvatar(avatarFile) {
         })
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
 async function UpdateCoverImage(CoverImage) {
     try {
-        console.log(CoverImage);
+        // console.log(CoverImage);
 
         const formData = new FormData()
         formData.append("coverImage", CoverImage)
 
-        const response = await baseUrl.patch("/users/cover-image",formData,{
-            headers: {"Content-Type":"multipart/form-data"},
+        const response = await baseUrl.patch("/users/cover-image", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
             withCredentials: true
         })
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
-async function changeCurrentPassword({oldPassword,newPassword}) {
-    console.log(oldPassword, newPassword);
-    
+async function changeCurrentPassword({ oldPassword, newPassword }) {
+    // console.log(oldPassword, newPassword);
+
     try {
-        const response = await baseUrl.post("/users/change-password",{
+        const response = await baseUrl.post("/users/change-password", {
             oldPassword,
             newPassword
-        },{withCredentials:true})
+        }, { withCredentials: true })
 
         return response
     } catch (error) {
-        console.log(error);                
+        // console.log(error);                
     }
 }
 

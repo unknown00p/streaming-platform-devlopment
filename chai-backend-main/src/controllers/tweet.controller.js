@@ -11,7 +11,7 @@ const createTweet = asyncHandler(async (req, res) => {
 
     // steps to Make tweet controler
     // 1: get the todo content from frontend
-    console.log("user: ", req.user?._id);
+    // console.log("user: ", req.user?._id);
     const { content } = req.body
 
     // 2: check if i got the content correctly
@@ -55,7 +55,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
     // send the res array of tweets
 
     const { userId } = req.params
-    console.log(userId);
+    // console.log(userId);
 
     if (!userId) {
         throw new ApiError(404, "userId is undefined")
@@ -64,18 +64,18 @@ const getUserTweets = asyncHandler(async (req, res) => {
     const tweetsOfUser = await Tweet.find({ owner: new mongoose.Types.ObjectId(userId) })
 
     if (!tweetsOfUser?.length) {
-        throw new ApiError(404,"no tweets founded")
+        throw new ApiError(404, "no tweets founded")
     }
 
     res
-    .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            tweetsOfUser,
-            "tweets fetched successfully"
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                tweetsOfUser,
+                "tweets fetched successfully"
+            )
         )
-    )
 
 })
 
@@ -86,27 +86,27 @@ const updateTweet = asyncHandler(async (req, res) => {
     // find the id in database and update it
     // sent the updated responec
 
-    const {tweetId} = req.params
-    const {content} = req.body
+    const { tweetId } = req.params
+    const { content } = req.body
 
     if (!tweetId) {
-        throw new ApiError(400,"Id is required")
+        throw new ApiError(400, "Id is required")
     }
     if (!content) {
-        throw new ApiError(400,"content is required")
+        throw new ApiError(400, "content is required")
     }
 
-    const updatedTweet = await Tweet.findByIdAndUpdate(tweetId,{
+    const updatedTweet = await Tweet.findByIdAndUpdate(tweetId, {
         content: content
     })
 
-    console.log(updatedTweet);
+    // console.log(updatedTweet);
 
     return res
-    .status(200)
-    .json(
-        new ApiResponse(200,updatedTweet,"tweet got updated successfully")
-    )
+        .status(200)
+        .json(
+            new ApiResponse(200, updatedTweet, "tweet got updated successfully")
+        )
 
 })
 
@@ -117,23 +117,23 @@ const deleteTweet = asyncHandler(async (req, res) => {
     // find the tweet by id and delete it
     // send the deletion message
 
-    const {tweetId} = req.params
+    const { tweetId } = req.params
 
     if (!tweetId) {
-        throw new ApiError(400,"tweetId is required")
+        throw new ApiError(400, "tweetId is required")
     }
 
     const tweetDeleted = await Tweet.findByIdAndDelete(tweetId)
 
     if (!tweetDeleted) {
-        throw new ApiError(500,"deletion method got failed")
+        throw new ApiError(500, "deletion method got failed")
     }
 
     return res
-    .status(200)
-    .json(
-        new ApiResponse(200,{},"tweet deleted successfully")
-    )
+        .status(200)
+        .json(
+            new ApiResponse(200, {}, "tweet deleted successfully")
+        )
 
 })
 

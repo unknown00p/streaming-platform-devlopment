@@ -4,11 +4,14 @@ import SideBar from '../subComponents/SideBar'
 import { useNavigate } from 'react-router-dom'
 import Wrapper from '../components/Wrapper'
 import { getAllVideos } from '../api/videos/videoApi'
+import { userById } from '../api/authentication/authApi'
 
 
 function Home() {
   const [hasVideo, setHasVideo] = useState(true)
   const [videoArray, setVideoArray] = useState([])
+  const [userData, setuserData] = useState(null)
+  const [userId, setUserId] = useState(null)
 
   useEffect(() => {
     async function getAllVideosFunc() {
@@ -17,7 +20,15 @@ function Home() {
         setHasVideo(true)
         setVideoArray(response.data.data.allvideos)
       }
-      console.log(response.data.data.allvideos);
+
+      response.data.data.allvideos.map((val) => (
+        console.log(val?._id),
+        setUserId(val?._id)
+      ))
+      console.log(userId && userId);
+      
+      const responseData = await userById(userId)
+      console.log(responseData);      
     }
     getAllVideosFunc()
   }, [])
@@ -70,7 +81,7 @@ function Home() {
                   <div className="py-4">
                     <div className="flex gap-0">
                       <img onClick={() => {
-                        console.log("Hola");
+                        // console.log("Hola");
                       }} id='profile' className="w-11 h-11 rounded-full mr-4" src="https://th.bing.com/th/id/OIP.HLuY60jzx5puuKjbqmWRRwHaEK?w=328&h=185&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Avatar of Jonathan Reinink" />
                       <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                         <div className='flex gap-2'>

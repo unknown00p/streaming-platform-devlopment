@@ -41,7 +41,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
             ))
 
     } else {
-        console.log("nahi aa rha hai");
+        // console.log("nahi aa rha hai");
         const UpdateLikeVideo = await Like.deleteOne({ video: videoId, user: userId })
 
         if (!UpdateLikeVideo) {
@@ -65,7 +65,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
 const toggleCommentLike = asyncHandler(async (req, res) => {
     const { commentId } = req.params
     const userId = req.user._id
-    
+
     //TODO: toggle like on comment
 
     if (!(commentId && userId)) {
@@ -76,15 +76,15 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
     }
 
     const likedComment = await Like.findOne({ comment: commentId, likedBy: userId })
-    console.log(likedComment);
-    
+    // console.log(likedComment);
+
 
     if (!likedComment) {
 
         const LikeComment = await Like.create({
             likedBy: userId,
             comment: commentId,
-        })        
+        })
 
         if (!LikeComment) {
             throw new ApiError(
@@ -136,7 +136,7 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
         )
     }
 
-    const likedTweet = await Like.findOne({tweet: tweetId, likedBy: userId})
+    const likedTweet = await Like.findOne({ tweet: tweetId, likedBy: userId })
 
     if (!likedTweet) {
         const likeTweet = await Like.create({
@@ -152,29 +152,29 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
         }
 
         return res
-        .status(200)
-        .json( new ApiResponse(
-            200,
-            {likeTweet},
-            "Tweet liked successfully",
-        ))
-    }else{
-        const unlikeTweet = await Like.findOneAndDelete({tweet: tweetId, likedBy: userId})
+            .status(200)
+            .json(new ApiResponse(
+                200,
+                { likeTweet },
+                "Tweet liked successfully",
+            ))
+    } else {
+        const unlikeTweet = await Like.findOneAndDelete({ tweet: tweetId, likedBy: userId })
 
         if (!unlikeTweet) {
             throw new ApiError(
                 400,
-                 "Failed to unlike tweet",
+                "Failed to unlike tweet",
             )
         }
 
         return res
-        .status(200)
-        .json(new ApiResponse(
-            200,
-            {},
-            "Tweet unliked successfully",
-        ))
+            .status(200)
+            .json(new ApiResponse(
+                200,
+                {},
+                "Tweet unliked successfully",
+            ))
     }
 }
 )
@@ -182,33 +182,33 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 const getLikedVideos = asyncHandler(async (req, res) => {
     //TODO: get all liked videos of user
     const userId = req.user._id
-    // console.log(userId);
-    
+    // // console.log(userId);
+
 
     if (!userId) {
         throw new ApiError(
             401,
-             "Unauthorized",
+            "Unauthorized",
         )
     }
 
     const getAllLikedVideos = await Like.aggregate([
         {
-            $match: {likedBy: new mongoose.Types.ObjectId(userId)}
+            $match: { likedBy: new mongoose.Types.ObjectId(userId) }
         },
         {
-            $lookup:{
+            $lookup: {
                 from: "videos",
-                localField:"video",
-                foreignField:"_id",
-                as:"videos"
+                localField: "video",
+                foreignField: "_id",
+                as: "videos"
             }
         },
         {
             $unwind: "$videos"
         },
         {
-            $project:{
+            $project: {
                 _id: 1,
                 "videos._id": 1,
                 "videos.thumbnail": 1,
@@ -220,8 +220,8 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         }
     ])
 
-    console.log(getAllLikedVideos);
-    
+    // console.log(getAllLikedVideos);
+
 
 })
 

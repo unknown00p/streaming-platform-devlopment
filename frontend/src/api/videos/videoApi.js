@@ -8,14 +8,14 @@ async function deleteVideo(videoId) {
             }
         )
 
-        console.log(response);
+        // console.log(response);
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
-async function getAllVideosOfaUser(userId,page=1,limit=10,sortBy='isPublished',sortType='ascending') {
+async function getAllVideosOfaUser(userId, page = 1, limit = 10, sortBy = 'isPublished', sortType = 'ascending') {
     try {
         if (userId) {
 
@@ -33,7 +33,7 @@ async function getAllVideosOfaUser(userId,page=1,limit=10,sortBy='isPublished',s
         }
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
@@ -45,10 +45,10 @@ async function getVideobyId({ videoId }) {
             },
             withCredentials: true
         })
-        console.log(response);
+        // console.log(response);
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
@@ -62,10 +62,10 @@ async function updateVideo({ videoId, title, description, thumbnail }) {
             params: videoId,
             withCredentials: true
         })
-        console.log(response);
+        // console.log(response);
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
@@ -75,11 +75,11 @@ async function togglePublicStatus({ videoId }) {
             videoId
         }, { withCredentials: true })
 
-        console.log(response);
+        // console.log(response);
         return response
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
@@ -94,19 +94,19 @@ async function postVideo(title, description, videoFile, thumbnail) {
         const response = await baseUrl.post("/videos", formData, {
             withCredentials: true
         })
-        console.log(response);
+        // console.log(response);
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
-async function getAllSearchVideos(page=1,limit=2,sortBy='isPublished',query="ajab") {
+async function getAllSearchVideos(page = 1, limit = 2, sortBy = 'isPublished', query = "ajab") {
     let queryToLower = query.toLowerCase()
-    
+
     try {
-        return await baseUrl.get("/videos",{
-            params:{
+        return await baseUrl.get("/videos", {
+            params: {
                 page,
                 limit,
                 sortBy,
@@ -115,21 +115,21 @@ async function getAllSearchVideos(page=1,limit=2,sortBy='isPublished',query="aja
             withCredentials: true
         })
     } catch (error) {
-        console.log(error);                
+        // console.log(error);                
     }
 }
 
-async function getAllVideos(page=1,limit=10) {
+async function getAllVideos(page = 1, limit = 10) {
     try {
-        return await baseUrl.get("/videos",{
-            params:{
+        return await baseUrl.get("/videos", {
+            params: {
                 page,
                 limit,
             },
             withCredentials: true
         })
     } catch (error) {
-        console.log(error);                
+        // console.log(error);                
     }
 }
 

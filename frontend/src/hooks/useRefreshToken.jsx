@@ -3,7 +3,7 @@ import useAuth from "../zustand/useAuth";
 
 const useRefreshToken = () => {
     const setAuthData = useAuth(state => state.setAuthData)
-    const authData = useAuth(state => state.authData) 
+    const authData = useAuth(state => state.authData)
 
     const refresh = async () => {
         try {
@@ -14,7 +14,7 @@ const useRefreshToken = () => {
             }
             return response.data.data.accessToken
         } catch (error) {
-            console.log(error)
+            // console.log(error)
         }
     }
 

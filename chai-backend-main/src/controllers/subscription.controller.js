@@ -11,7 +11,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     const userId = req.user._id
     // TODO: toggle subscription
 
-    // console.log(channelId,userId);
+    // // console.log(channelId,userId);
 
     if (!channelId && !userId) {
         throw new ApiError(400, "Channel and user ID is required")
@@ -60,10 +60,10 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 
     const Subscribers = await Subscription.aggregate([
         {
-            $match: {channel: new mongoose.Types.ObjectId(channelId)}
+            $match: { channel: new mongoose.Types.ObjectId(channelId) }
         },
         {
-            $lookup:{
+            $lookup: {
                 from: "users",
                 localField: "channel",
                 foreignField: "_id",
@@ -71,7 +71,7 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
             }
         },
         {
-            $lookup:{
+            $lookup: {
                 from: "users",
                 localField: "subscriber",
                 foreignField: "_id",
@@ -98,9 +98,9 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
     }
 
     return res
-    .status(200)
-    .json( new ApiResponse(200, {Subscribers}, "user subscribers got successfully"))
-    
+        .status(200)
+        .json(new ApiResponse(200, { Subscribers }, "user subscribers got successfully"))
+
 })
 
 
@@ -110,7 +110,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
     const { subscriberId } = req.params
     //get the subscriberId from req
     //find the channel that user has subscribed
-    // console.log(subscriberId);
+    // // console.log(subscriberId);
 
 
     if (!subscriberId) {
@@ -163,8 +163,8 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
     }
 
     return res
-    .status(200)
-    .json( new ApiResponse(200, {returnedSubscribedChannels}, "user subscribed Channels got successfully"))
+        .status(200)
+        .json(new ApiResponse(200, { returnedSubscribedChannels }, "user subscribed Channels got successfully"))
 
 })
 

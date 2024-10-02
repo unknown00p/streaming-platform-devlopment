@@ -52,10 +52,10 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    
+
     const coverImgLocalPath = req.files?.coverImage[0]?.path;
-    console.log("1st one coverImgLocalPath",coverImgLocalPath);
-    
+    // // console.log("1st one coverImgLocalPath",coverImgLocalPath);
+
 
     let coverImageLocalPath;
 
@@ -63,7 +63,7 @@ const registerUser = asyncHandler(async (req, res) => {
         coverImageLocalPath = req.files.coverImage[0].path
     }
 
-    console.log(coverImageLocalPath);    
+    // // console.log(coverImageLocalPath);    
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required")
@@ -71,8 +71,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
     const avatar = await uploadImagesOnCloudinary(avatarLocalPath)
     const coverImage = await uploadImagesOnCloudinary(coverImgLocalPath)
-    console.log("coverImage",coverImage);
-    
+    // // console.log("coverImage",coverImage);
+
 
     if (!avatar) {
         throw new ApiError(400, "Avatar file is required")
@@ -110,14 +110,14 @@ const loginUser = asyncHandler(async (req, res) => {
     //access and referesh token
     //send cookie
 
-    const { email , password } = req.body
-    console.log(email,password);
+    const { email, password } = req.body
+    // // console.log(email,password);
 
     if (!email) {
         throw new ApiError(400, "email is required")
     }
 
-    const user = await User.findOne({email})    
+    const user = await User.findOne({ email })
 
     if (!user) {
         throw new ApiError(404, "User does not exist")
@@ -208,7 +208,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             secure: true
         }
 
-        const { accessToken } = await generateAccessAndRefereshTokens(user._id)        
+        const { accessToken } = await generateAccessAndRefereshTokens(user._id)
 
         return res
             .status(200)
@@ -228,8 +228,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 const changeCurrentPassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body
-    console.log(oldPassword,newPassword);
-    
+    // // console.log(oldPassword,newPassword);
+
     const user = await User.findById(req.user?._id)
     const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
 
@@ -281,7 +281,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
     const avatarLocalPath = req.file?.path
-    console.log("whats here avatarLocalPath",avatarLocalPath);
+    // // console.log("whats here avatarLocalPath",avatarLocalPath);
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is missing")
@@ -289,7 +289,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
     //TODO: delete old image - assignment
     const previousImgId = req.user?.avatar.split("/").pop().split('.').shift()
-    console.log(previousImgId);
+    // // console.log(previousImgId);
 
     const avatar = await uploadImagesOnCloudinary(avatarLocalPath)
 
@@ -318,9 +318,9 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 })
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
-    console.log("whats here req.file",req.file);
-    const coverImageLocalPath = req.file?.path   
-    // console.log("whats here coverImageLocalPath",coverImageLocalPath);
+    // // console.log("whats here req.file",req.file);
+    const coverImageLocalPath = req.file?.path
+    // // console.log("whats here coverImageLocalPath",coverImageLocalPath);
     if (!coverImageLocalPath) {
         throw new ApiError(400, "Cover image file is missing")
     }
@@ -427,25 +427,28 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         )
 })
 
-const getUserById = asyncHandler(async(req,res)=>{
+const getUserById = asyncHandler(async (req, res) => {
+
     try {
-        const userId = req.params
-        if (!userId) {
-            throw new ApiError(400, "user Id is undefined")
-        }
+    const userId = req.params
+    console.log("userId",userId);
 
-        const userData = User.findById(userId)
+    if (!userId) {
+        throw new ApiError(400, "user Id is undefined")
+    }
 
-        if (!userData) {
-            throw new ApiError(404, "No user founded")
-        }
+    const userData = User.findById(userId)
 
-        res
+    if (!userData) {
+        throw new ApiError(404, "No user founded")
+    }
+
+    res
         .status(200)
-        .json(new ApiResponse(200,{userData},"succesfully fetched userData"))
+        .json(new ApiResponse(200, { userData }, "succesfully fetched userData"))
 
     } catch (error) {
-        console.log(error);        
+        console.error(error);        
     }
 })
 

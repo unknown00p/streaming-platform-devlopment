@@ -11,7 +11,7 @@ async function SignIn({ email, password }) {
 
         return response
     } catch (error) {
-        console.log(error?.response?.data);
+        // console.log(error?.response?.data);
         return null
     }
 }
@@ -19,10 +19,10 @@ async function SignIn({ email, password }) {
 async function SignOut() {
     try {
         const response = await baseUrl.post("/users/logout", {}, { withCredentials: true })
-        console.log(response);
+        // console.log(response);
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return null
     }
 }
@@ -62,9 +62,10 @@ async function SignUp({ username, fullname, email, password }) {
     }
 }
 
-async function userById({ userId }) {
+async function userById(userId) {
+    console.log(userId);
     try {
-        const response = await baseUrl.get("/videos/userById", {
+        const response = await baseUrl.get("/users/userById", {
             params: userId,
             withCredentials: true
         })

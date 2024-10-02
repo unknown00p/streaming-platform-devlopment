@@ -19,7 +19,7 @@ function CustomVideoPlayer({ qualityArr }) {
 
   useEffect(() => {
     const videoElement = videoRef.current;
-    
+
     if (Hls.isSupported() && videoElement) {
       const hls = new Hls();
       hls.loadSource(qualityArr[videoIndex]);
@@ -70,7 +70,7 @@ function CustomVideoPlayer({ qualityArr }) {
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
       const duration = videoRef.current.duration;
-      // console.log("slider", duration);
+      // // console.log("slider", duration);
 
       if (duration > 0) {
         const newValue = (currentTime / duration) * 100;
@@ -112,7 +112,7 @@ function CustomVideoPlayer({ qualityArr }) {
   }, [soundRangeValue])
 
   function playNextVideo() {
-    console.log(qualityArr.length);
+    // console.log(qualityArr.length);
     if (videoIndex < qualityArr.length) {
       setVideoIndex(prev => prev + 1)
     }
@@ -141,24 +141,24 @@ function CustomVideoPlayer({ qualityArr }) {
     }
   }
 
-  function formatDuration(seconds) {   
+  function formatDuration(seconds) {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
     let time = `${hours > 0 ? `${hours}:` : ""}${minutes < 10 ? "0" : ""}${minutes}:${secs < 10 ? "0" : ""}${secs}`;
-    // console.log(time);
+    // // console.log(time);
     return time
   }
 
   function changeQuality(event) {
-    console.log(event.target.innerText);    
+    // console.log(event.target.innerText);    
   }
 
   return (
     <>
-      <div ref={divRef} 
-      // onMouseEnter={()=> setonHoverShow("absolute")}
-      //  onMouseLeave={()=> setonHoverShow("hidden")}
+      <div ref={divRef}
+        // onMouseEnter={()=> setonHoverShow("absolute")}
+        //  onMouseLeave={()=> setonHoverShow("hidden")}
         className="relative">
         <video
           onClick={togglePlayPause}
@@ -166,7 +166,7 @@ function CustomVideoPlayer({ qualityArr }) {
           onEnded={() => {
             setIsPlaying(false)
           }}
-      
+
           disablePictureInPicture
           className="w-full h-full rounded-md object-cover cursor-pointer"
           controls={false}

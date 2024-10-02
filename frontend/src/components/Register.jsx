@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form"
 import { Input, Button, SelectImage } from '../index'
 import { Link } from "react-router-dom";
-import {SignUp} from '../api/authentication/authApi';
+import { SignUp } from '../api/authentication/authApi';
 import Wrapper from './Wrapper';
 
 function Register() {
@@ -9,7 +9,7 @@ function Register() {
 
     async function InputValues(data) {
         const returendData = await SignUp(data)
-        console.log(returendData);
+        // console.log(returendData);
     }
 
     return (
@@ -18,8 +18,8 @@ function Register() {
                 <div className='flex flex-col items-center justify-center'>
                     <form className="flex flex-col gap-4 px-7 py-6 bg-slate-800 rounded-md w-full max-w-md" onSubmit={handleSubmit(InputValues)}>
 
-                    <h1 className='text-white text-[1.3rem]'>Sign up</h1>
-                    <hr />
+                        <h1 className='text-white text-[1.3rem]'>Sign up</h1>
+                        <hr />
                         <Input
                             id="username"
                             type="text"

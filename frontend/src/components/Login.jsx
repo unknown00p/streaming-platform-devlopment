@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form"
 import { Input, Button } from '../index'
 import { Link } from "react-router-dom";
 import Wrapper from './Wrapper';
-import {SignIn} from "../api/authentication/authApi";
+import { SignIn } from "../api/authentication/authApi";
 import { useNavigate } from 'react-router-dom'
 
 function Login() {
@@ -10,11 +10,11 @@ function Login() {
     const navigate = useNavigate()
 
     async function InputValues(data) {
-       const responseData = await SignIn(data)
-       if (responseData.status === 200) {
-        navigate("/")        
-       }
-       console.log(responseData);       
+        const responseData = await SignIn(data)
+        if (responseData.status === 200) {
+            navigate("/")
+        }
+        // console.log(responseData);       
     }
 
     return (
@@ -23,8 +23,8 @@ function Login() {
                 <div className='flex flex-col items-center justify-center'>
                     <form className="flex flex-col gap-4 px-7 py-6 bg-slate-800 rounded-md w-full max-w-md" onSubmit={handleSubmit(InputValues)}>
 
-                    <h1 className='text-white text-[1.3rem]'>Login</h1>
-                    <hr />
+                        <h1 className='text-white text-[1.3rem]'>Login</h1>
+                        <hr />
                         <Input
                             id="email"
                             type="email"

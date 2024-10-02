@@ -54,7 +54,7 @@ function Video() {
               <div className="flex justify-between gap-3 items-center">
                 <div className="flex items-center gap-1">
                   <img onClick={() => {
-                    console.log("Hola");
+                    // console.log("Hola");
                   }} id='profile' className="w-9 h-9 rounded-full mr-2" src="https://th.bing.com/th/id/OIP.HLuY60jzx5puuKjbqmWRRwHaEK?w=328&h=185&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Avatar of Jonathan Reinink" />
                   <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                     <div className='flex flex-col'>
