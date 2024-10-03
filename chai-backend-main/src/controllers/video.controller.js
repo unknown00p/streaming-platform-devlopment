@@ -5,7 +5,6 @@ import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 import { deletePreviousVideo, uploadVideoOnCloudinary, uploadImagesOnCloudinary, deletePreviousImage } from "../utils/cloudinary.js"
-import { response } from "express"
 
 
 const getAllVideosOfaUser = asyncHandler(async (req, res) => {
