@@ -18,7 +18,6 @@ const generateAccessAndRefereshTokens = async (userId) => {
 
         return { accessToken, refreshToken }
 
-
     } catch (error) {
         throw new ApiError(500, "Something went wrong while generating referesh and access token")
     }
@@ -190,17 +189,16 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         const decodedToken = jwt.verify(
             incomingRefreshToken,
             process.env.REFRESH_TOKEN_SECRET
-        )
-
+        )        
+        
         const user = await User.findById(decodedToken?._id)
-
+        
         if (!user) {
             throw new ApiError(401, "Invalid refresh token")
         }
 
         if (incomingRefreshToken !== user?.refreshToken) {
             throw new ApiError(401, "Refresh token is expired or used")
-
         }
 
         const options = {
@@ -208,7 +206,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             secure: true
         }
 
-        const { accessToken } = await generateAccessAndRefereshTokens(user._id)
+        const { accessToken,refreshToken } = await generateAccessAndRefereshTokens(user._id)
 
         return res
             .status(200)
@@ -430,23 +428,23 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
 const getUserById = asyncHandler(async (req, res) => {
 
     try {
-    const {userId} = req.query
-    if (!userId) {
-        throw new ApiError(400, "user Id is undefined")
-    }
+        const { userId } = req.query
+        if (!userId) {
+            throw new ApiError(400, "user Id is undefined")
+        }
 
-    const userData = await User.findById(new mongoose.Types.ObjectId(userId)).select("-password -refreshToken -accessToken")
+        const userData = await User.findById(new mongoose.Types.ObjectId(userId)).select("-password -refreshToken -accessToken")
 
-    if (!userData) {
-        throw new ApiError(404, "No user founded")
-    }
+        if (!userData) {
+            throw new ApiError(404, "No user founded")
+        }
 
-    res
-        .status(200)
-        .json(new ApiResponse(200, { userData }, "succesfully fetched userData"))
+        res
+            .status(200)
+            .json(new ApiResponse(200, { userData }, "succesfully fetched userData"))
 
     } catch (error) {
-        console.error(error);        
+        console.error(error);
     }
 })
 

@@ -14,13 +14,13 @@ function Video() {
 
     async function videoByIdFunc() {
       const response = await getVideobyId(videoId)
-      setVideoData(response.data.data.video) 
+      setVideoData(response.data.data.video)
     }
     videoByIdFunc()
 
   }, [videoId])
 
-  console.log(videoData && videoData?.videoFile?.[0]);
+  // console.log(videoData && videoData?.videoFile?.[0]);
 
   const imageUrl = [
     "https://th.bing.com/th/id/OIP.c2yh-vjm-Ze872ygDBhg3QHaEK?w=326&h=183&c=7&r=0&o=5&dpr=1.5&pid=1.7",

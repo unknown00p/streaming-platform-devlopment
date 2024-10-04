@@ -14,7 +14,7 @@ async function UpdateEmailPassword(fullName, email) {
 
         return updatedValue
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -63,7 +63,7 @@ async function changeCurrentPassword({ oldPassword, newPassword }) {
 
         return response
     } catch (error) {
-        // console.log(error);                
+        console.log(error);
     }
 }
 

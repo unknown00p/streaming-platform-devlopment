@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import Wrapper from '../components/Wrapper'
 import { getAllVideos } from '../api/videos/videoApi'
 import { userById } from '../api/authentication/authApi'
+import CurrentUser from '../api/authentication/CurrentUser'
 
 
 function Home() {
@@ -38,7 +39,7 @@ function Home() {
   }, [])
 
   const navigate = useNavigate()
-  const videoClick = (e,value) => {
+  const videoClick = (e, value) => {
     const target = e?.target.id
     if (target !== "profile" && target !== "dot") {
       navigate(`video/${value?._id}`)
@@ -91,7 +92,7 @@ function Home() {
             {videoArray && videoArray.map((value) => {
               return <div key={value._id} className=''>
                 <div onClick={(e) => {
-                  videoClick(e,value)
+                  videoClick(e, value)
                 }} className="rounded-xl shadow-lg">
                   <div className=''>
                     <img className="object-cover w-full h-[13rem] rounded-sm" src={value?.thumbnail} alt="Sunset in the mountains" />

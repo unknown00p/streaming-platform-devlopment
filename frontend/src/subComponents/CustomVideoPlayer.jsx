@@ -1,9 +1,9 @@
 import { useRef, useState, useEffect } from "react"
 import Hls from "hls.js"
 
-function CustomVideoPlayer({qualityArr}) {
+function CustomVideoPlayer({ qualityArr }) {
   // console.log(qualityArr);
-  
+
   const videoRef = useRef(null)
   const frameIdRef = useRef(null)
   const divRef = useRef(null)
@@ -153,7 +153,7 @@ function CustomVideoPlayer({qualityArr}) {
   }
 
   function changeQuality(event) {
-    // console.log(event.target.innerText);    
+    // console.log(event.target.innerText);
   }
 
   return (

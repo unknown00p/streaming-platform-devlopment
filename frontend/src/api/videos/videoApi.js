@@ -48,7 +48,7 @@ async function getVideobyId(videoId) {
         // console.log(response);
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
@@ -115,7 +115,7 @@ async function getAllSearchVideos(page = 1, limit = 2, sortBy = 'isPublished', q
             withCredentials: true
         })
     } catch (error) {
-        // console.log(error);                
+        // console.log(error);
     }
 }
 
@@ -129,7 +129,7 @@ async function getAllVideos(page = 1, limit = 10) {
             withCredentials: true
         })
     } catch (error) {
-        // console.log(error);                
+        // console.log(error);
     }
 }
 

@@ -45,19 +45,19 @@ function UserDashboard() {
     // console.log(data);
     if (data.fullName !== currentUserData.fullName || data.email !== currentUserData.email) {
       const response = await UpdateEmailPassword(data.fullName, data.email)
-      // console.log("responseData",response);
+      // console.log("responseData", response);
     }
     if (data.avatar[0]) {
       const response = await UpdateAvatar(data.avatar[0])
-      // console.log("responseData",response);
+      // console.log("responseData", response);
     }
     if (data.coverImage[0]) {
       const responseCover = await UpdateCoverImage(data.coverImage[0])
-      // console.log("responseData",responseCover);
+      // console.log("responseData", responseCover);
     }
     if (data.currentPassword && data.newPassword) {
       const response = await changeCurrentPassword({ oldPassword: data.currentPassword, newPassword: data.newPassword })
-      // console.log(response);      
+      // console.log(response);
     }
     setIsEditing(false);
   };

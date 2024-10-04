@@ -3,7 +3,7 @@ import Header from '../components/Header'
 import CurrentUser from '../api/authentication/CurrentUser'
 
 function OutletComp() {
-  CurrentUser()
+    CurrentUser()
     return (
         <>
             <div className='fixed z-20 w-full'>

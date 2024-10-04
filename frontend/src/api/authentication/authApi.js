@@ -11,7 +11,7 @@ async function SignIn({ email, password }) {
 
         return response
     } catch (error) {
-        console.log(error?.response?.data);
+        // console.log(error?.response?.data);
         return null
     }
 }
@@ -22,7 +22,7 @@ async function SignOut() {
         // console.log(response);
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return null
     }
 }
@@ -65,13 +65,13 @@ async function SignUp({ username, fullname, email, password }) {
 async function userById(userId) {
     try {
         const response = await baseUrl.get("/users/userById", {
-            params: {userId},
+            params: { userId },
             withCredentials: true
         })
 
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 

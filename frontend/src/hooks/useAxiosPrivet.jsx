@@ -1,7 +1,7 @@
 import { PrivetBaseUrl } from "../api/baseUrl/BaseUrl"
 import useRefreshToken from "./useRefreshToken";
 import useAuth from "../zustand/useAuth";
-import CurrentUser from "../api/authentication/CurrentUser";
+// import CurrentUser from "../api/authentication/CurrentUser";
 import { useEffect } from "react";
 const useAxiosPrivet = () => {
   const refresh = useRefreshToken()
@@ -15,7 +15,7 @@ const useAxiosPrivet = () => {
           config.headers["Authorization"] = `Bearer ${authData?.accessToken}`
         }
         return config
-      },(error)=>{Promise.reject(error)}
+      }, (error) => { Promise.reject(error) }
     )
 
     const responseIntercepter = PrivetBaseUrl.interceptors.response.use(
@@ -23,7 +23,7 @@ const useAxiosPrivet = () => {
 
       async error => {
         const previousRequest = error?.config
-        
+
 
         if (error?.response?.status === 401 && !previousRequest?.sent) {
           previousRequest.sent = true
@@ -42,7 +42,7 @@ const useAxiosPrivet = () => {
 
     )
 
-    return ()=>{
+    return () => {
       PrivetBaseUrl.interceptors.request.eject(requestIntercepter)
       PrivetBaseUrl.interceptors.response.eject(responseIntercepter)
     }
