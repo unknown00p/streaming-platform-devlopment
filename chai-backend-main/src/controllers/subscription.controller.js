@@ -11,7 +11,7 @@ const toggleSubscription = asyncHandler(async (req, res) => {
     const userId = req.user._id
     // TODO: toggle subscription
 
-    // // console.log(channelId,userId);
+    // console.log(channelId,userId);
 
     if (!channelId && !userId) {
         throw new ApiError(400, "Channel and user ID is required")
@@ -110,7 +110,7 @@ const getSubscribedChannels = asyncHandler(async (req, res) => {
     const { subscriberId } = req.params
     //get the subscriberId from req
     //find the channel that user has subscribed
-    // // console.log(subscriberId);
+    // console.log(subscriberId);
 
 
     if (!subscriberId) {

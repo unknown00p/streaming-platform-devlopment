@@ -28,7 +28,7 @@ function Home() {
             userData: userDataResponse[index].data.data.userData,
           }));
 
-        // console.log(enrichedVideos);
+        console.log(enrichedVideos);
 
         setVideoArray(enrichedVideos)
       } else {
@@ -100,7 +100,7 @@ function Home() {
                   <div className="py-4">
                     <div className="flex gap-0">
                       <img onClick={() => {
-                        // console.log("Hola");
+                        console.log("Hola");
                       }} id='profile' className="w-11 h-11 rounded-full mr-4" src={value?.userData?.avatar} alt="Avatar of Jonathan Reinink" />
                       <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                         <div className='flex gap-2'>

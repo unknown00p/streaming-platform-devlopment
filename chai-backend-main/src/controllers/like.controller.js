@@ -41,7 +41,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
             ))
 
     } else {
-        // console.log("nahi aa rha hai");
+        console.log("nahi aa rha hai");
         const UpdateLikeVideo = await Like.deleteOne({ video: videoId, user: userId })
 
         if (!UpdateLikeVideo) {
@@ -76,7 +76,7 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
     }
 
     const likedComment = await Like.findOne({ comment: commentId, likedBy: userId })
-    // console.log(likedComment);
+    console.log(likedComment);
 
 
     if (!likedComment) {
@@ -182,7 +182,7 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 const getLikedVideos = asyncHandler(async (req, res) => {
     //TODO: get all liked videos of user
     const userId = req.user._id
-    // // console.log(userId);
+    // console.log(userId);
 
 
     if (!userId) {
@@ -220,7 +220,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         }
     ])
 
-    // console.log(getAllLikedVideos);
+    console.log(getAllLikedVideos);
 
 
 })

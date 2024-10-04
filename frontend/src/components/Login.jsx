@@ -14,7 +14,7 @@ function Login() {
     if (responseData.status === 200) {
       navigate("/")
     }
-    // console.log(responseData);
+    console.log(responseData);
   }
 
   return (

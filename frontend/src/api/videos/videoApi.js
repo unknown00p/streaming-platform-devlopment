@@ -8,10 +8,10 @@ async function deleteVideo(videoId) {
             }
         )
 
-        // console.log(response);
+        console.log(response);
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -33,7 +33,7 @@ async function getAllVideosOfaUser(userId, page = 1, limit = 10, sortBy = 'isPub
         }
 
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -45,10 +45,10 @@ async function getVideobyId(videoId) {
             },
             withCredentials: true
         })
-        // console.log(response);
+        console.log(response);
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -62,10 +62,10 @@ async function updateVideo({ videoId, title, description, thumbnail }) {
             params: videoId,
             withCredentials: true
         })
-        // console.log(response);
+        console.log(response);
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -75,11 +75,11 @@ async function togglePublicStatus({ videoId }) {
             videoId
         }, { withCredentials: true })
 
-        // console.log(response);
+        console.log(response);
         return response
 
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -94,10 +94,10 @@ async function postVideo(title, description, videoFile, thumbnail) {
         const response = await baseUrl.post("/videos", formData, {
             withCredentials: true
         })
-        // console.log(response);
+        console.log(response);
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -115,7 +115,7 @@ async function getAllSearchVideos(page = 1, limit = 2, sortBy = 'isPublished', q
             withCredentials: true
         })
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -129,7 +129,7 @@ async function getAllVideos(page = 1, limit = 10) {
             withCredentials: true
         })
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 

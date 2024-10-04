@@ -53,7 +53,7 @@ const registerUser = asyncHandler(async (req, res) => {
     const avatarLocalPath = req.files?.avatar[0]?.path;
 
     const coverImgLocalPath = req.files?.coverImage[0]?.path;
-    // // console.log("1st one coverImgLocalPath",coverImgLocalPath);
+    // console.log("1st one coverImgLocalPath",coverImgLocalPath);
 
 
     let coverImageLocalPath;
@@ -62,7 +62,7 @@ const registerUser = asyncHandler(async (req, res) => {
         coverImageLocalPath = req.files.coverImage[0].path
     }
 
-    // // console.log(coverImageLocalPath);    
+    // console.log(coverImageLocalPath);    
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required")
@@ -70,7 +70,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     const avatar = await uploadImagesOnCloudinary(avatarLocalPath)
     const coverImage = await uploadImagesOnCloudinary(coverImgLocalPath)
-    // // console.log("coverImage",coverImage);
+    // console.log("coverImage",coverImage);
 
 
     if (!avatar) {
@@ -110,7 +110,7 @@ const loginUser = asyncHandler(async (req, res) => {
     //send cookie
 
     const { email, password } = req.body
-    // // console.log(email,password);
+    // console.log(email,password);
 
     if (!email) {
         throw new ApiError(400, "email is required")
@@ -189,10 +189,10 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         const decodedToken = jwt.verify(
             incomingRefreshToken,
             process.env.REFRESH_TOKEN_SECRET
-        )        
-        
+        )
+
         const user = await User.findById(decodedToken?._id)
-        
+
         if (!user) {
             throw new ApiError(401, "Invalid refresh token")
         }
@@ -206,7 +206,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             secure: true
         }
 
-        const { accessToken,refreshToken } = await generateAccessAndRefereshTokens(user._id)
+        const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
 
         return res
             .status(200)
@@ -226,7 +226,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 const changeCurrentPassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body
-    // // console.log(oldPassword,newPassword);
+    // console.log(oldPassword,newPassword);
 
     const user = await User.findById(req.user?._id)
     const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
@@ -279,7 +279,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
     const avatarLocalPath = req.file?.path
-    // // console.log("whats here avatarLocalPath",avatarLocalPath);
+    // console.log("whats here avatarLocalPath",avatarLocalPath);
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is missing")
@@ -287,7 +287,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
     //TODO: delete old image - assignment
     const previousImgId = req.user?.avatar.split("/").pop().split('.').shift()
-    // // console.log(previousImgId);
+    // console.log(previousImgId);
 
     const avatar = await uploadImagesOnCloudinary(avatarLocalPath)
 
@@ -316,9 +316,9 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 })
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
-    // // console.log("whats here req.file",req.file);
+    // console.log("whats here req.file",req.file);
     const coverImageLocalPath = req.file?.path
-    // // console.log("whats here coverImageLocalPath",coverImageLocalPath);
+    // console.log("whats here coverImageLocalPath",coverImageLocalPath);
     if (!coverImageLocalPath) {
         throw new ApiError(400, "Cover image file is missing")
     }

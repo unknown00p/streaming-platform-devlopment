@@ -11,7 +11,7 @@ cloudinary.config({
 });
 
 const uploadVideoOnCloudinary = async (localFilePath) => {
-    // console.log(localFilePath);
+    console.log(localFilePath);
     try {
         if (!localFilePath) return null
         const response = await cloudinary.uploader.upload(localFilePath, {
@@ -64,7 +64,7 @@ const uploadVideoOnCloudinary = async (localFilePath) => {
             eager_async: true,
         })
         fs.unlinkSync(localFilePath)
-        // // console.log(response);
+        // console.log(response);
 
         return response;
 
@@ -75,7 +75,7 @@ const uploadVideoOnCloudinary = async (localFilePath) => {
 }
 
 const uploadImagesOnCloudinary = async (localFilePath) => {
-    // console.log("clodinary local file path", localFilePath);
+    console.log("clodinary local file path", localFilePath);
 
     try {
         if (!localFilePath) return null
@@ -100,18 +100,18 @@ const deletePreviousImage = async (FileId, type = "image",) => {
         return deleted
 
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         throw error
     }
 }
 
 const deletePreviousVideo = async (FileId, type = "video") => {
-    // // console.log("videoId cloudi",FileId);
+    // console.log("videoId cloudi",FileId);
     try {
         if (!FileId) return null
         return await cloudinary.uploader.destroy(FileId, { resource_type: type, invalidate: true })
     } catch (error) {
-        // console.log("cloudi error", error);
+        console.log("cloudi error", error);
         throw error
     }
 }

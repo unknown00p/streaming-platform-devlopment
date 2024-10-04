@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react"
 import Hls from "hls.js"
 
 function CustomVideoPlayer({ qualityArr }) {
-  // console.log(qualityArr);
+  console.log(qualityArr);
 
   const videoRef = useRef(null)
   const frameIdRef = useRef(null)
@@ -72,7 +72,7 @@ function CustomVideoPlayer({ qualityArr }) {
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
       const duration = videoRef.current.duration;
-      // // console.log("slider", duration);
+      // console.log("slider", duration);
 
       if (duration > 0) {
         const newValue = (currentTime / duration) * 100;
@@ -114,7 +114,7 @@ function CustomVideoPlayer({ qualityArr }) {
   }, [soundRangeValue])
 
   function playNextVideo() {
-    // console.log(qualityArr.length);
+    console.log(qualityArr.length);
     if (videoIndex < qualityArr.length) {
       setVideoIndex(prev => prev + 1)
     }
@@ -148,12 +148,12 @@ function CustomVideoPlayer({ qualityArr }) {
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
     let time = `${hours > 0 ? `${hours}:` : ""}${minutes < 10 ? "0" : ""}${minutes}:${secs < 10 ? "0" : ""}${secs}`;
-    // // console.log(time);
+    // console.log(time);
     return time
   }
 
   function changeQuality(event) {
-    // console.log(event.target.innerText);
+    console.log(event.target.innerText);
   }
 
   return (

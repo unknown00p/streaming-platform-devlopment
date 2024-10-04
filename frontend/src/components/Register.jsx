@@ -9,7 +9,7 @@ function Register() {
 
     async function InputValues(data) {
         const returendData = await SignUp(data)
-        // console.log(returendData);
+        console.log(returendData);
     }
 
     return (

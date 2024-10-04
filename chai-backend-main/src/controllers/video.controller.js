@@ -78,7 +78,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
     const thumbnail = req.files?.thumbnail[0]?.path
 
     const returnedVideoDeatilsFromCloudinary = await uploadVideoOnCloudinary(video)
-    // console.log(returnedVideoDeatilsFromCloudinary);
+    console.log(returnedVideoDeatilsFromCloudinary);
 
     const returnedThumbnailDeatilsFromCloudinary = await uploadImagesOnCloudinary(thumbnail)
     if (!returnedVideoDeatilsFromCloudinary) {
@@ -122,12 +122,12 @@ const getVideoById = asyncHandler(async (req, res) => {
     if (!videoId) {
         throw new ApiError(404, "videoId not found")
     }
-    // console.log(videoId);
+    console.log(videoId);
 
 
     const video = await Video.findOne(new mongoose.Types.ObjectId(videoId))
 
-    // console.log(video);
+    console.log(video);
 
 
     if (!video) {
@@ -220,7 +220,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
     const { videoId } = req.params
-    // console.log(videoId);
+    console.log(videoId);
     //TODO: toggle publish status
 
     if (!videoId) {

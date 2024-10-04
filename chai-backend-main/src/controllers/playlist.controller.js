@@ -69,7 +69,7 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
             "User playlists retrieved successfully",
         ))
 
-    // console.log(userPlaylist);
+    console.log(userPlaylist);
 
 })
 
@@ -147,7 +147,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
         $pull: { videos: videoId }
     }, { new: true })
 
-    // console.log(removeVideoFromPlaylist);
+    console.log(removeVideoFromPlaylist);
 
 
     if (!removeVideoFromPlaylist) {

@@ -9,7 +9,7 @@ const useRefreshToken = () => {
         try {
             const response = await baseUrl.post("/users/refresh-token", {}, { withCredentials: true })
             console.log(response.data.data.accessToken);
-            
+
 
             if (response.status === 200) {
                 setAuthData(response.data.data.accessToken)
