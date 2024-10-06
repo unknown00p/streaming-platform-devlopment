@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js"
 import { User } from "../models/user.model.js"
-import { sendImagesToBucket } from "../utils/cloudinary.js"
+import { uploadImagesToBucket } from "../utils/tebi_s3.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
@@ -68,8 +68,8 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Avatar file is required")
     }
 
-    const avatar = await sendImagesToBucket(avatarLocalPath)
-    const coverImage = await sendImagesToBucket(coverImgLocalPath)
+    const avatar = await uploadImagesToBucket(avatarLocalPath)
+    const coverImage = await uploadImagesToBucket(coverImgLocalPath)
     // console.log("coverImage",coverImage);
 
 
@@ -289,7 +289,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     const previousImgId = req.user?.avatar.split("/").pop().split('.').shift()
     // console.log(previousImgId);
 
-    const avatar = await sendImagesToBucket(avatarLocalPath)
+    const avatar = await uploadImagesToBucket(avatarLocalPath)
 
     if (!avatar.url) {
         throw new ApiError(400, "Error while uploading on avatar")
@@ -327,7 +327,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     const previousImgId = req.user?.avatar.split("/").pop().split('.').shift()
 
 
-    const coverImage = await sendImagesToBucket(coverImageLocalPath)
+    const coverImage = await uploadImagesToBucket(coverImageLocalPath)
 
     if (!coverImage.url) {
         throw new ApiError(400, "Error while uploading on avatar")

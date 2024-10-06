@@ -4,7 +4,7 @@ import { User } from "../models/user.model.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
-import { sendVideosToBucket, sendImagesToBucket } from "../utils/cloudinary.js"
+import { uploadVideosToBucket, uploadImagesToBucket } from "../utils/tebi_s3.js"
 
 
 const getAllVideosOfaUser = asyncHandler(async (req, res) => {
@@ -75,48 +75,46 @@ const publishAVideo = asyncHandler(async (req, res) => {
     // TODO: get video, upload to cloudinary, create video
     const { title, description } = req.body
     const video = req.files?.videoFile[0]?.path
-    const thumbnail = req.files?.thumbnail[0]?.path    
-    
-    const responseVideoFromBucket = await sendVideosToBucket(video)
-    console.log(responseVideoFromBucket);
-    
-    const responseImageFromBucket = await sendImagesToBucket(thumbnail)
-    console.log(responseImageFromBucket);
-    
-    return res.json("everyThing is ok")
+    const thumbnail = req.files?.thumbnail[0]?.path
 
-    // if (!returnedVideoDeatilsFromCloudinary) {
-    //     throw new ApiError(404, "video is undefined")
-    // }
+    const { url, duration } = await uploadVideosToBucket(video)
+    console.log('responseVideoFromBucket', url, duration);
 
-    // if (!returnedThumbnailDeatilsFromCloudinary) {
-    //     throw new ApiError(404, "thumbnail is undefined")
-    // }
+    const responseImageFromBucket = await uploadImagesToBucket(thumbnail)
+    console.log('responseImageFromBucket', responseImageFromBucket);
 
-    // const uploadVideo = await Video.create(
-    //     {
-    //         title,
-    //         description,
-    //         thumbnail: returnedThumbnailDeatilsFromCloudinary.url,
-    //         videoFile: { default: returnedVideoDeatilsFromCloudinary.playback_url, allManualQuality: returnedVideoDeatilsFromCloudinary.eager.map((val) => val.secure_url) },
-    //         duration: returnedVideoDeatilsFromCloudinary.duration,
-    //         isPublished: true,
-    //         owner: req.user?._id
-    //     }
-    // )
+    if (!url) {
+        throw new ApiError(404, "video is undefined")
+    }
 
-    // if (!uploadVideo) {
-    //     throw new ApiError(500, "uplodation failed")
-    // }
+    if (!responseImageFromBucket) {
+        throw new ApiError(404, "thumbnail is undefined")
+    }
 
-    // res
-    //     .status(200)
-    //     .json(
-    //         new ApiResponse(200,
-    //             { uploadVideo },
-    //             "Video uploaded successfully"
-    //         )
-    //     )
+    const uploadVideo = await Video.create(
+        {
+            title,
+            description,
+            thumbnail: responseImageFromBucket,
+            videoFile: url,
+            isPublished: true,
+            duration: duration,
+            owner: req.user?._id
+        }
+    )
+
+    if (!uploadVideo) {
+        throw new ApiError(500, "uplodation failed")
+    }
+
+    res
+        .status(200)
+        .json(
+            new ApiResponse(200,
+                { uploadVideo },
+                "Video uploaded successfully"
+            )
+        )
 
 })
 
@@ -154,7 +152,7 @@ const updateVideo = asyncHandler(async (req, res) => {
     const { title, description } = req.body
     const thumbnail = req.file?.path
     //TODO: update video details like title, description, thumbnail
-    const uploadedOnCloudinary = await sendImagesToBucket(thumbnail)
+    const uploadedOnCloudinary = await uploadImagesToBucket(thumbnail)
 
     const previousThumbnail = await Video.findById(videoId)
 

@@ -115,7 +115,9 @@
 
 // export { uploadVideoOnCloudinary, deletePreviousVideo, uploadImagesOnCloudinary, deletePreviousImage }
 
-import { S3Client, ListObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3"
+import { S3Client, ListObjectsCommand, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3"
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
+import ffmpegCommand from "fluent-ffmpeg"
 import fs from "fs"
 import path from "path"
 
@@ -130,7 +132,7 @@ const s3client = new S3Client({
     region: "global"
 })
 
-async function sendImagesToBucket(image) {
+async function uploadImagesToBucket(image) {
     try {
         const imageName = path.basename(image)
         const imageContent = fs.createReadStream(image)
@@ -145,14 +147,23 @@ async function sendImagesToBucket(image) {
             })
         )
 
-        console.log(storeImageTos3);
-        return storeImageTos3
+        if (storeImageTos3.$metadata.httpStatusCode === 200) {
+            const get_cmd = new GetObjectCommand({
+                Bucket: "tempvideobucket",
+                Key: imageName,
+                ResponseContentDisposition: "inline"
+            })
+
+            const url = await getSignedUrl(s3client,get_cmd)
+            return url
+        }
+
     } catch (error) {
         console.log(error);
     }
 }
 
-async function sendVideosToBucket(video) {
+async function uploadVideosToBucket(video) {
     try {
         const videoName = path.basename(video)
         const videoContent = fs.createReadStream(video)
@@ -167,8 +178,34 @@ async function sendVideosToBucket(video) {
             })
         )
 
-        console.log(storeVideoTos3);
-        return storeVideoTos3
+        if (storeVideoTos3.$metadata.httpStatusCode === 200) {
+
+            ffmpegCommand.setFfprobePath("C:/ffmpeg/ffmpeg-2024-10-02-git-358fdf3083-full_build/ffmpeg-2024-10-02-git-358fdf3083-full_build/bin/ffprobe.exe");
+
+
+            const metaData = await new Promise((resolve, reject) => {
+                ffmpegCommand.ffprobe(video, (err, metaData) => {
+                    if (err) {
+                        console.log(err);
+                        return reject(err)
+                    } else {
+                        resolve(metaData)
+                    }
+                })
+            })
+
+            const duration = metaData?.format?.duration
+
+            const get_cmd = new GetObjectCommand({
+                Bucket: "tempvideobucket",
+                Key: videoName,
+                ResponseContentDisposition: "inline"
+            })
+
+            const url = await getSignedUrl(s3client, get_cmd)
+            return { url, duration }
+        }
+
     } catch (error) {
         console.log(error);
         throw error
@@ -176,6 +213,6 @@ async function sendVideosToBucket(video) {
 }
 
 export {
-    sendImagesToBucket,
-    sendVideosToBucket
+    uploadImagesToBucket,
+    uploadVideosToBucket
 }
