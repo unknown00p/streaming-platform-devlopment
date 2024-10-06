@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.665.0",
+    "@aws-sdk/s3-request-presigner": "^3.665.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "video-convert",
+  "version": "1.0.0",
+  "description": "video-converter",
+  "main": "server.js",
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}
