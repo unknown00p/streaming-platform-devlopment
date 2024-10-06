@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js"
 import { User } from "../models/user.model.js"
-import { deletePreviousImage, uploadImagesOnCloudinary } from "../utils/cloudinary.js"
+import { sendImagesToBucket } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
@@ -68,8 +68,8 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Avatar file is required")
     }
 
-    const avatar = await uploadImagesOnCloudinary(avatarLocalPath)
-    const coverImage = await uploadImagesOnCloudinary(coverImgLocalPath)
+    const avatar = await sendImagesToBucket(avatarLocalPath)
+    const coverImage = await sendImagesToBucket(coverImgLocalPath)
     // console.log("coverImage",coverImage);
 
 
@@ -289,7 +289,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     const previousImgId = req.user?.avatar.split("/").pop().split('.').shift()
     // console.log(previousImgId);
 
-    const avatar = await uploadImagesOnCloudinary(avatarLocalPath)
+    const avatar = await sendImagesToBucket(avatarLocalPath)
 
     if (!avatar.url) {
         throw new ApiError(400, "Error while uploading on avatar")
@@ -306,7 +306,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
         { new: true }
     ).select("-password")
 
-    await deletePreviousImage(previousImgId)
+    // await deletePreviousImage(previousImgId)
 
     return res
         .status(200)
@@ -327,7 +327,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     const previousImgId = req.user?.avatar.split("/").pop().split('.').shift()
 
 
-    const coverImage = await uploadImagesOnCloudinary(coverImageLocalPath)
+    const coverImage = await sendImagesToBucket(coverImageLocalPath)
 
     if (!coverImage.url) {
         throw new ApiError(400, "Error while uploading on avatar")
@@ -344,7 +344,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         { new: true }
     ).select("-password")
 
-    await deletePreviousImage(previousImgId)
+    // await deletePreviousImage(previousImgId)
 
     return res
         .status(200)

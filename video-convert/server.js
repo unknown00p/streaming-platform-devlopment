@@ -19,7 +19,7 @@ const s3Client = new S3Client({
 
 const get_cmd = new GetObjectCommand({
     Bucket: "tempvideobucket",
-    Key: "videoplayback (3).mp4",
+    Key: "videoplayback (1).mp4",
     ResponseContentDisposition: "inline",
 })
 
