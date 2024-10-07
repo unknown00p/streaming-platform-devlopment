@@ -2,6 +2,8 @@ import { S3Client, ListBucketsCommand, PutObjectCommand, GetObjectCommand } from
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import dotenv from "dotenv"
 
+// optional to-do use engine-x for load balancing
+
 dotenv.config({
     path: ".env"
 })
@@ -19,7 +21,7 @@ const s3Client = new S3Client({
 
 const get_cmd = new GetObjectCommand({
     Bucket: "tempvideobucket",
-    Key: "videoplayback (1).mp4",
+    Key: "videoplayback (2).mp4",
     ResponseContentDisposition: "inline",
 })
 

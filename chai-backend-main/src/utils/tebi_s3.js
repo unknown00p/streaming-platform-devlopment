@@ -115,6 +115,8 @@
 
 // export { uploadVideoOnCloudinary, deletePreviousVideo, uploadImagesOnCloudinary, deletePreviousImage }
 
+// to-do use rabit-mq for sending video for proccssiong
+
 import { S3Client, ListObjectsCommand, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import ffmpegCommand from "fluent-ffmpeg"
@@ -143,19 +145,23 @@ async function uploadImagesToBucket(image) {
                 Key: imageName,
                 Body: imageContent,
                 ContentDisposition: "inline",
-                ContentType: image?.mimetype
+                ContentType: image?.mimetype,
+                ACL: "public-read"
             })
         )
 
         if (storeImageTos3.$metadata.httpStatusCode === 200) {
-            const get_cmd = new GetObjectCommand({
-                Bucket: "tempvideobucket",
-                Key: imageName,
-                ResponseContentDisposition: "inline"
-            })
+            // const get_cmd = new GetObjectCommand({
+            //     Bucket: "tempvideobucket",
+            //     Key: imageName,
+            //     ResponseContentDisposition: "inline"
+            // })
 
-            const url = await getSignedUrl(s3client,get_cmd)
+            const url = `https://tempvideobucket.s3.tebi.io/${imageName}`
             return url
+
+            // const url = await getSignedUrl(s3client,get_cmd)
+            // return url
         }
 
     } catch (error) {
@@ -196,13 +202,7 @@ async function uploadVideosToBucket(video) {
 
             const duration = metaData?.format?.duration
 
-            const get_cmd = new GetObjectCommand({
-                Bucket: "tempvideobucket",
-                Key: videoName,
-                ResponseContentDisposition: "inline"
-            })
-
-            const url = await getSignedUrl(s3client, get_cmd)
+            const url = videoName
             return { url, duration }
         }
 
