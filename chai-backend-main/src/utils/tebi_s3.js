@@ -178,13 +178,18 @@ async function uploadVideosToBucket(video) {
 
         if (storeVideoTos3.$metadata.httpStatusCode === 200) {
 
-            const myQueue = new Queue("comunication")
+            const myQueue = new Queue("comunication",{
+                connection:{
+                    host: 'localhost',
+                    port: 6379
+                }
+            })
 
-            function sendQueue() {
-                myQueue.add("videoKey",{key: videoName})
-            }
+            // async function sendQueue() {
+               await myQueue.add("videoKey",{key: videoName})
+            // }
 
-            sendQueue()
+            // sendQueue()
 
             ffmpegCommand.setFfprobePath("C:/ffmpeg/ffmpeg-2024-10-02-git-358fdf3083-full_build/ffmpeg-2024-10-02-git-358fdf3083-full_build/bin/ffprobe.exe");
 

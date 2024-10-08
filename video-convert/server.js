@@ -20,20 +20,29 @@ const s3Client = new S3Client({
     region: "global"
 })
 
+console.log("runing");
+
+
 const myQueue = new Worker("comunication", async(job)=>{
 
     console.log(job.data);
-    const get_cmd = new GetObjectCommand({
-        Bucket: "tempvideobucket",
-        Key: job.data.key,
-        ResponseContentDisposition: "inline",
-    })
+
+    // const get_cmd = new GetObjectCommand({
+    //     Bucket: "tempvideobucket",
+    //     Key: job.data.key,
+    //     ResponseContentDisposition: "inline",
+    // })
     
-    async function getUrl(params) {
-        const url = await getSignedUrl(s3Client, get_cmd)
-        console.log(url);
+    // async function getUrl(params) {
+    //     const url = await getSignedUrl(s3Client, get_cmd)
+    //     console.log(url);
+    // }
+    
+    // getUrl()
+
+},{
+    connection:{
+        host: 'localhost',
+        port: 6379
     }
-    
-    getUrl()
-    
 })
