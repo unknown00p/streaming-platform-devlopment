@@ -77,13 +77,13 @@ const publishAVideo = asyncHandler(async (req, res) => {
     const video = req.files?.videoFile[0]?.path
     const thumbnail = req.files?.thumbnail[0]?.path
 
-    const { url, duration } = await uploadVideosToBucket(video)
-    console.log('responseVideoFromBucket', url, duration);
+    const { videoUrlId, duration } = await uploadVideosToBucket(video)
+    console.log('responseVideoFromBucket', videoUrlId, duration);
 
     const responseImageFromBucket = await uploadImagesToBucket(thumbnail)
     console.log('responseImageFromBucket', responseImageFromBucket);
 
-    if (!url) {
+    if (!videoUrlId) {
         throw new ApiError(404, "video is undefined")
     }
 
@@ -96,7 +96,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
             title,
             description,
             thumbnail: responseImageFromBucket,
-            videoFile: url,
+            videoUrlId: videoUrlId,
             isPublished: true,
             duration: duration,
             owner: req.user?._id

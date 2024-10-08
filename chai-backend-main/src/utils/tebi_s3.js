@@ -122,6 +122,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import ffmpegCommand from "fluent-ffmpeg"
 import fs from "fs"
 import path from "path"
+import { Queue } from "bullmq"
 
 const credentials = {
     accessKeyId: process.env.TEBI_ACCESSKEY_ID,
@@ -151,17 +152,8 @@ async function uploadImagesToBucket(image) {
         )
 
         if (storeImageTos3.$metadata.httpStatusCode === 200) {
-            // const get_cmd = new GetObjectCommand({
-            //     Bucket: "tempvideobucket",
-            //     Key: imageName,
-            //     ResponseContentDisposition: "inline"
-            // })
-
             const url = `https://tempvideobucket.s3.tebi.io/${imageName}`
             return url
-
-            // const url = await getSignedUrl(s3client,get_cmd)
-            // return url
         }
 
     } catch (error) {
@@ -186,6 +178,14 @@ async function uploadVideosToBucket(video) {
 
         if (storeVideoTos3.$metadata.httpStatusCode === 200) {
 
+            const myQueue = new Queue("comunication")
+
+            function sendQueue() {
+                myQueue.add("videoKey",{key: videoName})
+            }
+
+            sendQueue()
+
             ffmpegCommand.setFfprobePath("C:/ffmpeg/ffmpeg-2024-10-02-git-358fdf3083-full_build/ffmpeg-2024-10-02-git-358fdf3083-full_build/bin/ffprobe.exe");
 
 
@@ -202,11 +202,12 @@ async function uploadVideosToBucket(video) {
 
             const duration = metaData?.format?.duration
 
-            const url = videoName
-            return { url, duration }
+            const videoUrlId = videoName
+            return { videoUrlId, duration }
         }
 
-    } catch (error) {
+    }
+    catch (error) {
         console.log(error);
         throw error
     }

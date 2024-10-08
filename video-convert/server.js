@@ -1,8 +1,9 @@
 import { S3Client, ListBucketsCommand, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import dotenv from "dotenv"
+import { Worker } from "bullmq"
 
-// optional to-do use engine-x for load balancing
+// optional-to-do: use engineX for load balancing
 
 dotenv.config({
     path: ".env"
@@ -19,15 +20,20 @@ const s3Client = new S3Client({
     region: "global"
 })
 
-const get_cmd = new GetObjectCommand({
-    Bucket: "tempvideobucket",
-    Key: "videoplayback (2).mp4",
-    ResponseContentDisposition: "inline",
+const myQueue = new Worker("comunication", async(job)=>{
+
+    console.log(job.data);
+    const get_cmd = new GetObjectCommand({
+        Bucket: "tempvideobucket",
+        Key: job.data.key,
+        ResponseContentDisposition: "inline",
+    })
+    
+    async function getUrl(params) {
+        const url = await getSignedUrl(s3Client, get_cmd)
+        console.log(url);
+    }
+    
+    getUrl()
+    
 })
-
-async function getUrl(params) {
-    const url = await getSignedUrl(s3Client,get_cmd)
-    console.log(url);
-}
-
-getUrl()
