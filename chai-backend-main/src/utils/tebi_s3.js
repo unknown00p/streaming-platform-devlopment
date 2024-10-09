@@ -136,6 +136,8 @@ const s3client = new S3Client({
 })
 
 async function uploadImagesToBucket(image) {
+    console.log(image);
+    
     try {
         const imageName = path.basename(image)
         const imageContent = fs.createReadStream(image)
@@ -156,12 +158,17 @@ async function uploadImagesToBucket(image) {
             return url
         }
 
+        
     } catch (error) {
         console.log(error);
+    } finally{
+        fs.unlinkSync(image)
     }
 }
 
 async function uploadVideosToBucket(video) {
+    console.log(video);
+
     try {
         const videoName = path.basename(video)
         const videoContent = fs.createReadStream(video)
@@ -211,10 +218,13 @@ async function uploadVideosToBucket(video) {
             return { videoUrlId, duration }
         }
 
+        
     }
     catch (error) {
         console.log(error);
         throw error
+    } finally{
+        fs.unlinkSync(video)
     }
 }
 

@@ -78,10 +78,7 @@ const publishAVideo = asyncHandler(async (req, res) => {
     const thumbnail = req.files?.thumbnail[0]?.path
 
     const { videoUrlId, duration } = await uploadVideosToBucket(video)
-    console.log('responseVideoFromBucket', videoUrlId, duration);
-
     const responseImageFromBucket = await uploadImagesToBucket(thumbnail)
-    console.log('responseImageFromBucket', responseImageFromBucket);
 
     if (!videoUrlId) {
         throw new ApiError(404, "video is undefined")
