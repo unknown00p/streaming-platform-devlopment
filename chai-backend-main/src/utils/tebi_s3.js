@@ -115,7 +115,7 @@
 
 // export { uploadVideoOnCloudinary, deletePreviousVideo, uploadImagesOnCloudinary, deletePreviousImage }
 
-// to-do use rabit-mq for sending video for proccssiong
+// to-do use bull-mq for sending video for proccssiong
 
 import { S3Client, ListObjectsCommand, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
@@ -137,7 +137,7 @@ const s3client = new S3Client({
 
 async function uploadImagesToBucket(image) {
     console.log(image);
-    
+
     try {
         const imageName = path.basename(image)
         const imageContent = fs.createReadStream(image)
@@ -158,10 +158,10 @@ async function uploadImagesToBucket(image) {
             return url
         }
 
-        
+
     } catch (error) {
         console.log(error);
-    } finally{
+    } finally {
         fs.unlinkSync(image)
     }
 }
@@ -185,18 +185,14 @@ async function uploadVideosToBucket(video) {
 
         if (storeVideoTos3.$metadata.httpStatusCode === 200) {
 
-            const myQueue = new Queue("comunication",{
-                connection:{
+            const myQueue = new Queue("comunication", {
+                connection: {
                     host: 'localhost',
                     port: 6379
                 }
             })
 
-            // async function sendQueue() {
-               await myQueue.add("videoKey",{key: videoName})
-            // }
-
-            // sendQueue()
+            await myQueue.add("videoKey", { key: videoName })
 
             ffmpegCommand.setFfprobePath("C:/ffmpeg/ffmpeg-2024-10-02-git-358fdf3083-full_build/ffmpeg-2024-10-02-git-358fdf3083-full_build/bin/ffprobe.exe");
 
@@ -218,12 +214,12 @@ async function uploadVideosToBucket(video) {
             return { videoUrlId, duration }
         }
 
-        
+
     }
     catch (error) {
         console.log(error);
         throw error
-    } finally{
+    } finally {
         fs.unlinkSync(video)
     }
 }

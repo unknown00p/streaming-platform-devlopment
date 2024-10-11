@@ -2,8 +2,6 @@ import { useRef, useState, useEffect } from "react"
 import Hls from "hls.js"
 
 function CustomVideoPlayer({ qualityArr }) {
-  console.log(qualityArr);
-
   const videoRef = useRef(null)
   const frameIdRef = useRef(null)
   const divRef = useRef(null)
@@ -163,6 +161,7 @@ function CustomVideoPlayer({ qualityArr }) {
         //  onMouseLeave={()=> setonHoverShow("hidden")}
         className="relative">
         <video
+          crossOrigin="anonymous"
           onClick={togglePlayPause}
           ref={videoRef}
           onEnded={() => {

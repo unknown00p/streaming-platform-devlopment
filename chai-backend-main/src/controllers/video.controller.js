@@ -70,7 +70,6 @@ const getSearchedVideos = asyncHandler(async (req, res) => {
 
 })
 
-
 const publishAVideo = asyncHandler(async (req, res) => {
     // TODO: get video, upload to cloudinary, create video
     const { title, description } = req.body

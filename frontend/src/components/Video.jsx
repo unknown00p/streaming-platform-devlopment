@@ -33,10 +33,8 @@ function Video() {
   ]
 
   const qualityArr = [
-    "https://res.cloudinary.com/da8hlgfcq/video/upload/sp_auto/v1726312335/ss6etygsiiukhhb40e0w.m3u8",
-    "https://res.cloudinary.com/da8hlgfcq/video/upload/br_3000k,c_limit,h_1080,vc_h265,w_1920/sp_full_hd/v1726312335/ss6etygsiiukhhb40e0w.m3u8",
-    "https://res.cloudinary.com/da8hlgfcq/video/upload/br_1500k,c_limit,h_720,vc_h264,w_1280/sp_hd/v1726312335/ss6etygsiiukhhb40e0w.m3u8",
-    "https://res.cloudinary.com/da8hlgfcq/video/upload/br_800k,c_limit,h_480,vc_h264,w_854/sp_sd/v1726312335/ss6etygsiiukhhb40e0w.m3u8"
+    'https://s3.tebi.io/hls-bucket/dcc2c5a8-de63-4811-b8a0-a5e85336c6b81080p/_index.m3u8',
+    'https://s3.tebi.io/hls-bucket/0a2772af-f027-4bdd-a991-571182d9cefe720p/0a2772af-f027-4bdd-a991-571182d9cefeindex.m3u8'
   ]
 
   return (
