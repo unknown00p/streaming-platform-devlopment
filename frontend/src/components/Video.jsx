@@ -33,8 +33,7 @@ function Video() {
   ]
 
   const qualityArr = [
-    'https://s3.tebi.io/hls-bucket/dcc2c5a8-de63-4811-b8a0-a5e85336c6b81080p/_index.m3u8',
-    'https://s3.tebi.io/hls-bucket/0a2772af-f027-4bdd-a991-571182d9cefe720p/0a2772af-f027-4bdd-a991-571182d9cefeindex.m3u8'
+    'https://s3.tebi.io/hls-bucket/Toast%20%20-%20One%20Minute%20Comedy%20Film%20_%20Award%20Winning.mp4/Toast%20%20-%20One%20Minute%20Comedy%20Film%20_%20Award%20Winning.mp4_master.m3u8'
   ]
 
   return (

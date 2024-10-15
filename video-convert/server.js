@@ -1,11 +1,15 @@
 import { S3Client, ListBucketsCommand, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3"
+import { Upload } from '@aws-sdk/lib-storage'
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import dotenv from "dotenv"
 import { Worker } from "bullmq"
 import ffmpeg from "fluent-ffmpeg"
 import path from "path"
 import { v4 as uuidv4 } from 'uuid'
-import fs from 'fs'
+import fs from 'fs/promises'
+import { createReadStream, existsSync, createWriteStream } from 'fs'
+import { PassThrough } from 'stream'
+import { fileURLToPath } from 'url';
 // optional-to-do: use engineX for load balancing
 
 dotenv.config({
@@ -26,6 +30,7 @@ const s3Client = new S3Client({
 console.log("running...");
 
 const myQueue = new Worker("comunication", async (job) => {
+    let outputDir;
     try {
         const videoKey = job.data.key;
 
@@ -42,22 +47,35 @@ const myQueue = new Worker("comunication", async (job) => {
         }
 
         const location = uuidv4()
-        const outputDir = `./output/${videoKey}`
+        outputDir = `./output/${videoKey}`
         const output1080pDir = `${outputDir}/1080p`
         const output720pDir = `${outputDir}/720p`
+        const output480pDir = `${outputDir}/480p`
+        const output320pDir = `${outputDir}/320p`
 
-        if (!fs.existsSync(output1080pDir)) {
-            fs.mkdirSync(output1080pDir, { recursive: true });
+        if (!existsSync(output1080pDir)) {
+            fs.mkdir(output1080pDir, { recursive: true });
         }
 
-        if (!fs.existsSync(output720pDir)) {
-            fs.mkdirSync(output720pDir, { recursive: true });
+        if (!existsSync(output720pDir)) {
+            fs.mkdir(output720pDir, { recursive: true });
         }
 
-        async function ffmpegPromise(videoUrl, outPutPath, hlsTime, size, audioBitrate, videoBitrate, segments) {
+        if (!existsSync(output480pDir)) {
+            fs.mkdir(output480pDir, { recursive: true });
+        }
+
+        if (!existsSync(output320pDir)) {
+            fs.mkdir(output320pDir, { recursive: true });
+        }
+
+        async function ffmpegPromise(videoUrl, outputDir, hlsTime, size, audioBitrate, videoBitrate, segments) {
+            console.log('outputDir', outputDir);
+
             return new Promise((resolve, reject) => {
                 ffmpeg(videoUrl)
-                    .output(outPutPath)
+                    .output(outputDir)
+                    .format('hls')
                     .videoCodec('libx264')
                     .audioCodec('aac')
                     .addOption('-hls_time', hlsTime)
@@ -75,33 +93,139 @@ const myQueue = new Worker("comunication", async (job) => {
                         throw new Error(err)
                     })
                     .run()
+
             }
+
             )
+
         }
 
         const response = await Promise.all([
-            ffmpegPromise(url, `${output1080pDir}/1080p_index.m3u8`, 7, '1920x1080', '192k', '3000k', `${output1080pDir}/${location}1080p_segment%03d.ts`),
+            ffmpegPromise(url, `${output1080pDir}/1080p_index.m3u8`, 7, '1920x1080', '192k', '3000k', `${output1080pDir}/${location}_1080p_segment%03d.ts`),
 
-            ffmpegPromise(url, `${output720pDir}/720_index.m3u8`, 6, '1280x720', '96k', '1400k', `${output720pDir}/${location}720p_segment%03d.ts`),
+            ffmpegPromise(url, `${output720pDir}/720_index.m3u8`, 6, '1280x720', '120k', '1600k', `${output720pDir}/${location}_720p_segment%03d.ts`),
 
+            ffmpegPromise(url, `${output480pDir}/480_index.m3u8`, 4, '854x480', '96k', '1000k', `${output480pDir}/${location}_480p_segment%03d.ts`),
+
+            ffmpegPromise(url, `${output320pDir}/320p_index.m3u8`, 4, '480x320', '64k', '500k', `${output320pDir}/${location}_320p_segment%03d.ts`),
         ])
 
         if (response) {
-            console.log("Conversion completed");
-            console.log(response);
-            // fs.readFile(`${output1080pDir}`, (err, data) => {
-            //     if (err) {
-            //         console.log(err);
-            //         throw new Error(err)
-            //     }
+            const __filename = fileURLToPath(import.meta.url);
+            const __dirname = path.dirname(__filename);
 
-            //     console.log('andar',data);                
-            // })
+            async function createMasterPlaylist() {
+                const masterPlaylistContent =
+                    `
+                        #EXTM3U
+                        #EXT-X-VERSION:3
+                        #EXT-X-TARGETDURATION:10
+                        #EXT-X-MEDIA-SEQUENCE:0
+
+                        # 1080p Stream
+                        #EXT-X-STREAM-INF:BANDWIDTH=3000000,RESOLUTION=1920x1080
+                        1080p/1080p_index.m3u8
+
+                        # 720p Stream
+                        #EXT-X-STREAM-INF:BANDWIDTH=1600000,RESOLUTION=1280x720
+                        720p/720_index.m3u8
+
+                        # 480p Stream
+                        #EXT-X-STREAM-INF:BANDWIDTH=1000000,RESOLUTION=854x480
+                        480p/480_index.m3u8
+
+                        # 320p Stream
+                        #EXT-X-STREAM-INF:BANDWIDTH=500000,RESOLUTION=480x320
+                        320p/320p_index.m3u8
+
+                `
+
+                const masterPlaylistPath = path.join(outputDir, 'master.m3u8')
+
+                await fs.writeFile(masterPlaylistPath, masterPlaylistContent.trim())
+            }
+
+            createMasterPlaylist()
+
+            async function uploadFileToS3(filePath, s3Key) {
+                try {
+                    const fileStream = createReadStream(filePath);
+                    // console.log('fileStream',fileStream);                    
+
+                    const contentType = filePath.endsWith('.m3u8') ? 'application/x-mpegURL' : 'video/MP2T';
+
+                    const upload = await new Upload({
+                        client: s3Client,
+                        params: {
+                            Bucket: 'hls-bucket',
+                            Key: s3Key,
+                            Body: fileStream,
+                            ContentType: contentType,
+                            ACL: 'public-read'
+                        }
+                    });
+
+                    await upload.done();
+                    // console.log(`Upload successful for: ${s3Key}`);
+                } catch (err) {
+                    console.error(`Error uploading file ${s3Key}:`, err);
+                }
+            }
+
+            async function uploadAllHLSFiles(videoFileName, secondOutputDir, qualityFolder) {
+                const pathType = await fs.stat(secondOutputDir)
+
+                if (pathType.isDirectory()) {
+                    try {
+                        const files = await fs.readdir(secondOutputDir)
+
+                        for (const file of files) {
+                            const filePath = path.join(secondOutputDir, file);
+                            const s3Key = `${videoFileName}/${qualityFolder}/${file}`;
+                            await uploadFileToS3(filePath, s3Key);
+                        }
+                        return true
+
+                    } catch (error) {
+                        console.log(error);
+                        return false
+                    }
+                } else if (pathType.isFile() && path.extname(secondOutputDir) === '.m3u8') {
+                    const s3Key = `${videoFileName}/${videoKey}_master.m3u8`;
+
+                    await uploadFileToS3(secondOutputDir, s3Key)
+                }
+
+            }
+
+            const secondOutputDir = `${__dirname}/output/${videoKey}`;
+            const folder = await fs.readdir(secondOutputDir)
+            // console.log('folder',folder);
+
+
+            for (const qualityFolder of folder) {
+                await uploadAllHLSFiles(videoKey, `${secondOutputDir}/${qualityFolder}`, qualityFolder);
+            }
+
         }
 
-    } catch (error) {
+    }
+    catch (error) {
         console.log(error);
         throw new Error(error)
+    }
+    finally {
+        try {
+            if (existsSync(outputDir)) {
+                console.log(`Removing directory: ${outputDir}`);
+                await fs.rm(outputDir, { recursive: true, force: true });
+                console.log('Directory removed successfully.');
+            } else {
+                console.log(`Directory does not exist: ${outputDir}`);
+            }
+        } catch (error) {
+            console.log(`Failed to remove directory ${outputDir}:`, error);
+        }
     }
 
 }, {
@@ -109,19 +233,4 @@ const myQueue = new Worker("comunication", async (job) => {
         host: 'localhost',
         port: 6379
     }
-})
-
-const directory = path.resolve('C:/full stack journey/full stack/youtube-app/video-convert/output/6 second video.mp4/1080p')
-
-// const absolutePath = 
-
-fs.readdir(directory, (err, data) => {
-    console.log('hello');
-    
-    if (err) {
-        console.log(err);
-        throw new Error(err)
-    }
-
-    console.log('bahar',data);                
 })
