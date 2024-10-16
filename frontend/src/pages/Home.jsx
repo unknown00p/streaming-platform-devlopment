@@ -28,8 +28,6 @@ function Home() {
             userData: userDataResponse[index].data.data.userData,
           }));
 
-        console.log(enrichedVideos);
-
         setVideoArray(enrichedVideos)
       } else {
         setHasVideo(false)

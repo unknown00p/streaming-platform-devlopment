@@ -7,7 +7,7 @@ import { getVideobyId } from "../api/videos/videoApi"
 
 function Video() {
   const [saveToPlaylist, setSaveToPlaylist] = useState(false)
-  const [videoData, setVideoData] = useState([])
+  const [videoData, setVideoData] = useState(null)
   const { videoId } = useParams()
 
   useEffect(() => {
@@ -18,9 +18,10 @@ function Video() {
     }
     videoByIdFunc()
 
-  }, [videoId])
+  }, [])
 
-  console.log(videoData && videoData?.videoFile?.[0]);
+  console.log(videoData && videoData);
+  console.log(videoData && videoData.videoUrl);
 
   const imageUrl = [
     "https://th.bing.com/th/id/OIP.c2yh-vjm-Ze872ygDBhg3QHaEK?w=326&h=183&c=7&r=0&o=5&dpr=1.5&pid=1.7",
@@ -33,7 +34,8 @@ function Video() {
   ]
 
   const qualityArr = [
-    'https://s3.tebi.io/hls-bucket/Toast%20%20-%20One%20Minute%20Comedy%20Film%20_%20Award%20Winning.mp4/Toast%20%20-%20One%20Minute%20Comedy%20Film%20_%20Award%20Winning.mp4_master.m3u8'
+    'https://s3.tebi.io/hls-bucket/Aarambh Hai Prachand •X• Polozehni - Shrylox 🔥.mp4/Aarambh Hai Prachand •X• Polozehni - Shrylox 🔥.mp4_master.m3u8',
+    'https://s3.tebi.io/hls-bucket/Toast  - One Minute Comedy Film _ Award Winning.mp4/Toast  - One Minute Comedy Film _ Award Winning.mp4_master.m3u8'
   ]
 
   return (
@@ -49,7 +51,8 @@ function Video() {
 
         <div className="left flex relative flex-col">
           <div className="mb-4">
-            <CustomVideoPlayer qualityArr={qualityArr} />
+            
+            {videoData && <CustomVideoPlayer qualityArr={videoData?.videoUrl} />}
           </div>
 
           <div className="flex flex-col text-white gap-4">

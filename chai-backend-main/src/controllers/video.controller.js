@@ -4,7 +4,8 @@ import { User } from "../models/user.model.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
-import { uploadVideosToBucket, uploadImagesToBucket } from "../utils/tebi_s3.js"
+import { uploadVideosToBucket, uploadImagesToBucket, listFolderContents } from "../utils/tebi_s3.js"
+import { GetObjectCommand } from '@aws-sdk/client-s3'
 
 
 const getAllVideosOfaUser = asyncHandler(async (req, res) => {
@@ -72,6 +73,9 @@ const getSearchedVideos = asyncHandler(async (req, res) => {
 
 const publishAVideo = asyncHandler(async (req, res) => {
     // TODO: get video, upload to cloudinary, create video
+    console.log('req files',req.files);
+    console.log('req body',req.body.title);
+    
     const { title, description } = req.body
     const video = req.files?.videoFile[0]?.path
     const thumbnail = req.files?.thumbnail[0]?.path
@@ -124,19 +128,29 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 
     const video = await Video.findOne(new mongoose.Types.ObjectId(videoId))
-
-    console.log(video);
-
-
+    
     if (!video) {
         throw new ApiError(500, "unable to get video from dataBase")
     }
+    const videoUrlId = `${video.videoUrlId}`;
+
+    const url = await listFolderContents({ folderName: videoUrlId })
+
+    if (!url) {
+        throw new ApiError(404,'Unable to retrive video url')
+    }
+
+    const newVideoObj = video.toObject()
+    newVideoObj['videoUrl'] = url
+    
 
     res
         .status(200)
         .json(
             new ApiResponse(200,
-                { video },
+                {
+                    video:newVideoObj
+                },
                 "video fetched successfully"
             )
         )

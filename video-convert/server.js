@@ -10,7 +10,6 @@ import fs from 'fs/promises'
 import { createReadStream, existsSync, createWriteStream } from 'fs'
 import { PassThrough } from 'stream'
 import { fileURLToPath } from 'url';
-// optional-to-do: use engineX for load balancing
 
 dotenv.config({
     path: ".env"
@@ -70,8 +69,7 @@ const myQueue = new Worker("comunication", async (job) => {
         }
 
         async function ffmpegPromise(videoUrl, outputDir, hlsTime, size, audioBitrate, videoBitrate, segments) {
-            console.log('outputDir', outputDir);
-
+            
             return new Promise((resolve, reject) => {
                 ffmpeg(videoUrl)
                     .output(outputDir)
@@ -149,8 +147,7 @@ const myQueue = new Worker("comunication", async (job) => {
 
             async function uploadFileToS3(filePath, s3Key) {
                 try {
-                    const fileStream = createReadStream(filePath);
-                    // console.log('fileStream',fileStream);                    
+                    const fileStream = createReadStream(filePath);                   
 
                     const contentType = filePath.endsWith('.m3u8') ? 'application/x-mpegURL' : 'video/MP2T';
 
@@ -166,7 +163,6 @@ const myQueue = new Worker("comunication", async (job) => {
                     });
 
                     await upload.done();
-                    // console.log(`Upload successful for: ${s3Key}`);
                 } catch (err) {
                     console.error(`Error uploading file ${s3Key}:`, err);
                 }
@@ -200,8 +196,6 @@ const myQueue = new Worker("comunication", async (job) => {
 
             const secondOutputDir = `${__dirname}/output/${videoKey}`;
             const folder = await fs.readdir(secondOutputDir)
-            // console.log('folder',folder);
-
 
             for (const qualityFolder of folder) {
                 await uploadAllHLSFiles(videoKey, `${secondOutputDir}/${qualityFolder}`, qualityFolder);

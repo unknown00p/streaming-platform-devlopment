@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react"
 import Hls from "hls.js"
 
 function CustomVideoPlayer({ qualityArr }) {
+  console.log(qualityArr);  
   const videoRef = useRef(null)
   const frameIdRef = useRef(null)
   const divRef = useRef(null)
@@ -18,15 +19,20 @@ function CustomVideoPlayer({ qualityArr }) {
 
 
   useEffect(() => {
-    const videoElement = videoRef.current;
 
-    if (Hls.isSupported() && videoElement) {
-      const hls = new Hls();
-      hls.loadSource(qualityArr[videoIndex]);
-      hls.attachMedia(videoElement);
-      // videoElement.play();
-    } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-      videoElement.src = qualityArr[videoIndex];
+    try {
+          const videoElement = videoRef.current;
+      
+          if (Hls.isSupported() && videoElement) {
+            const hls = new Hls();
+            hls.loadSource(qualityArr[videoIndex]);
+            hls.attachMedia(videoElement);
+            // videoElement.play();
+          } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+            videoElement.src = qualityArr[videoIndex];
+          }
+    } catch (error) {
+      console.log(error);  
     }
 
   }, [videoIndex]);

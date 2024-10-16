@@ -3,6 +3,7 @@ import Button from './Button'
 import Input from "./Input"
 import { useForm } from 'react-hook-form'
 import useHandleCssStore from '../zustand/useHandleCssStore'
+import {postVideo} from '../api/videos//videoApi'
 
 
 function UploadVideo() {
@@ -10,8 +11,10 @@ function UploadVideo() {
   const { handleSubmit, register } = useForm()
   const showUploadVideo = useHandleCssStore((state) => state.showUploadVideo)
 
-  function SubFunc(e) {
-    e.preventDefault()
+  async function SubFunc(e) {
+    // console.log(e);    
+    const response = await postVideo(e?.title,e?.description,e?.video[0],e?.thumbnail[0])
+    console.log(response);    
   }
 
   function handleClick() {
@@ -36,10 +39,22 @@ function UploadVideo() {
 
           {/* Form Inputs */}
           <div className="space-y-4 overflow-y-auto">
-            <Input className="rounded-md border-[1.5px] p-2 w-full bg-transparent border-[#3c3f46]" type="file" label="Video" />
-            <Input className="rounded-md border-[1.5px] p-2 w-full bg-transparent border-[#3c3f46]" type="file" label="Thumbnail" />
-            <Input className="rounded-md border-[1.5px] p-2 w-full bg-transparent border-[#3c3f46] outline-none" type="text" placeholder="Title" />
-            <Input className="rounded-md border-[1.5px] p-2 w-full bg-transparent border-[#3c3f46] outline-none" type="text" placeholder="Description" />
+            <Input
+             className="rounded-md border-[1.5px] p-2 w-full bg-transparent border-[#3c3f46]" type="file" label="Video"
+             {...register('video')}
+              />
+            <Input
+             className="rounded-md border-[1.5px] p-2 w-full bg-transparent border-[#3c3f46]" type="file" label="Thumbnail"
+             {...register('thumbnail')}
+              />
+            <Input
+             className="rounded-md border-[1.5px] p-2 w-full bg-transparent border-[#3c3f46] outline-none" type="text" placeholder="Title"
+             {...register('title')}
+              />
+            <Input
+             className="rounded-md border-[1.5px] p-2 w-full bg-transparent border-[#3c3f46] outline-none" type="text" placeholder="Description"
+             {...register('description')}
+              />
           </div>
 
           {/* Save Button */}
