@@ -175,7 +175,7 @@ function CustomVideoPlayer({ qualityArr }) {
           }}
 
           disablePictureInPicture
-          className="w-full h-full rounded-md object-cover cursor-pointer"
+          className="max-w-[844px] w-full h-[430px] rounded-md object-cover cursor-pointer"
           controls={false}
         >
 

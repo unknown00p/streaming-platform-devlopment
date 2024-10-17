@@ -5,14 +5,14 @@ import CurrentUser from '../api/authentication/CurrentUser'
 function OutletComp() {
     CurrentUser()
     return (
-        <>
+        <div className='max-w-[90rem] mx-auto'>
             <div className='fixed z-20 w-full'>
                 <Header />
             </div>
             <div className='overflow-x-hidden'>
                 <Outlet />
             </div>
-        </>
+        </div>
     )
 }
 

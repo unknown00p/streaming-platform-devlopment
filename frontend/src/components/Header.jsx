@@ -64,7 +64,7 @@ function Header() {
     <>
       <div className=''>
         <div className={`${headerClass} md:block`}>
-          <div className='flex text-white items-center justify-between px-7 pt-2 pb-5 text-[1.11rem] bg-[#13151a]'>
+          <div className='flex max-w-[90rem] text-white items-center justify-between px-7 pt-2 pb-5 text-[1.11rem] bg-[#13151a]'>
             <div className='flex items-center gap-8'>
               <button className='hidden sm:block' id='mainMenu' onClick={toggleSideBar}>
                 <img src="/menubar.svg" alt="" />
@@ -77,7 +77,7 @@ function Header() {
 
             <div className='flex relative'>
               <Input
-                className="w-[50vw] hidden md:block  rounded-full bg-[#13131400] h-11 px-5 text-[1.1rem] outline-none border-[#8d8d8d8b] border-[1px] text-white"
+                className="max-w-[50rem] lg:w-[50rem] md:w-[20rem] hidden md:block  rounded-full bg-[#13131400] h-11 px-5 text-[1.1rem] outline-none border-[#8d8d8d8b] border-[1px] text-white"
                 placeholder="Search"
               />
               <div>

@@ -14,8 +14,9 @@ function PlaylistVideos() {
   ]
   return (
     <Wrapper>
-      <div className="flex flex-col lg:flex-row">
-        <div className="sm:left-[8px] sm:top-20 fixed sm:hidden z-40 sm:z-0 lg:block bottom-[0px] lg:bottom-auto w-full lg:w-[5rem]">
+      <div className="flex flex-col lg:flex-row max-w-[90rem]">
+
+        <div className="sm:left-[8px] sm:top-20 sm:hidden z-40 sm:z-0 lg:block bottom-[0px] lg:bottom-auto w-full lg:w-[5rem]">
           <SideBar />
         </div>
         

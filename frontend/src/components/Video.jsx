@@ -52,7 +52,7 @@ function Video() {
         <div className="left flex relative flex-col">
           <div className="mb-4">
             
-            {videoData && <CustomVideoPlayer qualityArr={videoData?.videoUrl} />}
+            {videoData ? <CustomVideoPlayer qualityArr={videoData?.videoUrl} />: <div className="w-[45.25rem] h-[26.9rem] bg-slate-700"></div>}
           </div>
 
           <div className="flex flex-col text-white gap-4">
