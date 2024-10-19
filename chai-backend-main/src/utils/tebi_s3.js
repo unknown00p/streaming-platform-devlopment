@@ -23,7 +23,7 @@ async function uploadImagesToBucket(image) {
 
         const storeImageTos3 = await s3client.send(
             new PutObjectCommand({
-                Bucket: "tempvideobucket",
+                Bucket: "temporarybucket",
                 Key: imageName,
                 Body: imageContent,
                 ContentDisposition: "inline",

@@ -14,14 +14,12 @@ function Video() {
 
     async function videoByIdFunc() {
       const response = await getVideobyId(videoId)
+      console.log('response',response);      
       setVideoData(response.data.data.video)
     }
     videoByIdFunc()
 
   }, [])
-
-  console.log(videoData && videoData);
-  console.log(videoData && videoData.videoUrl);
 
   const imageUrl = [
     "https://th.bing.com/th/id/OIP.c2yh-vjm-Ze872ygDBhg3QHaEK?w=326&h=183&c=7&r=0&o=5&dpr=1.5&pid=1.7",
@@ -52,7 +50,7 @@ function Video() {
         <div className="left flex relative flex-col">
           <div className="mb-4">
             
-            {videoData ? <CustomVideoPlayer qualityArr={videoData?.videoUrl} />: <div className="w-[45.25rem] h-[26.9rem] bg-slate-700"></div>}
+            {videoData ? <CustomVideoPlayer qualityArr={videoData?.videoUrl} />: <div className="w-full aspect-video bg-[#1b1e28] rounded-md"></div>}
           </div>
 
           <div className="flex flex-col text-white gap-4">

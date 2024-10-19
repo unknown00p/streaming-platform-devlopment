@@ -34,7 +34,7 @@ const myQueue = new Worker("comunication", async (job) => {
         const videoKey = job.data.key;
 
         const get_cmd = new GetObjectCommand({
-            Bucket: "tempvideobucket",
+            Bucket: "temporarybucket",
             Key: videoKey,
             ResponseContentDisposition: "inline",
         })
@@ -52,21 +52,32 @@ const myQueue = new Worker("comunication", async (job) => {
         const output480pDir = `${outputDir}/480p`
         const output320pDir = `${outputDir}/320p`
 
-        if (!existsSync(output1080pDir)) {
-            fs.mkdir(output1080pDir, { recursive: true });
+        function makeFiles(DirPath) {
+            if (!existsSync(DirPath)) {
+                fs.mkdir(DirPath,{recursive: true})
+            }
         }
 
-        if (!existsSync(output720pDir)) {
-            fs.mkdir(output720pDir, { recursive: true });
-        }
+        makeFiles(output1080pDir)
+        makeFiles(output720pDir)
+        makeFiles(output480pDir)
+        makeFiles(output320pDir)
 
-        if (!existsSync(output480pDir)) {
-            fs.mkdir(output480pDir, { recursive: true });
-        }
+        // if (!existsSync(output1080pDir)) {
+        //     fs.mkdir(output1080pDir, { recursive: true });
+        // }
 
-        if (!existsSync(output320pDir)) {
-            fs.mkdir(output320pDir, { recursive: true });
-        }
+        // if (!existsSync(output720pDir)) {
+        //     fs.mkdir(output720pDir, { recursive: true });
+        // }
+
+        // if (!existsSync(output480pDir)) {
+        //     fs.mkdir(output480pDir, { recursive: true });
+        // }
+
+        // if (!existsSync(output320pDir)) {
+        //     fs.mkdir(output320pDir, { recursive: true });
+        // }
 
         async function ffmpegPromise(videoUrl, outputDir, hlsTime, size, audioBitrate, videoBitrate, segments) {
             
@@ -99,13 +110,13 @@ const myQueue = new Worker("comunication", async (job) => {
         }
 
         const response = await Promise.all([
-            ffmpegPromise(url, `${output1080pDir}/1080p_index.m3u8`, 7, '1920x1080', '192k', '3000k', `${output1080pDir}/${location}_1080p_segment%03d.ts`),
+            ffmpegPromise(url, `${output1080pDir}/1080p_index.m3u8`, 4, '1920x1080', '192k', '3000k', `${output1080pDir}/${location}_1080p_segment%03d.ts`),
 
             ffmpegPromise(url, `${output720pDir}/720_index.m3u8`, 6, '1280x720', '120k', '1600k', `${output720pDir}/${location}_720p_segment%03d.ts`),
 
-            ffmpegPromise(url, `${output480pDir}/480_index.m3u8`, 4, '854x480', '96k', '1000k', `${output480pDir}/${location}_480p_segment%03d.ts`),
+            ffmpegPromise(url, `${output480pDir}/480_index.m3u8`, 8, '854x480', '96k', '1000k', `${output480pDir}/${location}_480p_segment%03d.ts`),
 
-            ffmpegPromise(url, `${output320pDir}/320p_index.m3u8`, 4, '480x320', '64k', '500k', `${output320pDir}/${location}_320p_segment%03d.ts`),
+            ffmpegPromise(url, `${output320pDir}/320p_index.m3u8`, 10, '480x320', '64k', '500k', `${output320pDir}/${location}_320p_segment%03d.ts`),
         ])
 
         if (response) {
@@ -154,7 +165,7 @@ const myQueue = new Worker("comunication", async (job) => {
                     const upload = await new Upload({
                         client: s3Client,
                         params: {
-                            Bucket: 'hls-bucket',
+                            Bucket: 'hls-bucket-youtube',
                             Key: s3Key,
                             Body: fileStream,
                             ContentType: contentType,
@@ -163,6 +174,7 @@ const myQueue = new Worker("comunication", async (job) => {
                     });
 
                     await upload.done();
+                    console.log(`Upload for ${filePath} completed`);
                 } catch (err) {
                     console.error(`Error uploading file ${s3Key}:`, err);
                 }

@@ -2,7 +2,6 @@ import { useRef, useState, useEffect } from "react"
 import Hls from "hls.js"
 
 function CustomVideoPlayer({ qualityArr }) {
-  console.log(qualityArr);  
   const videoRef = useRef(null)
   const frameIdRef = useRef(null)
   const divRef = useRef(null)
@@ -19,12 +18,14 @@ function CustomVideoPlayer({ qualityArr }) {
 
 
   useEffect(() => {
-
     try {
           const videoElement = videoRef.current;
-      
           if (Hls.isSupported() && videoElement) {
-            const hls = new Hls();
+            const hls = new Hls({
+              startLevel: 0,
+              maxBufferLength: 10,
+              maxBufferSize: 60 * 1000 * 1000,
+            });
             hls.loadSource(qualityArr[videoIndex]);
             hls.attachMedia(videoElement);
             // videoElement.play();
@@ -163,9 +164,10 @@ function CustomVideoPlayer({ qualityArr }) {
   return (
     <>
       <div ref={divRef}
-        // onMouseEnter={()=> setonHoverShow("absolute")}
-        //  onMouseLeave={()=> setonHoverShow("hidden")}
+        onMouseEnter={()=> setonHoverShow("absolute")}
+         onMouseLeave={()=> setonHoverShow("hidden")}
         className="relative">
+          
         <video
           crossOrigin="anonymous"
           onClick={togglePlayPause}
@@ -173,11 +175,11 @@ function CustomVideoPlayer({ qualityArr }) {
           onEnded={() => {
             setIsPlaying(false)
           }}
-
+          preload="auto"
           disablePictureInPicture
-          className="max-w-[844px] w-full h-[430px] rounded-md object-cover cursor-pointer"
+          className="w-full aspect-video rounded-md object-cover cursor-pointer"
           controls={false}
-        >
+          >
 
           <source src={qualityArr[videoIndex]} type="application/x-mpegURL" />
 
