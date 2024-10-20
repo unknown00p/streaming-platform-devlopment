@@ -10,30 +10,34 @@ const credentials = {
     secretAccessKey: process.env.TEBI_SECRET_ACCESSKEY_ID,
 }
 
+// console.log(credentials);
+
 const s3client = new S3Client({
     endpoint: "https://s3.tebi.io",
     credentials: credentials,
     region: "global"
 })
 
+// console.log('s3client',s3client);
+
 async function uploadImagesToBucket(image) {
     try {
         const imageName = path.basename(image)
         const imageContent = fs.createReadStream(image)
-
+        
         const storeImageTos3 = await s3client.send(
             new PutObjectCommand({
-                Bucket: "temporarybucket",
+                Bucket: process.env.TEBI_TEMPORARY_BUCKET_NAME,
                 Key: imageName,
                 Body: imageContent,
                 ContentDisposition: "inline",
                 ContentType: image?.mimetype,
                 ACL: "public-read"
             })
-        )
+        )        
 
         if (storeImageTos3.$metadata.httpStatusCode === 200) {
-            const url = `https://tempvideobucket.s3.tebi.io/${imageName}`
+            const url = `https://${process.env.TEBI_TEMPORARY_BUCKET_NAME}.s3.tebi.io/${imageName}`
             return url
         }
 
@@ -46,7 +50,7 @@ async function uploadImagesToBucket(image) {
 }
 
 async function uploadVideosToBucket(video) {
-    console.log(video);
+    console.log('video',video);
 
     try {
         const videoName = path.basename(video)
@@ -54,7 +58,7 @@ async function uploadVideosToBucket(video) {
 
         const storeVideoTos3 = await s3client.send(
             new PutObjectCommand({
-                Bucket: "tempvideobucket",
+                Bucket: process.env.TEBI_TEMPORARY_BUCKET_NAME,
                 Key: videoName,
                 Body: videoContent,
                 ContentType: video?.mimetype,
@@ -104,8 +108,10 @@ async function uploadVideosToBucket(video) {
 }
 
 async function listFolderContents({folderName}) {
+    console.log(folderName);
+    
     const listParams = {
-        Bucket: "hls-bucket", 
+        Bucket: process.env.TEBI_HLS_BUCKET_NAME, 
         Prefix: `${folderName}/`,
         Delimiter: "/",
     };

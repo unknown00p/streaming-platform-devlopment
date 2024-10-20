@@ -34,7 +34,7 @@ const myQueue = new Worker("comunication", async (job) => {
         const videoKey = job.data.key;
 
         const get_cmd = new GetObjectCommand({
-            Bucket: "temporarybucket",
+            Bucket: process.env.TEBI_TEMPORARY_BUCKET_NAME,
             Key: videoKey,
             ResponseContentDisposition: "inline",
         })
@@ -62,22 +62,6 @@ const myQueue = new Worker("comunication", async (job) => {
         makeFiles(output720pDir)
         makeFiles(output480pDir)
         makeFiles(output320pDir)
-
-        // if (!existsSync(output1080pDir)) {
-        //     fs.mkdir(output1080pDir, { recursive: true });
-        // }
-
-        // if (!existsSync(output720pDir)) {
-        //     fs.mkdir(output720pDir, { recursive: true });
-        // }
-
-        // if (!existsSync(output480pDir)) {
-        //     fs.mkdir(output480pDir, { recursive: true });
-        // }
-
-        // if (!existsSync(output320pDir)) {
-        //     fs.mkdir(output320pDir, { recursive: true });
-        // }
 
         async function ffmpegPromise(videoUrl, outputDir, hlsTime, size, audioBitrate, videoBitrate, segments) {
             
@@ -120,6 +104,10 @@ const myQueue = new Worker("comunication", async (job) => {
         ])
 
         if (response) {
+            console.log('completed');
+            console.log(response);                        
+        }
+
             const __filename = fileURLToPath(import.meta.url);
             const __dirname = path.dirname(__filename);
 
@@ -165,7 +153,7 @@ const myQueue = new Worker("comunication", async (job) => {
                     const upload = await new Upload({
                         client: s3Client,
                         params: {
-                            Bucket: 'hls-bucket-youtube',
+                            Bucket: process.env.TEBI_HLS_BUCKET_NAME,
                             Key: s3Key,
                             Body: fileStream,
                             ContentType: contentType,
@@ -212,8 +200,6 @@ const myQueue = new Worker("comunication", async (job) => {
             for (const qualityFolder of folder) {
                 await uploadAllHLSFiles(videoKey, `${secondOutputDir}/${qualityFolder}`, qualityFolder);
             }
-
-        }
 
     }
     catch (error) {

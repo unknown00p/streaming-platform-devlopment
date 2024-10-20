@@ -1,0 +1,41 @@
+step 1: genarate access and secret key in tebi
+step 2: make a storage class in tebi
+step 3: make two buckets. go to update bucket then advance setting and you can find Default Storage Class then change storage field as your current storage
+
+step 4: paste this code in bucket policy and click on enable and then click update bucket: 
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:storage:tebi:your-bucket-name/*",
+      "Condition": {
+        "StringLike": {
+          "tebi:prefix": "*"
+        }
+      }
+    }
+  ]
+}
+
+step 5: paste this code in bucket policy and click on enable and then click update bucket:
+<?xml version='1.0' encoding='UTF-8'?>
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <CORSRule>
+        <AllowedOrigin>http://localhost</AllowedOrigin>
+        <AllowedOrigin>*</AllowedOrigin>
+        <AllowedMethod>HEAD</AllowedMethod>
+        <AllowedMethod>GET</AllowedMethod>
+        <AllowedMethod>POST</AllowedMethod>
+        <AllowedHeader>*</AllowedHeader>
+    </CORSRule>
+</CORSConfiguration>
+
+step 7: change the env file according to:
+TEBI_ACCESSKEY_ID="your accesskey"
+TEBI_SECRET_ACCESSKEY_ID="your secret access key"
+TEBI_TEMPORARY_BUCKET_NAME = "your temroray bucket name"
+TEBI_HLS_BUCKET_NAME = "your hls bucket name"
