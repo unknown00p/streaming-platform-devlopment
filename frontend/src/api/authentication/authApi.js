@@ -31,16 +31,22 @@ async function SignUp({ username, fullname, email, password }) {
     const formData = new FormData();
 
     const defaultAvatar = new File(
-        [await fetch("/images/avatar.png").then((res) => res.blob())],
+        [await fetch("/images/avatar1.png").then((res) => res.blob())],
         "defaultAvatar.png",
         { type: "image/png" }
     )
 
+    console.log(defaultAvatar);
+    
+
     const defaultCoverImage = new File(
-        [await fetch("/images/coverImage.jpg").then((res) => res.blob())],
+        [await fetch("/images/coverImage1.jpg").then((res) => res.blob())],
         "defaultCoverImage.jpg",
         { type: "image/jpg" }
     )
+
+    console.log(defaultCoverImage);
+    
 
     formData.append("username", username);
     formData.append("fullName", fullname);

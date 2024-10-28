@@ -10,6 +10,7 @@ import fs from 'fs/promises'
 import { createReadStream, existsSync, createWriteStream } from 'fs'
 import { PassThrough } from 'stream'
 import { fileURLToPath } from 'url';
+// console.log(numCors);
 
 dotenv.config({
     path: ".env"
@@ -47,6 +48,7 @@ const myQueue = new Worker("comunication", async (job) => {
 
         const location = uuidv4()
         outputDir = `./output/${videoKey}`
+
         const output1080pDir = `${outputDir}/1080p`
         const output720pDir = `${outputDir}/720p`
         const output480pDir = `${outputDir}/480p`
@@ -54,7 +56,7 @@ const myQueue = new Worker("comunication", async (job) => {
 
         function makeFiles(DirPath) {
             if (!existsSync(DirPath)) {
-                fs.mkdir(DirPath,{recursive: true})
+                fs.mkdir(DirPath, { recursive: true })
             }
         }
 
@@ -64,7 +66,7 @@ const myQueue = new Worker("comunication", async (job) => {
         makeFiles(output320pDir)
 
         async function ffmpegPromise(videoUrl, outputDir, hlsTime, size, audioBitrate, videoBitrate, segments) {
-            
+
             return new Promise((resolve, reject) => {
                 ffmpeg(videoUrl)
                     .output(outputDir)
@@ -93,27 +95,39 @@ const myQueue = new Worker("comunication", async (job) => {
 
         }
 
-        const response = await Promise.all([
-            ffmpegPromise(url, `${output1080pDir}/1080p_index.m3u8`, 4, '1920x1080', '192k', '3000k', `${output1080pDir}/${location}_1080p_segment%03d.ts`),
+        const allQualities = [
+            {
+                outputDir: `${output1080pDir}/1080p_index.m3u8`,hlsTime: 4,size: '1920x1080',audioBitrate: '192k',videoBitrate: '3000k',segments: `${output1080pDir}/${location}_1080p_segment%03d.ts`
+            },
+            {
+                outputDir: `${output720pDir}/720_index.m3u8`,hlsTime: 6,size: '1280x720',audioBitrate: '120k',videoBitrate: '1600k',segments: `${output720pDir}/${location}_720p_segment%03d.ts`
+            },
+            {
+              outputDir: `${output480pDir}/480_index.m3u8`,hlsTime: 8,size: '854x480',audioBitrate: '96k',videoBitrate: '1000k',segments: `${output480pDir}/${location}_480p_segment%03d.ts`
+            },
+            {
+              outputDir: `${output320pDir}/320p_index.m3u8`,hlsTime: 10,size: '480x320',audioBitrate: '64k',videoBitrate: '500k',segments: `${output320pDir}/${location}_320p_segment%03d.ts`
+            }
+          ];
+          
 
-            ffmpegPromise(url, `${output720pDir}/720_index.m3u8`, 6, '1280x720', '120k', '1600k', `${output720pDir}/${location}_720p_segment%03d.ts`),
-
-            ffmpegPromise(url, `${output480pDir}/480_index.m3u8`, 8, '854x480', '96k', '1000k', `${output480pDir}/${location}_480p_segment%03d.ts`),
-
-            ffmpegPromise(url, `${output320pDir}/320p_index.m3u8`, 10, '480x320', '64k', '500k', `${output320pDir}/${location}_320p_segment%03d.ts`),
-        ])
+        const response = await Promise.all(
+            allQualities.map(quality =>
+                ffmpegPromise(url,quality.outputDir,quality.hlsTime,quality.size,quality.audioBitrate,quality.videoBitrate,quality.segments
+                )
+            ))
 
         if (response) {
             console.log('completed');
-            console.log(response);                        
+            console.log(response);
         }
 
-            const __filename = fileURLToPath(import.meta.url);
-            const __dirname = path.dirname(__filename);
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = path.dirname(__filename);
 
-            async function createMasterPlaylist() {
-                const masterPlaylistContent =
-                    `
+        async function createMasterPlaylist() {
+            const masterPlaylistContent =
+                `
                         #EXTM3U
                         #EXT-X-VERSION:3
                         #EXT-X-TARGETDURATION:10
@@ -137,69 +151,69 @@ const myQueue = new Worker("comunication", async (job) => {
 
                 `
 
-                const masterPlaylistPath = path.join(outputDir, 'master.m3u8')
+            const masterPlaylistPath = path.join(outputDir, 'master.m3u8')
 
-                await fs.writeFile(masterPlaylistPath, masterPlaylistContent.trim())
-            }
+            await fs.writeFile(masterPlaylistPath, masterPlaylistContent.trim())
+        }
 
-            createMasterPlaylist()
+        createMasterPlaylist()
 
-            async function uploadFileToS3(filePath, s3Key) {
-                try {
-                    const fileStream = createReadStream(filePath);                   
+        async function uploadFileToS3(filePath, s3Key) {
+            try {
+                const fileStream = createReadStream(filePath);
 
-                    const contentType = filePath.endsWith('.m3u8') ? 'application/x-mpegURL' : 'video/MP2T';
+                const contentType = filePath.endsWith('.m3u8') ? 'application/x-mpegURL' : 'video/MP2T';
 
-                    const upload = await new Upload({
-                        client: s3Client,
-                        params: {
-                            Bucket: process.env.TEBI_HLS_BUCKET_NAME,
-                            Key: s3Key,
-                            Body: fileStream,
-                            ContentType: contentType,
-                            ACL: 'public-read'
-                        }
-                    });
-
-                    await upload.done();
-                    console.log(`Upload for ${filePath} completed`);
-                } catch (err) {
-                    console.error(`Error uploading file ${s3Key}:`, err);
-                }
-            }
-
-            async function uploadAllHLSFiles(videoFileName, secondOutputDir, qualityFolder) {
-                const pathType = await fs.stat(secondOutputDir)
-
-                if (pathType.isDirectory()) {
-                    try {
-                        const files = await fs.readdir(secondOutputDir)
-
-                        for (const file of files) {
-                            const filePath = path.join(secondOutputDir, file);
-                            const s3Key = `${videoFileName}/${qualityFolder}/${file}`;
-                            await uploadFileToS3(filePath, s3Key);
-                        }
-                        return true
-
-                    } catch (error) {
-                        console.log(error);
-                        return false
+                const upload = await new Upload({
+                    client: s3Client,
+                    params: {
+                        Bucket: process.env.TEBI_HLS_BUCKET_NAME,
+                        Key: s3Key,
+                        Body: fileStream,
+                        ContentType: contentType,
+                        ACL: 'public-read'
                     }
-                } else if (pathType.isFile() && path.extname(secondOutputDir) === '.m3u8') {
-                    const s3Key = `${videoFileName}/${videoKey}_master.m3u8`;
+                });
 
-                    await uploadFileToS3(secondOutputDir, s3Key)
+                await upload.done();
+                console.log(`Upload for ${filePath} completed`);
+            } catch (err) {
+                console.error(`Error uploading file ${s3Key}:`, err);
+            }
+        }
+
+        async function uploadAllHLSFiles(videoFileName, secondOutputDir, qualityFolder) {
+            const pathType = await fs.stat(secondOutputDir)
+
+            if (pathType.isDirectory()) {
+                try {
+                    const files = await fs.readdir(secondOutputDir)
+
+                    const uploadPromise = files.map(async (file) => {
+                        const filePath = path.join(secondOutputDir, file);
+                        const s3Key = `${videoFileName}/${qualityFolder}/${file}`;
+                        await uploadFileToS3(filePath, s3Key);
+                    })
+
+                    await Promise.all(uploadPromise)
+
+                } catch (error) {
+                    console.log(error);
+                    return false
                 }
-
+            } else if (pathType.isFile() && path.extname(secondOutputDir) === '.m3u8') {
+                const s3Key = `${videoFileName}/${videoKey}_master.m3u8`;
+                await uploadFileToS3(secondOutputDir, s3Key)
             }
 
-            const secondOutputDir = `${__dirname}/output/${videoKey}`;
-            const folder = await fs.readdir(secondOutputDir)
+        }
 
-            for (const qualityFolder of folder) {
-                await uploadAllHLSFiles(videoKey, `${secondOutputDir}/${qualityFolder}`, qualityFolder);
-            }
+        const secondOutputDir = `${__dirname}/output/${videoKey}`;
+        const folder = await fs.readdir(secondOutputDir)
+
+        for (const qualityFolder of folder) {
+            await uploadAllHLSFiles(videoKey, `${secondOutputDir}/${qualityFolder}`, qualityFolder);
+        }
 
     }
     catch (error) {

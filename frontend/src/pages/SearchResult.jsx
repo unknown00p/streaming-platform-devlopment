@@ -24,11 +24,11 @@ function SearchResult() {
                 </div>
 
                 <div className='flex flex-col gap-2'>
-                    {imageUrl && imageUrl.map((value) => (
-                        <div key={value} className='grid gap-3 grid-cols-1 sm:grid-cols-2 lg:ml-[6rem]'>
-                            <img className='w-full h-full object-cover rounded-md' src={value} alt="" />
+                    {imageUrl && imageUrl.map((value,index) => (
+                        <div key={index} className='grid gap-3 grid-cols-1 sm:grid-cols-3 lg:ml-[6rem]'>
+                            <img className='w-full object-contain aspect-video bg-black rounded-md' src={value} alt="" />
 
-                            <div className='flex gap-3 items-start'>
+                            <div className='flex gap-3 items-start sm:col-span-2'>
                                 <img src="https://th.bing.com/th/id/OIP.PA_USRL68UjTfF0kRo5ImQHaEo?w=296&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7" className='w-11 h-11 rounded-full sm:hidden block' alt="" />
 
                                 <div>
@@ -52,6 +52,7 @@ function SearchResult() {
                                         Lorem ipsum, dolor sit amet consectetur adipisicing elit Lorem ipsum dolor sit amet consectetur.
                                     </div>
                                 </div>
+                                
                             </div>
                         </div>
                     ))}

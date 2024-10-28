@@ -17,6 +17,8 @@ function Home() {
       if (response) {
         setHasVideo(true)
         const videoData = response.data.data.allvideos
+        console.log(videoData);
+        
 
         const awaitResponse = videoData.map((val) => userById(val?.owner))
         const userDataResponse = await Promise.all(awaitResponse)
@@ -85,14 +87,14 @@ function Home() {
         </div>
 
         <div className='right w-full pt-3 overflow-hidden sm:mx-3 pb-16 sm:pb-0'>
-          <div className='lg:ml-[6rem] max-w-full ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 cursor-pointer'>
+          <div className='lg:ml-[6rem] ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 cursor-pointer'>
             {videoArray && videoArray.map((value) => {          
               return <div key={value._id} className=''>
                 <div onClick={(e) => {
                   videoClick(e, value)
                 }} className="rounded-xl shadow-lg">
                   <div className=''>
-                    <img className="object-cover w-full h-[13rem] rounded-sm" src={value?.thumbnail} alt="Sunset in the mountains" />
+                    <img className="w-full object-contain aspect-video rounded-xl bg-black" src={value?.thumbnail} alt="Sunset in the mountains" />
                   </div>
                   <div className="py-4">
                     <div className="flex gap-0">

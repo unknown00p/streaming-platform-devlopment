@@ -57,7 +57,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
     let coverImageLocalPath;
-
     if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
         coverImageLocalPath = req.files.coverImage[0].path
     }
@@ -70,7 +69,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
     const avatar = await uploadImagesToBucket(avatarLocalPath)
     const coverImage = await uploadImagesToBucket(coverImgLocalPath)
-    // console.log("coverImage",coverImage);
+    console.log("avatar",avatar);
+    console.log("coverImage",coverImage);
 
 
     if (!avatar) {
@@ -80,8 +80,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
     const user = await User.create({
         fullName,
-        avatar: avatar.url,
-        coverImage: coverImage?.url || "",
+        avatar: avatar,
+        coverImage: coverImage || "",
         email,
         password,
         username: username.toLowerCase()
