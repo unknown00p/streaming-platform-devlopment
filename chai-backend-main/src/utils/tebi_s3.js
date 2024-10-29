@@ -24,7 +24,7 @@ async function uploadImagesToBucket(image) {
     try {
         const imageName = path.basename(image)
         const imageContent = fs.createReadStream(image)
-        
+
         const storeImageTos3 = await s3client.send(
             new PutObjectCommand({
                 Bucket: process.env.TEBI_TEMPORARY_BUCKET_NAME,
@@ -34,7 +34,7 @@ async function uploadImagesToBucket(image) {
                 ContentType: image?.mimetype,
                 ACL: "public-read"
             })
-        )        
+        )
 
         if (storeImageTos3.$metadata.httpStatusCode === 200) {
             const url = `https://${process.env.TEBI_TEMPORARY_BUCKET_NAME}.s3.tebi.io/${imageName}`
@@ -50,7 +50,7 @@ async function uploadImagesToBucket(image) {
 }
 
 async function uploadVideosToBucket(video) {
-    console.log('video',video);
+    console.log('video', video);
 
     try {
         const videoName = path.basename(video)
@@ -107,27 +107,17 @@ async function uploadVideosToBucket(video) {
     }
 }
 
-async function listFolderContents({folderName}) {
-    console.log(folderName);
-    
-    const listParams = {
-        Bucket: process.env.TEBI_HLS_BUCKET_NAME, 
-        Prefix: `${folderName}/`,
-        Delimiter: "/",
-    };
+async function listFolderContents({ folderName }) {
 
-    console.log('list params',listParams);
-    
-
+    const bucketName = process.env.TEBI_HLS_BUCKET_NAME;
     try {
-        const data = await s3client.send(new ListObjectsV2Command(listParams));
-        const masterUrlFileKey = data.Contents[0]?.Key
-        // console.log('masterKey',masterUrlFileKey);
-        
-
-        const url = [
-            `https://s3.tebi.io/${listParams.Bucket}/${masterUrlFileKey}`
-        ]
+        const url = {
+            auto: `https://s3.tebi.io/${bucketName}/${folderName}/${folderName}_master.m3u8`,
+            quality1080p: `https://s3.tebi.io/${bucketName}/${folderName}/1080p/1080p_index.m3u8`,
+            quality720p: `https://s3.tebi.io/${bucketName}/${folderName}/720p/720p_index.m3u8`,
+            quality480p: `https://s3.tebi.io/${bucketName}/${folderName}/480p/480p_index.m3u8`,
+            quality320p: `https://s3.tebi.io/${bucketName}/${folderName}/320p/320p_index.m3u8`
+        }
         return url
     } catch (err) {
         console.error("Error listing folder contents:", err);

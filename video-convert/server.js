@@ -100,10 +100,10 @@ const myQueue = new Worker("comunication", async (job) => {
                 outputDir: `${output1080pDir}/1080p_index.m3u8`,hlsTime: 4,size: '1920x1080',audioBitrate: '192k',videoBitrate: '3000k',segments: `${output1080pDir}/${location}_1080p_segment%03d.ts`
             },
             {
-                outputDir: `${output720pDir}/720_index.m3u8`,hlsTime: 6,size: '1280x720',audioBitrate: '120k',videoBitrate: '1600k',segments: `${output720pDir}/${location}_720p_segment%03d.ts`
+                outputDir: `${output720pDir}/720p_index.m3u8`,hlsTime: 6,size: '1280x720',audioBitrate: '120k',videoBitrate: '1600k',segments: `${output720pDir}/${location}_720p_segment%03d.ts`
             },
             {
-              outputDir: `${output480pDir}/480_index.m3u8`,hlsTime: 8,size: '854x480',audioBitrate: '96k',videoBitrate: '1000k',segments: `${output480pDir}/${location}_480p_segment%03d.ts`
+              outputDir: `${output480pDir}/480p_index.m3u8`,hlsTime: 8,size: '854x480',audioBitrate: '96k',videoBitrate: '1000k',segments: `${output480pDir}/${location}_480p_segment%03d.ts`
             },
             {
               outputDir: `${output320pDir}/320p_index.m3u8`,hlsTime: 10,size: '480x320',audioBitrate: '64k',videoBitrate: '500k',segments: `${output320pDir}/${location}_320p_segment%03d.ts`

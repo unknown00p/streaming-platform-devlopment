@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from "react"
 import Hls from "hls.js"
 
-function CustomVideoPlayer({ qualityArr }) {
+function CustomVideoPlayer({ qualityObj, duration }) {
   const videoRef = useRef(null)
   const frameIdRef = useRef(null)
   const divRef = useRef(null)
@@ -10,33 +10,36 @@ function CustomVideoPlayer({ qualityArr }) {
   const [soundRangeValue, setSoundRangeValue] = useState(10)
   const [volumeUrl, setVolumeUrl] = useState("volume-full.svg")
   const [videoIndex, setVideoIndex] = useState(0)
-  const [duration, setDuration] = useState(265.427302)
+  // const [duration, setDuration] = useState(duration)
   const [currentTime, setCurrentTime] = useState(0)
   const [toggleFullScreenImg, setToggleFullScreenImg] = useState("maximize.svg")
   const [showSetting, setShowSetting] = useState(false)
   const [onHoverShow, setonHoverShow] = useState("absolute")
+  const [quality, setQuality] = useState(qualityObj?.auto)
+
+  console.log('qualityObj', qualityObj);
 
 
   useEffect(() => {
     try {
-          const videoElement = videoRef.current;
-          if (Hls.isSupported() && videoElement) {
-            const hls = new Hls({
-              startLevel: 0,
-              maxBufferLength: 10,
-              maxBufferSize: 60 * 1000 * 1000,
-            });
-            hls.loadSource(qualityArr[videoIndex]);
-            hls.attachMedia(videoElement);
-            // videoElement.play();
-          } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
-            videoElement.src = qualityArr[videoIndex];
-          }
+      const videoElement = videoRef.current;
+      if (Hls.isSupported() && videoElement) {
+        const hls = new Hls({
+          startLevel: 0,
+          maxBufferLength: 10,
+          maxBufferSize: 60 * 1000 * 1000,
+        });
+        hls.loadSource(quality);
+        hls.attachMedia(videoElement);
+        // videoElement.play();
+      } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+        videoElement.src = quality
+      }
     } catch (error) {
-      console.log(error);  
+      console.log(error);
     }
 
-  }, [videoIndex]);
+  }, [quality]);
 
   function togglePlayPause() {
     if (videoRef.current.paused) {
@@ -157,17 +160,17 @@ function CustomVideoPlayer({ qualityArr }) {
     return time
   }
 
-  function changeQuality(event) {
-    console.log(event.target.innerText);
-  }
+  // function changeQuality(event) {
+  //   console.log(event.target.innerText);
+  // }
 
   return (
     <>
       <div ref={divRef}
-        onMouseEnter={()=> setonHoverShow("absolute")}
-         onMouseLeave={()=> setonHoverShow("hidden")}
+        onMouseEnter={() => setonHoverShow("absolute")}
+        onMouseLeave={() => setonHoverShow("hidden")}
         className="relative">
-          
+
         <video
           crossOrigin="anonymous"
           onClick={togglePlayPause}
@@ -179,9 +182,9 @@ function CustomVideoPlayer({ qualityArr }) {
           disablePictureInPicture
           className="w-full aspect-video rounded-md object-cover cursor-pointer"
           controls={false}
-          >
+        >
 
-          <source src={qualityArr[videoIndex]} type="application/x-mpegURL" />
+          <source src={qualityObj?.quality1080p} type="application/x-mpegURL" />
 
         </video>
 
@@ -238,19 +241,22 @@ function CustomVideoPlayer({ qualityArr }) {
                 <img className="cursor-pointer hidden sm:block" onClick={() => (
                   setShowSetting(!showSetting)
                 )} src="/dots2.svg" alt="" />
-                {showSetting && <div className="bg-[#211e1e7a] absolute w-[8.75rem] p-2 top-[-11rem] left-[-5rem] rounded-md">
+                {showSetting && <div className="bg-[#211e1e7a] absolute w-[8.75rem] p-2 top-[-13rem] left-[-5rem] rounded-md">
                   <ul className="flex flex-col gap-3">
                     <button className="text-left">
-                      <li onClick={changeQuality}>Auto</li>
+                      <li onClick={()=> setQuality(qualityObj?.auto)}>Auto</li>
                     </button>
                     <button className="text-left">
-                      <li onClick={changeQuality}>1080p</li>
+                      <li onClick={()=> setQuality(qualityObj?.quality1080p)}>1080p</li>
                     </button>
                     <button className="text-left">
-                      <li onClick={changeQuality}>720p</li>
+                      <li onClick={()=> setQuality(qualityObj?.quality720p)}>720p</li>
                     </button>
                     <button className="text-left">
-                      <li onClick={changeQuality}>480p</li>
+                      <li onClick={()=> setQuality(qualityObj?.quality480p)}>480p</li>
+                    </button>
+                    <button className="text-left">
+                      <li onClick={()=> setQuality(qualityObj?.quality320p)}>320p</li>
                     </button>
                   </ul>
                 </div>}

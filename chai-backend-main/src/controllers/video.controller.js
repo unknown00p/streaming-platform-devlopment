@@ -121,8 +121,6 @@ const getVideoById = asyncHandler(async (req, res) => {
     if (!videoId) {
         throw new ApiError(404, "videoId not found")
     }
-    console.log(videoId);
-
 
     const video = await Video.findOne(new mongoose.Types.ObjectId(videoId))
     
@@ -136,10 +134,9 @@ const getVideoById = asyncHandler(async (req, res) => {
     if (!url) {
         throw new ApiError(404,'Unable to retrive video url')
     }
-
+    
     const newVideoObj = video.toObject()
     newVideoObj['videoUrl'] = url
-    
 
     res
         .status(200)

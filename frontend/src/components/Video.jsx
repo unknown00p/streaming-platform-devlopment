@@ -36,6 +36,9 @@ function Video() {
     'https://s3.tebi.io/hls-bucket/Toast  - One Minute Comedy Film _ Award Winning.mp4/Toast  - One Minute Comedy Film _ Award Winning.mp4_master.m3u8'
   ]
 
+  console.log(videoData);
+  
+
   return (
     <Wrapper>
       <main className="grid lg:grid-cols-[60%_40%] relative grid-cols-1 gap-4 px-2 min-h-screen pb-24 sm:pb-0">
@@ -50,7 +53,7 @@ function Video() {
         <div className="left flex relative flex-col">
           <div className="mb-4">
             
-            {videoData ? <CustomVideoPlayer qualityArr={videoData?.videoUrl} />: <div className="w-full aspect-video bg-[#1b1e28] rounded-md"></div>}
+            {videoData ? <CustomVideoPlayer duration={videoData?.duration} qualityObj={videoData?.videoUrl} />: <div className="w-full aspect-video bg-[#1b1e28] rounded-md"></div>}
           </div>
 
           <div className="flex flex-col text-white gap-4">
