@@ -2,7 +2,7 @@ import { S3Client, ListObjectsCommand, PutObjectCommand, GetObjectCommand, ListO
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import ffmpegCommand from "fluent-ffmpeg"
 import fs from "fs"
-import path from "path"
+import path, { delimiter } from "path"
 import { Queue } from "bullmq"
 
 const credentials = {
@@ -10,20 +10,16 @@ const credentials = {
     secretAccessKey: process.env.TEBI_SECRET_ACCESSKEY_ID,
 }
 
-// console.log(credentials);
-
 const s3client = new S3Client({
     endpoint: "https://s3.tebi.io",
     credentials: credentials,
     region: "global"
 })
 
-// console.log('s3client',s3client);
-
 async function uploadImagesToBucket(image) {
     try {
         const imageName = path.basename(image)
-        const imageContent = fs.createReadStream(image)
+        const imageContent = fs.createReadStream(image)        
 
         const storeImageTos3 = await s3client.send(
             new PutObjectCommand({
@@ -110,13 +106,26 @@ async function uploadVideosToBucket(video) {
 async function listFolderContents({ folderName }) {
 
     const bucketName = process.env.TEBI_HLS_BUCKET_NAME;
+
+
+    // const listParams = {
+    //     Bucket: process.env.TEBI_HLS_BUCKET_NAME,
+    //     Prefix: `${folderName}/`,
+    //     Delimiter: '/'
+    // }
+
+    // const dataCommand = new ListObjectsV2Command(listParams)
+    // const folders = await s3client.send(dataCommand)
+    // console.log('folders',folders.Contents[0]?.Key); 
+    
     try {
+        const incodedFolderName = encodeURIComponent(folderName)        
         const url = {
-            auto: `https://s3.tebi.io/${bucketName}/${folderName}/${folderName}_master.m3u8`,
-            quality1080p: `https://s3.tebi.io/${bucketName}/${folderName}/1080p/1080p_index.m3u8`,
-            quality720p: `https://s3.tebi.io/${bucketName}/${folderName}/720p/720p_index.m3u8`,
-            quality480p: `https://s3.tebi.io/${bucketName}/${folderName}/480p/480p_index.m3u8`,
-            quality320p: `https://s3.tebi.io/${bucketName}/${folderName}/320p/320p_index.m3u8`
+            auto: `https://s3.tebi.io/${bucketName}/${incodedFolderName}/${incodedFolderName}_master.m3u8`,
+            quality1080p: `https://s3.tebi.io/${bucketName}/${incodedFolderName}/1080p/1080p_index.m3u8`,
+            quality720p: `https://s3.tebi.io/${bucketName}/${incodedFolderName}/720p/720p_index.m3u8`,
+            quality480p: `https://s3.tebi.io/${bucketName}/${incodedFolderName}/480p/480p_index.m3u8`,
+            quality320p: `https://s3.tebi.io/${bucketName}/${incodedFolderName}/320p/320p_index.m3u8`
         }
         return url
     } catch (err) {
@@ -127,6 +136,5 @@ async function listFolderContents({ folderName }) {
 export {
     uploadImagesToBucket,
     uploadVideosToBucket,
-    // getVideo,
     listFolderContents
 }

@@ -27,33 +27,28 @@ async function SignOut() {
     }
 }
 
-async function SignUp({ username, fullname, email, password }) {
+async function SignUp({ username, fullname, email, password, avatar, coverImage }) {
+    // console.log(username, fullname, email, password, avatar[0], coverImage[0]);
     const formData = new FormData();
 
     const defaultAvatar = new File(
-        [await fetch("/images/avatar1.png").then((res) => res.blob())],
+        [await fetch("/images/avatar.png").then((res) => res.blob())],
         "defaultAvatar.png",
         { type: "image/png" }
     )
 
-    console.log(defaultAvatar);
-    
-
     const defaultCoverImage = new File(
-        [await fetch("/images/coverImage1.jpg").then((res) => res.blob())],
+        [await fetch("/images/coverImage.jpg").then((res) => res.blob())],
         "defaultCoverImage.jpg",
         { type: "image/jpg" }
     )
-
-    console.log(defaultCoverImage);
-    
 
     formData.append("username", username);
     formData.append("fullName", fullname);
     formData.append("email", email);
     formData.append("password", password);
-    formData.append("avatar", defaultAvatar);
-    formData.append("coverImage", defaultCoverImage);
+    formData.append("avatar", avatar[0] || defaultAvatar);
+    formData.append("coverImage", coverImage[0] || defaultCoverImage);    
 
     try {
         const register = await baseUrl.post("/users/register", formData, {

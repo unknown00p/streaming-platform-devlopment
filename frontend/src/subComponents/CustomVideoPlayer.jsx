@@ -17,7 +17,7 @@ function CustomVideoPlayer({ qualityObj, duration }) {
   const [onHoverShow, setonHoverShow] = useState("absolute")
   const [quality, setQuality] = useState(qualityObj?.auto)
 
-  console.log('qualityObj', qualityObj);
+  // console.log('qualityObj', qualityObj);
 
 
   useEffect(() => {

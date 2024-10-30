@@ -89,31 +89,28 @@ const myQueue = new Worker("comunication", async (job) => {
                     })
                     .run()
 
-            }
-
-            )
+            })
 
         }
 
         const allQualities = [
             {
-                outputDir: `${output1080pDir}/1080p_index.m3u8`,hlsTime: 4,size: '1920x1080',audioBitrate: '192k',videoBitrate: '3000k',segments: `${output1080pDir}/${location}_1080p_segment%03d.ts`
+                outputDir: `${output1080pDir}/1080p_index.m3u8`, hlsTime: 4, size: '1920x1080', audioBitrate: '192k', videoBitrate: '3000k', segments: `${output1080pDir}/${location}_1080p_segment%03d.ts`
             },
             {
-                outputDir: `${output720pDir}/720p_index.m3u8`,hlsTime: 6,size: '1280x720',audioBitrate: '120k',videoBitrate: '1600k',segments: `${output720pDir}/${location}_720p_segment%03d.ts`
+                outputDir: `${output720pDir}/720p_index.m3u8`, hlsTime: 6, size: '1280x720', audioBitrate: '120k', videoBitrate: '1600k', segments: `${output720pDir}/${location}_720p_segment%03d.ts`
             },
             {
-              outputDir: `${output480pDir}/480p_index.m3u8`,hlsTime: 8,size: '854x480',audioBitrate: '96k',videoBitrate: '1000k',segments: `${output480pDir}/${location}_480p_segment%03d.ts`
+                outputDir: `${output480pDir}/480p_index.m3u8`, hlsTime: 8, size: '854x480', audioBitrate: '96k', videoBitrate: '1000k', segments: `${output480pDir}/${location}_480p_segment%03d.ts`
             },
             {
-              outputDir: `${output320pDir}/320p_index.m3u8`,hlsTime: 10,size: '480x320',audioBitrate: '64k',videoBitrate: '500k',segments: `${output320pDir}/${location}_320p_segment%03d.ts`
+                outputDir: `${output320pDir}/320p_index.m3u8`, hlsTime: 10, size: '480x320', audioBitrate: '64k', videoBitrate: '500k', segments: `${output320pDir}/${location}_320p_segment%03d.ts`
             }
-          ];
-          
+        ];
 
         const response = await Promise.all(
             allQualities.map(quality =>
-                ffmpegPromise(url,quality.outputDir,quality.hlsTime,quality.size,quality.audioBitrate,quality.videoBitrate,quality.segments
+                ffmpegPromise(url, quality.outputDir, quality.hlsTime, quality.size, quality.audioBitrate, quality.videoBitrate, quality.segments
                 )
             ))
 
@@ -139,11 +136,11 @@ const myQueue = new Worker("comunication", async (job) => {
 
                         # 720p Stream
                         #EXT-X-STREAM-INF:BANDWIDTH=1600000,RESOLUTION=1280x720
-                        720p/720_index.m3u8
+                        720p/720p_index.m3u8
 
                         # 480p Stream
                         #EXT-X-STREAM-INF:BANDWIDTH=1000000,RESOLUTION=854x480
-                        480p/480_index.m3u8
+                        480p/480p_index.m3u8
 
                         # 320p Stream
                         #EXT-X-STREAM-INF:BANDWIDTH=500000,RESOLUTION=480x320
@@ -156,7 +153,7 @@ const myQueue = new Worker("comunication", async (job) => {
             await fs.writeFile(masterPlaylistPath, masterPlaylistContent.trim())
         }
 
-        createMasterPlaylist()
+        await createMasterPlaylist()
 
         async function uploadFileToS3(filePath, s3Key) {
             try {

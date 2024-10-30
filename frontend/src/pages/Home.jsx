@@ -100,7 +100,7 @@ function Home() {
                     <div className="flex gap-0">
                       <img onClick={() => {
                         console.log("Hola");
-                      }} id='profile' className="w-11 h-11 rounded-full mr-4" src={value?.userData?.avatar} alt="Avatar of Jonathan Reinink" />
+                      }} id='profile' className="w-11 h-11 object-cover rounded-full mr-4" src={value?.userData?.avatar} alt="Avatar of Jonathan Reinink" />
                       <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                         <div className='flex gap-2'>
                           <div className="text-lg">{value?.title}</div>
