@@ -4,17 +4,22 @@ import SideBar from "../subComponents/SideBar"
 import Wrapper from "./Wrapper"
 import { useParams } from "react-router-dom"
 import { getVideobyId } from "../api/videos/videoApi"
+import { userById } from "../api/authentication/authApi"
 
 function Video() {
   const [saveToPlaylist, setSaveToPlaylist] = useState(false)
   const [videoData, setVideoData] = useState(null)
+  const [userData, setUserData] = useState(null)
   const { videoId } = useParams()
 
   useEffect(() => {
 
     async function videoByIdFunc() {
       const response = await getVideobyId(videoId)
-      console.log('response',response);      
+      if (response) {
+        const response2 = await userById(response.data.data.video.owner)
+        setUserData(response2.data.data.userData)
+      }
       setVideoData(response.data.data.video)
     }
     videoByIdFunc()
@@ -31,13 +36,8 @@ function Video() {
     "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7"
   ]
 
-  const qualityArr = [
-    'https://s3.tebi.io/hls-bucket/Aarambh Hai Prachand •X• Polozehni - Shrylox 🔥.mp4/Aarambh Hai Prachand •X• Polozehni - Shrylox 🔥.mp4_master.m3u8',
-    'https://s3.tebi.io/hls-bucket/Toast  - One Minute Comedy Film _ Award Winning.mp4/Toast  - One Minute Comedy Film _ Award Winning.mp4_master.m3u8'
-  ]
+  console.log(userData);
 
-  console.log(videoData);
-  
 
   return (
     <Wrapper>
@@ -52,14 +52,14 @@ function Video() {
 
         <div className="left flex relative flex-col">
           <div className="mb-4">
-            
-            {videoData ? <CustomVideoPlayer duration={videoData?.duration} qualityObj={videoData?.videoUrl} />: <div className="w-full aspect-video bg-[#1b1e28] rounded-md"></div>}
+
+            {videoData ? <CustomVideoPlayer duration={videoData?.duration} qualityObj={videoData?.videoUrl} /> : <div className="w-full aspect-video bg-[#1b1e28] rounded-md"></div>}
           </div>
 
           <div className="flex flex-col text-white gap-4">
             <div className="flex items-start justify-between gap-2">
               <p>
-                Lorem ipsum dolor sit amet Lorem, ipsum. Lor ipsum dolor sit. Lorem, ipsum dolor
+                {videoData?.description}
               </p>
               <img onClick={() => setSaveToPlaylist(true)} src="/dots.svg" className="w-6 cursor-pointer" alt="" />
             </div>
@@ -71,10 +71,10 @@ function Video() {
                 <div className="flex items-center gap-1">
                   <img onClick={() => {
                     console.log("Hola");
-                  }} id='profile' className="w-9 h-9 rounded-full mr-2" src="https://th.bing.com/th/id/OIP.HLuY60jzx5puuKjbqmWRRwHaEK?w=328&h=185&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Avatar of Jonathan Reinink" />
+                  }} id='profile' className="w-9 h-9 rounded-full mr-2 object-cover" src={userData?.avatar} alt="Avatar of Jonathan Reinink" />
                   <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                     <div className='flex flex-col'>
-                      <div className="text-lg">Raj chaurasia</div>
+                      <div className="text-lg">{userData?.fullName}</div>
                       <div className="text-sm">280k subscribers</div>
                     </div>
                   </div>

@@ -1,9 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import SideBar from '../subComponents/SideBar'
 import Wrapper from '../components/Wrapper'
+import { videoStore } from '../zustand/videoStore'
+import { getAllSearchVideos } from '../api/videos/videoApi'
 
 function SearchResult() {
     const [searchResult, setSearchResult] = useState(true)
+    const [videos, setvideos] = useState(null)
     const imageUrl = [
         "https://th.bing.com/th/id/OIP.c2yh-vjm-Ze872ygDBhg3QHaEK?w=326&h=183&c=7&r=0&o=5&dpr=1.5&pid=1.7",
         "https://th.bing.com/th/id/OIP.hF8_3tDhRrZvxm-j1kZwgwHaE9?w=243&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
@@ -16,6 +19,19 @@ function SearchResult() {
         "https://th.bing.com/th/id/OIP.t_kb1S2P60S7gaKnEqQOjQHaEK?w=333&h=187&c=7&r=0&o=5&dpr=1.5&pid=1.7",
         "https://th.bing.com/th/id/OIP.77J08bFK_F7zzSmGyOQnkgHaDU?w=295&h=156&c=7&r=0&o=5&dpr=1.5&pid=1.7"
     ]
+
+    const searchData = videoStore((state) => state.searchData)
+
+    useEffect(() => {
+        async function getData(params) {
+            const response = await getAllSearchVideos(searchData)
+            console.log('response',response);
+        }
+        getData()
+    }, [searchData])
+
+
+
     return searchResult ? (
         <Wrapper>
             <div className='text-white'>
@@ -24,7 +40,7 @@ function SearchResult() {
                 </div>
 
                 <div className='flex flex-col gap-2'>
-                    {imageUrl && imageUrl.map((value,index) => (
+                    {imageUrl && imageUrl.map((value, index) => (
                         <div key={index} className='grid gap-3 grid-cols-1 sm:grid-cols-3 lg:ml-[6rem]'>
                             <img className='w-full object-contain aspect-video bg-black rounded-md' src={value} alt="" />
 
@@ -52,7 +68,7 @@ function SearchResult() {
                                         Lorem ipsum, dolor sit amet consectetur adipisicing elit Lorem ipsum dolor sit amet consectetur.
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
                     ))}

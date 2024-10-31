@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import userDataStore from '../zustand/userData';
+import userDataStore from '../zustand/userData.js';
 import { UpdateEmailPassword, UpdateAvatar, UpdateCoverImage, changeCurrentPassword } from '../api/authentication/UpdateAccountDetails';
 import { useForm } from 'react-hook-form';
 

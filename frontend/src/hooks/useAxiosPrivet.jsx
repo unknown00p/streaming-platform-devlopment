@@ -1,11 +1,11 @@
 import { PrivetBaseUrl } from "../api/baseUrl/BaseUrl"
 import useRefreshToken from "./useRefreshToken";
-import useAuth from "../zustand/useAuth";
+import useAuth from "../zustand/useAuth.js";
 // import CurrentUser from "../api/authentication/CurrentUser";
 import { useEffect } from "react";
 const useAxiosPrivet = () => {
   const refresh = useRefreshToken()
-  const authData = useAuth((state) => state.authData)
+  const authData = useAuth((state) => state.authData)  
 
   useEffect(() => {
 

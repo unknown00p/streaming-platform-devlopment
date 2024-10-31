@@ -161,7 +161,7 @@ const myQueue = new Worker("comunication", async (job) => {
 
                 const contentType = filePath.endsWith('.m3u8') ? 'application/x-mpegURL' : 'video/MP2T';
 
-                const upload = await new Upload({
+                const upload = new Upload({
                     client: s3Client,
                     params: {
                         Bucket: process.env.TEBI_HLS_BUCKET_NAME,

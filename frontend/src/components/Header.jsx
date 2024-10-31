@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Input } from "../index"
 import useHandleCssStore from '../zustand/useHandleCssStore';
-import {SignOut} from '../api/authentication/authApi';
+import { SignOut } from '../api/authentication/authApi';
+import { videoStore } from '../zustand/videoStore';
 
 function Header() {
   const toggleBarCss = useHandleCssStore((state) => state.toggelBarCss)
@@ -14,6 +15,8 @@ function Header() {
   const navigate = useNavigate()
   const showUploadVideo = useHandleCssStore((state) => state.showUploadVideo)
   const [dropDownCss, setDropDownCss] = useState("hidden")
+  const [searchValue, setSearchValue] = useState("")
+  const setSearchData = videoStore((state)=> state.setSearchData)  
 
   useEffect(() => {
     handleClickOutside()
@@ -23,11 +26,11 @@ function Header() {
 
   useEffect(() => {
     function handleClickOutside(e) {
-      if (e.target.closest("#userDropdown") && !e.target.closest(".SelectedLinks")) {  
+      if (e.target.closest("#userDropdown") && !e.target.closest(".SelectedLinks")) {
         setDropDownCss("block");
       } else if (e.target.closest(".userDropdownBtn")) {
         setDropDownCss(dropDownCss === "hidden" ? "block" : "hidden")
-      } else if(e.target.closest(".SelectedLinks")){
+      } else if (e.target.closest(".SelectedLinks")) {
         setDropDownCss("hidden");
       }
       else {
@@ -39,8 +42,6 @@ function Header() {
     return () => document.removeEventListener("click", handleClickOutside)
 
   }, [dropDownCss])
-
-
 
   function toggleSearch() {
     setMobileSearch("block")
@@ -60,6 +61,11 @@ function Header() {
     showUploadVideo("block")
   }
 
+  function searchVideo(e) {
+    e.preventDefault()
+    setSearchData(searchValue)
+  }
+
   return (
     <>
       <div className=''>
@@ -75,16 +81,19 @@ function Header() {
               </Link>
             </div>
 
-            <div className='flex relative'>
-              <Input
-                className="max-w-[50rem] lg:w-[50rem] md:w-[20rem] hidden md:block  rounded-full bg-[#13131400] h-11 px-5 text-[1.1rem] outline-none border-[#8d8d8d8b] border-[1px] text-white"
-                placeholder="Search"
-              />
-              <div>
-                <button className='absolute right-0 text-center mt-[0.60rem] mr-6'>
-                  <img className='' src="/search.svg" alt="" />
-                </button>
-              </div>
+            <div className=''>
+              <form onSubmit={searchVideo} className='flex relative'>
+                <Input
+                  className="max-w-[50rem] lg:w-[50rem] md:w-[20rem] hidden md:block  rounded-full bg-[#13131400] h-11 px-5 text-[1.1rem] outline-none border-[#8d8d8d8b] border-[1px] text-white"
+                  placeholder="Search"
+                  onChange={(e) => setSearchValue(e.target.value)}
+                />
+                <div>
+                  <button onClick={searchVideo} className='absolute right-0 text-center mt-[0.60rem] mr-6'>
+                    <img className='' src="/search.svg" alt="" />
+                  </button>
+                </div>
+              </form>
             </div>
 
             <div className='flex gap-3 sm:gap-5'>
@@ -119,7 +128,7 @@ function Header() {
                     </li>
                   </ul>
                   <div className="py-1">
-                    <Link to={"/login"} onClick={()=> SignOut()} className="block px-4 py-2 SelectedLinks text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</Link>
+                    <Link to={"/login"} onClick={() => SignOut()} className="block px-4 py-2 SelectedLinks text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</Link>
                   </div>
                 </div>
               </div>
@@ -134,15 +143,18 @@ function Header() {
               <button onClick={backToHeader}>
                 <img src="/leftArrow.svg" alt="" />
               </button>
-              <Input
-                className="w-[80vw] md:block  rounded-full bg-[#13131497] h-11 px-5 text-[1.1rem] outline-none border-[#8d8d8d8b] border-[1px] text-white"
-                placeholder="Search"
-              />
+              <form onSubmit={searchVideo}>
+                <Input
+                  className="w-[80vw] md:block  rounded-full bg-[#13131497] h-11 px-5 text-[1.1rem] outline-none border-[#8d8d8d8b] border-[1px] text-white"
+                  placeholder="Search"
+                  onChange={(e) => setSearchValue(e.target.value)}
+                />
+              </form>
             </div>
             <div>
-              <button className='absolute text-center ml-[-3rem] mt-[0.60rem]'>
+              {/* <button className={`${mobileSearch == 'hidden' ? 'absolute text-center ml-[-3rem] mt-[0.60rem]' : "hidden text-center ml-[-3rem] mt-[0.60rem]"}`}>
                 <img className='' src="/search.svg" alt="" />
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

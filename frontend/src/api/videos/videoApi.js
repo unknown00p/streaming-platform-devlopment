@@ -105,11 +105,11 @@ async function postVideo(title, description, videoFile, thumbnail) {
     }
 }
 
-async function getAllSearchVideos(page = 1, limit = 2, sortBy = 'isPublished', query = "ajab") {
-    let queryToLower = query.toLowerCase()
+async function getAllSearchVideos(page = 1, limit = 10, sortBy = 'isPublished', query) {
+    let queryToLower = query?.toLowerCase()
 
     try {
-        return await baseUrl.get("/videos", {
+        return await baseUrl.get("/videos/searchVideos", {
             params: {
                 page,
                 limit,

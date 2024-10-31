@@ -53,21 +53,29 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
 const getSearchedVideos = asyncHandler(async (req, res) => {
     const { page, limit, query, sortBy, sortType, } = req.query
+    console.log('query', query);
 
-    const searchCondition = query ? { title: { $regex: query, $options: "i" }, description: { $regex: query, $options: "i" } } : {}
 
-    const allvideos = await Video.find(searchCondition)
-        .sort({ [sortBy]: sortType == "ascending" ? 1 : -1 })
-        .skip((page - 1) * limit)
-        .limit(parseInt(limit))
+    const searchCondition = query ? { title: { $regex: query, $options: "i" }, description: { $regex: query, $options: "i" } } : null
 
-    if (!allvideos) {
-        throw new ApiError(404, "videos not found")
+    if (searchCondition) {
+        const videos = await Video.find(searchCondition)
+            .sort({ [sortBy]: sortType == "ascending" ? 1 : -1 })
+            .skip((page - 1) * limit)
+            .limit(parseInt(limit))
+
+        if (!videos) {
+            throw new ApiError(404, "sorry Unable to find video regarding this search for somthing else")
+        }
+
+        res
+            .status(200)
+            .json(new ApiResponse(200, { videos }, 'all videos fetched successfully'))
+    } else {
+        res
+            .status(200)
+            .json(new ApiResponse(200, {}, 'please give an input'))
     }
-
-    res
-        .status(200)
-        .json(new ApiResponse(200, { allvideos }, 'all videos fetched successfully'))
 
 })
 
@@ -123,7 +131,7 @@ const getVideoById = asyncHandler(async (req, res) => {
     }
 
     const video = await Video.findOne(new mongoose.Types.ObjectId(videoId))
-    
+
     if (!video) {
         throw new ApiError(500, "unable to get video from dataBase")
     }
@@ -132,9 +140,9 @@ const getVideoById = asyncHandler(async (req, res) => {
     const url = await listFolderContents({ folderName: videoUrlId })
 
     if (!url) {
-        throw new ApiError(404,'Unable to retrive video url')
+        throw new ApiError(404, 'Unable to retrive video url')
     }
-    
+
     const newVideoObj = video.toObject()
     newVideoObj['videoUrl'] = url
 
@@ -143,7 +151,7 @@ const getVideoById = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(200,
                 {
-                    video:newVideoObj
+                    video: newVideoObj
                 },
                 "video fetched successfully"
             )
