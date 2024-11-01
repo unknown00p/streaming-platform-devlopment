@@ -105,7 +105,8 @@ async function postVideo(title, description, videoFile, thumbnail) {
     }
 }
 
-async function getAllSearchVideos(page = 1, limit = 10, sortBy = 'isPublished', query) {
+async function getAllSearchVideos({page = 1, limit = 10, sortBy = 'isPublished', query}) {
+    // console.log('query',query);    
     let queryToLower = query?.toLowerCase()
 
     try {

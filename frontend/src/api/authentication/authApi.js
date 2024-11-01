@@ -76,4 +76,8 @@ async function userById(userId) {
     }
 }
 
-export { SignIn, SignOut, SignUp, userById }
+async function currentUser(params) {
+    
+}
+
+export { SignIn, SignOut, SignUp, userById, currentUser }

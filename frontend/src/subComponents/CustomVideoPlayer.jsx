@@ -10,15 +10,11 @@ function CustomVideoPlayer({ qualityObj, duration }) {
   const [soundRangeValue, setSoundRangeValue] = useState(10)
   const [volumeUrl, setVolumeUrl] = useState("volume-full.svg")
   const [videoIndex, setVideoIndex] = useState(0)
-  // const [duration, setDuration] = useState(duration)
   const [currentTime, setCurrentTime] = useState(0)
   const [toggleFullScreenImg, setToggleFullScreenImg] = useState("maximize.svg")
   const [showSetting, setShowSetting] = useState(false)
   const [onHoverShow, setonHoverShow] = useState("absolute")
   const [quality, setQuality] = useState(qualityObj?.auto)
-
-  // console.log('qualityObj', qualityObj);
-
 
   useEffect(() => {
     try {
@@ -31,7 +27,6 @@ function CustomVideoPlayer({ qualityObj, duration }) {
         });
         hls.loadSource(quality);
         hls.attachMedia(videoElement);
-        // videoElement.play();
       } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
         videoElement.src = quality
       }
@@ -122,8 +117,8 @@ function CustomVideoPlayer({ qualityObj, duration }) {
   }, [soundRangeValue])
 
   function playNextVideo() {
-    console.log(qualityArr.length);
-    if (videoIndex < qualityArr.length) {
+    console.log(qualityObj.length);
+    if (videoIndex < qualityObj.length) {
       setVideoIndex(prev => prev + 1)
     }
   }
@@ -156,13 +151,8 @@ function CustomVideoPlayer({ qualityObj, duration }) {
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
     let time = `${hours > 0 ? `${hours}:` : ""}${minutes < 10 ? "0" : ""}${minutes}:${secs < 10 ? "0" : ""}${secs}`;
-    // console.log(time);
     return time
   }
-
-  // function changeQuality(event) {
-  //   console.log(event.target.innerText);
-  // }
 
   return (
     <>
@@ -244,19 +234,19 @@ function CustomVideoPlayer({ qualityObj, duration }) {
                 {showSetting && <div className="bg-[#211e1e7a] absolute w-[8.75rem] p-2 top-[-13rem] left-[-5rem] rounded-md">
                   <ul className="flex flex-col gap-3">
                     <button className="text-left">
-                      <li onClick={()=> setQuality(qualityObj?.auto)}>Auto</li>
+                      <li onClick={() => setQuality(qualityObj?.auto)}>Auto</li>
                     </button>
                     <button className="text-left">
-                      <li onClick={()=> setQuality(qualityObj?.quality1080p)}>1080p</li>
+                      <li onClick={() => setQuality(qualityObj?.quality1080p)}>1080p</li>
                     </button>
                     <button className="text-left">
-                      <li onClick={()=> setQuality(qualityObj?.quality720p)}>720p</li>
+                      <li onClick={() => setQuality(qualityObj?.quality720p)}>720p</li>
                     </button>
                     <button className="text-left">
-                      <li onClick={()=> setQuality(qualityObj?.quality480p)}>480p</li>
+                      <li onClick={() => setQuality(qualityObj?.quality480p)}>480p</li>
                     </button>
                     <button className="text-left">
-                      <li onClick={()=> setQuality(qualityObj?.quality320p)}>320p</li>
+                      <li onClick={() => setQuality(qualityObj?.quality320p)}>320p</li>
                     </button>
                   </ul>
                 </div>}

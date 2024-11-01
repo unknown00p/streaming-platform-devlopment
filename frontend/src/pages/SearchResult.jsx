@@ -3,34 +3,70 @@ import SideBar from '../subComponents/SideBar'
 import Wrapper from '../components/Wrapper'
 import { videoStore } from '../zustand/videoStore'
 import { getAllSearchVideos } from '../api/videos/videoApi'
+import { userById } from '../api/authentication/authApi'
+import { useNavigate } from 'react-router-dom'
 
 function SearchResult() {
     const [searchResult, setSearchResult] = useState(true)
     const [videos, setvideos] = useState(null)
-    const imageUrl = [
-        "https://th.bing.com/th/id/OIP.c2yh-vjm-Ze872ygDBhg3QHaEK?w=326&h=183&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-        "https://th.bing.com/th/id/OIP.hF8_3tDhRrZvxm-j1kZwgwHaE9?w=243&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-        "https://th.bing.com/th/id/OIP.PA_USRL68UjTfF0kRo5ImQHaEo?w=296&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-        "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-        "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-        "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-        "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-        "https://th.bing.com/th/id/OIP.TaD-Sw3TdIco5YCJOtJPggHaJ4?w=140&h=187&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-        "https://th.bing.com/th/id/OIP.t_kb1S2P60S7gaKnEqQOjQHaEK?w=333&h=187&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-        "https://th.bing.com/th/id/OIP.77J08bFK_F7zzSmGyOQnkgHaDU?w=295&h=156&c=7&r=0&o=5&dpr=1.5&pid=1.7"
-    ]
-
     const searchData = videoStore((state) => state.searchData)
+    const navigate = useNavigate()
 
     useEffect(() => {
+        // console.log(searchData);
         async function getData(params) {
-            const response = await getAllSearchVideos(searchData)
-            console.log('response',response);
+            const response = await getAllSearchVideos({ query: searchData })
+            const pendingResponse = response.data.data.videos.map((val) => userById(val?.owner))
+            const resolvedResponse = await Promise.all(pendingResponse)
+            // console.log(resolvedResponse);
+
+            const all = response.data.data.videos.map((video, index) => (
+                {
+                    ...video,
+                    userdata: resolvedResponse[index]?.data.data.userData
+                }
+            ))
+
+            setvideos(all)
         }
         getData()
     }, [searchData])
 
+    function formatTimeDifference(date) {
+        const now = new Date();
+        const timestamp = new Date(date);
+        const diffInSeconds = Math.floor(Math.abs(now - timestamp) / 1000);
 
+        const units = [
+            { label: 'year', value: 365 * 24 * 60 * 60 },
+            { label: 'month', value: 30 * 24 * 60 * 60 },
+            { label: 'week', value: 7 * 24 * 60 * 60 },
+            { label: 'day', value: 24 * 60 * 60 },
+            { label: 'hour', value: 60 * 60 },
+            { label: 'minute', value: 60 },
+        ];
+
+        for (const { label, value } of units) {
+            const diff = Math.floor(diffInSeconds / value);
+            if (diff > 0) {
+                return `${diff} ${label}${diff > 1 ? 's' : ''} ago`;
+            }
+        }
+
+        return 'just now';
+    }
+
+    const videoClick = (e, value) => {
+        const target = e?.target.id
+        if (target !== "profile" && target !== "dot") {
+            navigate(`/video/${value?._id}`)
+        }
+        if (target == "profile") {
+            navigate("/userSection")
+        }
+    }
+
+    // console.log(videos);
 
     return searchResult ? (
         <Wrapper>
@@ -40,32 +76,34 @@ function SearchResult() {
                 </div>
 
                 <div className='flex flex-col gap-2'>
-                    {imageUrl && imageUrl.map((value, index) => (
-                        <div key={index} className='grid gap-3 grid-cols-1 sm:grid-cols-3 lg:ml-[6rem]'>
-                            <img className='w-full object-contain aspect-video bg-black rounded-md' src={value} alt="" />
+                    {videos && videos.map((value, index) => (
+                        <div key={index} onClick={(e) => videoClick(e, value)} className='grid gap-3 grid-cols-1 sm:grid-cols-3 lg:ml-[6rem]'>
+                            <img className='w-full object-contain aspect-video bg-black rounded-md' src={value.thumbnail} alt="" />
 
-                            <div className='flex gap-3 items-start sm:col-span-2'>
+                            <div className='flex gap-3 items-start sm:col-span-2 max-w-[100vw] w-full'>
                                 <img src="https://th.bing.com/th/id/OIP.PA_USRL68UjTfF0kRo5ImQHaEo?w=296&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7" className='w-11 h-11 rounded-full sm:hidden block' alt="" />
 
                                 <div>
-                                    <p className='pb-1 xl:text-3xl'>
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit.?
-                                    </p>
+                                    <div className='flex justify-between items-center'>
+                                        <p className='pb-1 xl:text-3xl w-full grow'>
+                                            {value.title}
+                                        </p>
+                                    </div>
 
                                     <div className='text-sm text-[#dfdede] flex flex-col gap-2'>
                                         <div className='flex gap-2 items-center'>
                                             <p>100k views</p>
                                             <img src="dot.svg" alt="" />
-                                            <p>18 hours ago</p>
+                                            <p>{formatTimeDifference(value.createdAt)}</p>
                                         </div>
                                         <div className='flex items-center gap-2'>
-                                            <img src="https://th.bing.com/th/id/OIP.PA_USRL68UjTfF0kRo5ImQHaEo?w=296&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7" className='w-11 h-11 rounded-full sm:block hidden' alt="" />
-                                            <p>Raj alam</p>
+                                            <img id='profile' src={value.userdata.avatar} className='w-9 h-9 rounded-full sm:block hidden object-cover' alt="" />
+                                            <p>{value.userdata.fullName}</p>
                                         </div>
                                     </div>
 
                                     <div className='pt-1 hidden sm:block text-sm'>
-                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit Lorem ipsum dolor sit amet consectetur.
+                                        {value.description}
                                     </div>
                                 </div>
 

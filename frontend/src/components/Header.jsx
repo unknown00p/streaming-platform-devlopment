@@ -64,6 +64,7 @@ function Header() {
   function searchVideo(e) {
     e.preventDefault()
     setSearchData(searchValue)
+    navigate('/searchResult')
   }
 
   return (

@@ -51,31 +51,25 @@ function Home() {
   function formatTimeDifference(date) {
     const now = new Date();
     const timestamp = new Date(date);
-
-    const diffInMs = Math.abs(now - timestamp);
-    const diffInSeconds = Math.floor(diffInMs / 1000);
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    const diffInDays = Math.floor(diffInHours / 24);
-    const diffInWeeks = Math.floor(diffInDays / 7);
-    const diffInMonths = Math.floor(diffInDays / 30); // Approximate
-    const diffInYears = Math.floor(diffInDays / 365); // Approximate
-
-    if (diffInYears > 0) {
-      return `${diffInYears} year${diffInYears > 1 ? 's' : ''} ago`;
-    } else if (diffInMonths > 0) {
-      return `${diffInMonths} month${diffInMonths > 1 ? 's' : ''} ago`;
-    } else if (diffInWeeks > 0) {
-      return `${diffInWeeks} week${diffInWeeks > 1 ? 's' : ''} ago`;
-    } else if (diffInDays > 0) {
-      return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
-    } else if (diffInHours > 0) {
-      return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
-    } else if (diffInMinutes > 0) {
-      return `${diffInMinutes} minute${diffInMinutes > 1 ? 's' : ''} ago`;
-    } else {
-      return `just now`;
+    const diffInSeconds = Math.floor(Math.abs(now - timestamp) / 1000);
+  
+    const units = [
+      { label: 'year', value: 365 * 24 * 60 * 60 },
+      { label: 'month', value: 30 * 24 * 60 * 60 },
+      { label: 'week', value: 7 * 24 * 60 * 60 },
+      { label: 'day', value: 24 * 60 * 60 },
+      { label: 'hour', value: 60 * 60 },
+      { label: 'minute', value: 60 },
+    ];
+  
+    for (const { label, value } of units) {
+      const diff = Math.floor(diffInSeconds / value);
+      if (diff > 0) {
+        return `${diff} ${label}${diff > 1 ? 's' : ''} ago`;
+      }
     }
+  
+    return 'just now';
   }
 
   return hasVideo ? (
@@ -87,9 +81,9 @@ function Home() {
         </div>
 
         <div className='right w-full pt-3 overflow-hidden sm:mx-3 pb-16 sm:pb-0'>
-          <div className='lg:ml-[6rem] ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 cursor-pointer'>
+          <div className='lg:ml-[6rem] ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5'>
             {videoArray && videoArray.map((value) => {          
-              return <div key={value._id} className=''>
+              return <div key={value._id} className='cursor-pointer'>
                 <div onClick={(e) => {
                   videoClick(e, value)
                 }} className="rounded-xl shadow-lg">
