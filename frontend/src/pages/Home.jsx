@@ -6,6 +6,7 @@ import Wrapper from '../components/Wrapper'
 import { getAllVideos } from '../api/videos/videoApi'
 import { userById } from '../api/authentication/authApi'
 import CurrentUser from '../api/authentication/CurrentUser'
+import formatTimeDifference from '../hooks/formateTime'
 
 function Home() {
   const [hasVideo, setHasVideo] = useState(true)
@@ -46,30 +47,6 @@ function Home() {
     if (target == "profile") {
       navigate("userSection")
     }
-  }
-
-  function formatTimeDifference(date) {
-    const now = new Date();
-    const timestamp = new Date(date);
-    const diffInSeconds = Math.floor(Math.abs(now - timestamp) / 1000);
-  
-    const units = [
-      { label: 'year', value: 365 * 24 * 60 * 60 },
-      { label: 'month', value: 30 * 24 * 60 * 60 },
-      { label: 'week', value: 7 * 24 * 60 * 60 },
-      { label: 'day', value: 24 * 60 * 60 },
-      { label: 'hour', value: 60 * 60 },
-      { label: 'minute', value: 60 },
-    ];
-  
-    for (const { label, value } of units) {
-      const diff = Math.floor(diffInSeconds / value);
-      if (diff > 0) {
-        return `${diff} ${label}${diff > 1 ? 's' : ''} ago`;
-      }
-    }
-  
-    return 'just now';
   }
 
   return hasVideo ? (

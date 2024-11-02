@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useHandleCssStore from '../zustand/useHandleCssStore'
+import userData from '../zustand/userData'
+import { getAllVideosOfaUser } from '../api/videos/videoApi'
+import formatTimeDifference from '../hooks/formateTime'
 
 function ProfileVideos() {
   const [hasVideo, setHasVideo] = useState(true)
-  const [currentUser, setCurrentUser] = useState(true)
   const showUploadVideo = useHandleCssStore((state) => state.showUploadVideo)
+  const data = userData((state)=> state.currentUserData)
+  const [videos, setVideos] = useState(null)
 
   const navigate = useNavigate()
   const videoClick = (e) => {
@@ -16,12 +20,15 @@ function ProfileVideos() {
   }
 
   useEffect(() => {
-    async function user(params) {
-      // console.log(response);
+    console.log(data);
+    async function processFetch() {
+      const response = await getAllVideosOfaUser(data?._id)
+      // console.log(response?.data?.data?.videos);
+      setVideos(response?.data?.data?.videos)    
     }
-
-    user()
-  }, [])
+    processFetch()
+  }, [data])
+  
 
   function navigateAndToggle() {
     showUploadVideo("block")
@@ -43,31 +50,35 @@ function ProfileVideos() {
     "https://th.bing.com/th/id/OIP.Yit4ehVET_xvmHYDJvYTpgAAAA?w=267&h=181&c=7&r=0&o=5&dpr=1.5&pid=1.7",
     "https://th.bing.com/th/id/OIP.A4dsv6AkIGssWk1TwfS97gHaEK?w=326&h=183&c=7&r=0&o=5&dpr=1.5&pid=1.7",
   ]
+
+  console.log(videos);
+  
+
   return hasVideo ? (
     <div>
       <div className='right w-full overflow-hidden'>
         <div className='max-w-full ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 cursor-pointer'>
-          {arr.map((value, i) => {
+          {videos && videos.map((value, i) => {
             return <div key={i} className=''>
               <div onClick={(e) => {
                 videoClick(e)
               }} className="rounded-xl shadow-lg">
                 <div className=''>
-                  <img className="object-cover w-full h-[13rem] rounded-sm" src={value} alt="Sunset in the mountains" />
+                  <img className="object-cover w-full h-[13rem] rounded-sm" src={value?.thumbnail} alt="Sunset in the mountains" />
                 </div>
                 <div className="py-4">
                   <div className="flex gap-1">
                     <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                       <div className='flex gap-2 items-baseline'>
-                        <div className="text-lg">Learn how to use Tailwind CSS card Learn how to use Tail...</div>
+                        <div className="text-lg">{value?.title}</div>
                         <div>
-                          <img className='hover:bg-[#162b45] hover:rounded-full w-9' id='dot' src="/dots.svg" alt="" />
+                          {/* <img className='hover:bg-[#162b45] hover:rounded-full w-9' id='dot' src="/dots.svg" alt="" /> */}
                         </div>
                       </div>
-                      <p className="leading-none text-[#a1a1a1]">Jonathan Reinink</p>
+                      <p className="leading-none text-[#a1a1a1]">{value?.description}</p>
                       <div className='flex gap-1 text-[#a1a1a1]'>
                         <p>173K views.</p>
-                        <p>3 weaks ago</p>
+                        <p>{formatTimeDifference(value?.createdAt)}</p>
                       </div>
                     </div>
                   </div>

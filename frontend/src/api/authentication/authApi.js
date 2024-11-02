@@ -77,7 +77,10 @@ async function userById(userId) {
 }
 
 async function currentUser(params) {
-    
+    const response = await baseUrl.get('/users/current-user',{
+        withCredentials: true
+    })
+    return response
 }
 
 export { SignIn, SignOut, SignUp, userById, currentUser }
