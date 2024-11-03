@@ -10,6 +10,6 @@ const userData = create((set) => (
             }
         ))
     }
-))      
+))
 
 export default userData

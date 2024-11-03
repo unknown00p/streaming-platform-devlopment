@@ -4,11 +4,11 @@ import useHandleCssStore from '../zustand/useHandleCssStore'
 import userData from '../zustand/userData'
 import { getAllVideosOfaUser } from '../api/videos/videoApi'
 import formatTimeDifference from '../hooks/formateTime'
+import { currentUser } from '../api/authentication/authApi'
 
 function ProfileVideos() {
   const [hasVideo, setHasVideo] = useState(true)
   const showUploadVideo = useHandleCssStore((state) => state.showUploadVideo)
-  const data = userData((state)=> state.currentUserData)
   const [videos, setVideos] = useState(null)
 
   const navigate = useNavigate()
@@ -20,39 +20,24 @@ function ProfileVideos() {
   }
 
   useEffect(() => {
-    console.log(data);
     async function processFetch() {
-      const response = await getAllVideosOfaUser(data?._id)
-      // console.log(response?.data?.data?.videos);
-      setVideos(response?.data?.data?.videos)    
+      const userResponse = await currentUser()      
+      if (userResponse) {
+        const response = await getAllVideosOfaUser(userResponse.data.data._id)
+        setVideos(response?.data?.data?.videos)
+      }
     }
     processFetch()
-  }, [data])
+  }, [])
+
+  console.log(videos);
   
+
 
   function navigateAndToggle() {
     showUploadVideo("block")
     navigate("/dashboard")
   }
-
-  const arr = [
-    "https://th.bing.com/th/id/OIP.NZtfot858OjoU8G0Y5TE9AHaEo?w=242&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.wg4R0mAD1_DQAII9hCM-8AHaDk?w=341&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.IHY4jIGoaywV1CkIYxzsNQHaEo?w=299&h=187&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.YMuauF2NaoHPNikNQyavFAHaEo?w=279&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.t_kb1S2P60S7gaKnEqQOjQHaEK?w=309&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.otQVzr8T480Dyttw-acdjgHaEP?w=312&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.BMXp9yc1JYylds7IvkyDrgHaGT?w=261&h=220&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.amEbZWd9JRcIxkyVtYNODwHaE8?w=272&h=181&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.hyOp4DHwU808lVPQ7qaZJAHaHa?w=194&h=195&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.bPsFZEaqlxRKQ9qrj9O57QHaFl?w=226&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.P_EOEXQab_37lelWDioz9QHaDf?w=330&h=164&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.Yit4ehVET_xvmHYDJvYTpgAAAA?w=267&h=181&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-    "https://th.bing.com/th/id/OIP.A4dsv6AkIGssWk1TwfS97gHaEK?w=326&h=183&c=7&r=0&o=5&dpr=1.5&pid=1.7",
-  ]
-
-  console.log(videos);
-  
 
   return hasVideo ? (
     <div>
@@ -66,16 +51,16 @@ function ProfileVideos() {
                 <div className=''>
                   <img className="object-cover w-full h-[13rem] rounded-sm" src={value?.thumbnail} alt="Sunset in the mountains" />
                 </div>
-                <div className="py-4">
+                <div className="py-4 h-[120px]">
                   <div className="flex gap-1">
                     <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                       <div className='flex gap-2 items-baseline'>
-                        <div className="text-lg">{value?.title}</div>
+                        <div className="text-lg">{value?.title.length > 30 ? value.title.substring(0,30) + '...': value.title}</div>
                         <div>
                           {/* <img className='hover:bg-[#162b45] hover:rounded-full w-9' id='dot' src="/dots.svg" alt="" /> */}
                         </div>
                       </div>
-                      <p className="leading-none text-[#a1a1a1]">{value?.description}</p>
+                      <p className="leading-none text-[#a1a1a1]">{value?.description.length > 90 ? value.description.substring(0,90) + "..." : value.description}</p>
                       <div className='flex gap-1 text-[#a1a1a1]'>
                         <p>173K views.</p>
                         <p>{formatTimeDifference(value?.createdAt)}</p>

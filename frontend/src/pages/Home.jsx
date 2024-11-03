@@ -11,7 +11,7 @@ import formatTimeDifference from '../hooks/formateTime'
 function Home() {
   const [hasVideo, setHasVideo] = useState(true)
   const [videoArray, setVideoArray] = useState([])
-
+  
   useEffect(() => {
     async function getAllVideosFunc() {
       const response = await getAllVideos()

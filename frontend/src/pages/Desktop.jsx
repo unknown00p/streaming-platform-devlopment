@@ -53,7 +53,7 @@ function Desktop() {
             <div className='lg:ml-[6rem]'>
 
                 <div className='coverImage relative'>
-                    <img className='w-full h-[14rem] object-cover' src={data?.coverImage} alt="" />
+                    <img className='w-full h-[18rem] object-cover' src={data?.coverImage} alt="" />
                 </div>
 
                 <div className='px-4'>

@@ -170,7 +170,7 @@ function CustomVideoPlayer({ qualityObj, duration }) {
           }}
           preload="auto"
           disablePictureInPicture
-          className="w-full aspect-video rounded-md object-cover cursor-pointer"
+          className="w-full aspect-video rounded-md object-contain bg-black cursor-pointer"
           controls={false}
         >
 

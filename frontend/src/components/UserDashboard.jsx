@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import userDataStore from '../zustand/userData.js';
-import { UpdateEmailPassword, UpdateAvatar, UpdateCoverImage, changeCurrentPassword } from '../api/authentication/UpdateAccountDetails';
 import { useForm } from 'react-hook-form';
+import { currentUser, UpdateNameEmail, UpdateAvatar, UpdateCoverImage, changeCurrentPassword } from '../api/authentication/authApi.js';
 
 function UserDashboard() {
   const [isEditing, setIsEditing] = useState(false);
-  const currentUserData = userDataStore((state) => state.currentUserData);
   const { register, handleSubmit } = useForm()
   const [userData, setUserData] = useState({
     avatar: null,
@@ -17,34 +16,50 @@ function UserDashboard() {
   });
 
   useEffect(() => {
-    setUserData(prevData => ({
-      ...prevData,
-      avatar: currentUserData?.avatar,
-      coverImage: currentUserData?.coverImage,
-      fullName: currentUserData?.fullName || prevData.fullName,
-      email: currentUserData?.email || prevData.email,
-    }));
-  }, [currentUserData]);
 
-  const handleInputChange = (e) => {
-    const { name, value, type, files } = e.target;
-    if (type === 'file') {
-      setUserData(prevData => ({
-        ...prevData,
-        [name]: files[0],
-      }));
-    } else {
-      setUserData(prevData => ({
-        ...prevData,
-        [name]: value,
-      }));
+    async function fetchData() {
+      const response = await currentUser()
+      setUserData(response.data.data)
     }
-  };
+
+    fetchData()
+  }, []);
+
+  // useEffect(() => {
+  //   setUserData(prevData => ({
+  //     ...prevData,
+  //     avatar: currentUserData?.avatar,
+  //     coverImage: currentUserData?.coverImage,
+  //     fullName: currentUserData?.fullName || prevData.fullName,
+  //     email: currentUserData?.email || prevData.email,
+  //   }));
+
+
+  //   console.log('currentUserData',currentUserData);
+  // }, [currentUserData])
+
+
+  // const handleInputChange = (e) => {
+  //   const { name, value, type, files } = e.target;
+  //   if (type === 'file') {
+  //     setUserData(prevData => ({
+  //       ...prevData,
+  //       [name]: files[0],
+  //     }));
+  //   } else {
+  //     setUserData(prevData => ({
+  //       ...prevData,
+  //       [name]: value,
+  //     }));
+  //   }
+  // };
 
   const handleSubmitData = async (data) => {
     console.log(data);
-    if (data.fullName !== currentUserData.fullName || data.email !== currentUserData.email) {
-      const response = await UpdateEmailPassword(data.fullName, data.email)
+    console.log(userData);
+    if (data.fullName !== userData.fullName || data.email !== userData.email) {
+      console.log('yes');      
+      const response = await UpdateNameEmail(data.fullName, data.email)
       console.log("responseData", response);
     }
     if (data.avatar[0]) {
@@ -62,6 +77,8 @@ function UserDashboard() {
     setIsEditing(false);
   };
 
+  console.log('userData',userData);  
+
   const getImageSrc = (image) => {
     if (typeof image === 'string') {
       return image;
@@ -76,7 +93,7 @@ function UserDashboard() {
     return src ? (
       <img src={src} alt={alt} className={className} />
     ) : (
-      <div className={className}>{defaultText}</div>
+      <div className={className}></div>
     );
   };
 
@@ -102,7 +119,7 @@ function UserDashboard() {
               type="file"
               id="avatar"
               name="avatar"
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
               {...register("avatar")}
               accept="image/*"
               className="block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
@@ -117,7 +134,7 @@ function UserDashboard() {
               type="file"
               id="coverImage"
               name="coverImage"
-              onChange={handleInputChange}
+              // onChange={handleInputChange}
               {...register("coverImage")}
               accept="image/*"
               className="block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
@@ -135,7 +152,7 @@ function UserDashboard() {
                 name={field}
                 value={userData[field]}
                 {...register(field)}
-                onChange={handleInputChange}
+                // onChange={handleInputChange}
                 className="border text-black border-gray-300 p-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required={!field.includes('Password')}
               />
