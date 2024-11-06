@@ -15,9 +15,12 @@ function CustomVideoPlayer({ qualityObj, duration }) {
   const [showSetting, setShowSetting] = useState(false)
   const [onHoverShow, setonHoverShow] = useState("absolute")
   const [quality, setQuality] = useState(qualityObj?.auto)
+  const [storedTime, setStoredTime] = useState(0)
+  const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
+  useEffect(() => {    
     try {
+      setLoading(true)
       const videoElement = videoRef.current;
       if (Hls.isSupported() && videoElement) {
         const hls = new Hls({
@@ -27,14 +30,21 @@ function CustomVideoPlayer({ qualityObj, duration }) {
         });
         hls.loadSource(quality);
         hls.attachMedia(videoElement);
+        videoElement.currentTime = storedTime
+        console.log('loaded');
+        videoElement.play()
       } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+        videoElement.currentTime = storedTime
         videoElement.src = quality
+        console.log('loaded');
+        videoElement.play()
       }
     } catch (error) {
       console.log(error);
     }
 
   }, [quality]);
+  
 
   function togglePlayPause() {
     if (videoRef.current.paused) {
@@ -65,7 +75,7 @@ function CustomVideoPlayer({ qualityObj, duration }) {
     } else {
       setSoundRangeValue(40)
     }
-  }
+  }  
 
   useEffect(() => {
     videoRef.current.volume = soundRangeValue / 100
@@ -154,6 +164,25 @@ function CustomVideoPlayer({ qualityObj, duration }) {
     return time
   }
 
+  function changeQuality(e) {
+    console.log(e.target.innerText);
+    setStoredTime(videoRef.current.currentTime)
+    if (e.target.innerText == 'auto') {
+      setQuality(qualityObj?.auto)
+    }else if (e.target.innerText == '1080p'){
+      setQuality(qualityObj?.quality1080p)
+    }
+    else if (e.target.innerText == '720p') {
+      setQuality(qualityObj?.quality720p)
+    }
+    else if (e.target.innerText == '480p') {
+      setQuality(qualityObj?.quality480p)
+    }
+    else if (e.target.innerText == '320p') {
+      setQuality(qualityObj?.quality320p)
+    }
+  }
+
   return (
     <>
       <div ref={divRef}
@@ -234,19 +263,19 @@ function CustomVideoPlayer({ qualityObj, duration }) {
                 {showSetting && <div className="bg-[#211e1e7a] absolute w-[8.75rem] p-2 top-[-13rem] left-[-5rem] rounded-md">
                   <ul className="flex flex-col gap-3">
                     <button className="text-left">
-                      <li onClick={() => setQuality(qualityObj?.auto)}>Auto</li>
+                      <li onClick={changeQuality}>auto</li>
                     </button>
                     <button className="text-left">
-                      <li onClick={() => setQuality(qualityObj?.quality1080p)}>1080p</li>
+                      <li onClick={changeQuality}>1080p</li>
                     </button>
                     <button className="text-left">
-                      <li onClick={() => setQuality(qualityObj?.quality720p)}>720p</li>
+                      <li onClick={changeQuality}>720p</li>
                     </button>
                     <button className="text-left">
-                      <li onClick={() => setQuality(qualityObj?.quality480p)}>480p</li>
+                      <li onClick={changeQuality}>480p</li>
                     </button>
                     <button className="text-left">
-                      <li onClick={() => setQuality(qualityObj?.quality320p)}>320p</li>
+                      <li onClick={changeQuality}>320p</li>
                     </button>
                   </ul>
                 </div>}
