@@ -6,6 +6,7 @@ import { useEffect } from "react";
 const useAxiosPrivet = () => {
   const refresh = useRefreshToken()
   const authData = useAuth((state) => state.authData)  
+   
 
   useEffect(() => {
 
@@ -29,6 +30,8 @@ const useAxiosPrivet = () => {
           previousRequest.sent = true
           try {
             const newAccessToken = await refresh()
+            // console.log('newAccessToken',newAccessToken);
+            
             previousRequest.headers["Authorization"] = `Bearer ${newAccessToken}`
             return PrivetBaseUrl(previousRequest)
           } catch (refreshError) {

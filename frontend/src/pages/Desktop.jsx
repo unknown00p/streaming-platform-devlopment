@@ -1,7 +1,6 @@
 import SideBar from '../subComponents/SideBar'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { currentUser } from '../api/authentication/authApi.js'
 import userData from '../zustand/userData.js'
 
 
@@ -10,13 +9,12 @@ function Desktop() {
     const navigate = useNavigate();
     const [data, setData] = useState(null)
 
+    const currentUserData = userData((state) => state.currentUserData);
+    // console.log(currentUserData);
+
     useEffect(() => {
-        async function process() {
-            const response = await currentUser()
-            setData(response.data.data)
-        }
-        process()
-    }, [])
+        setData(currentUserData)
+    }, [currentUserData])
 
     const deskCategories = [
         {
@@ -42,7 +40,10 @@ function Desktop() {
         },
     ]
 
-    return (
+    console.log(data);
+    
+
+    return currentUserData ? (
         <div className=''>
             <div>
                 <div className='sm:left-[8px] sm:top-20 fixed sm:hidden z-40 sm:z-0 lg:block bottom-[0px] lg:bottom-auto w-full lg:w-[5rem]'>
@@ -117,6 +118,11 @@ function Desktop() {
                 </div>
             </div>
         </div>
+    ) : (
+    <div className='h-full w-full flex items-center flex-col gap-2 justify-center text-white mt-72'>
+        <div>Just login mf</div>
+        <button onClick={()=> navigate('/login')} className='bg-blue-700 w-28 px-9 py-2 rounded-sm'>Login</button>
+    </div>
     )
 }
 

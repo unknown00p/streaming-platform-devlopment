@@ -4,6 +4,8 @@ import { Button, Input } from "../index"
 import useHandleCssStore from '../zustand/useHandleCssStore';
 import { SignOut } from '../api/authentication/authApi';
 import { videoStore } from '../zustand/videoStore';
+import userData from '../zustand/userData';
+
 
 function Header() {
   const toggleBarCss = useHandleCssStore((state) => state.toggelBarCss)
@@ -17,6 +19,7 @@ function Header() {
   const [dropDownCss, setDropDownCss] = useState("hidden")
   const [searchValue, setSearchValue] = useState("")
   const setSearchData = videoStore((state)=> state.setSearchData)  
+  const setCurrentUserData = userData((state)=>state.setCurrentUserData)
 
   useEffect(() => {
     handleClickOutside()
@@ -65,6 +68,11 @@ function Header() {
     e.preventDefault()
     setSearchData(searchValue)
     navigate('/searchResult')
+  }
+
+  function logout(params) {
+    SignOut()
+    setCurrentUserData(null)
   }
 
   return (
@@ -129,7 +137,7 @@ function Header() {
                     </li>
                   </ul>
                   <div className="py-1">
-                    <Link to={"/login"} onClick={() => SignOut()} className="block px-4 py-2 SelectedLinks text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</Link>
+                    <Link to={"/login"} onClick={logout} className="block px-4 py-2 SelectedLinks text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</Link>
                   </div>
                 </div>
               </div>

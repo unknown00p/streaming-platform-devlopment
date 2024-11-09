@@ -10,6 +10,7 @@ function ProfileVideos() {
   const [hasVideo, setHasVideo] = useState(true)
   const showUploadVideo = useHandleCssStore((state) => state.showUploadVideo)
   const [videos, setVideos] = useState(null)
+  const currentUserData = userData((state) => state.currentUserData)
 
   const navigate = useNavigate()
   const videoClick = (e) => {
@@ -21,17 +22,18 @@ function ProfileVideos() {
 
   useEffect(() => {
     async function processFetch() {
-      const userResponse = await currentUser()      
-      if (userResponse) {
-        const response = await getAllVideosOfaUser(userResponse.data.data._id)
-        setVideos(response?.data?.data?.videos)
-      }
+      console.log(currentUserData);
+
+      const response = await getAllVideosOfaUser(currentUserData._id)
+      console.log('response',response);
+
+      setVideos(response?.data?.data?.videos)
     }
     processFetch()
-  }, [])
+  }, [currentUserData])
 
   console.log(videos);
-  
+
 
 
   function navigateAndToggle() {
@@ -55,12 +57,12 @@ function ProfileVideos() {
                   <div className="flex gap-1">
                     <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                       <div className='flex gap-2 items-baseline'>
-                        <div className="text-lg">{value?.title.length > 30 ? value.title.substring(0,30) + '...': value.title}</div>
+                        <div className="text-lg">{value?.title.length > 30 ? value.title.substring(0, 30) + '...' : value.title}</div>
                         <div>
                           {/* <img className='hover:bg-[#162b45] hover:rounded-full w-9' id='dot' src="/dots.svg" alt="" /> */}
                         </div>
                       </div>
-                      <p className="leading-none text-[#a1a1a1]">{value?.description.length > 90 ? value.description.substring(0,90) + "..." : value.description}</p>
+                      <p className="leading-none text-[#a1a1a1]">{value?.description.length > 90 ? value.description.substring(0, 90) + "..." : value.description}</p>
                       <div className='flex gap-1 text-[#a1a1a1]'>
                         <p>173K views.</p>
                         <p>{formatTimeDifference(value?.createdAt)}</p>

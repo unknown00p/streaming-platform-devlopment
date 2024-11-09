@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 
 function Playlists() {
   const [hasVideo, setHasVideo] = useState(true)
-  // const [currentUser, setCurrentUser] = useState(false)
 
 
   const navigate = useNavigate()

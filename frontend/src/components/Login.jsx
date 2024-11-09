@@ -4,17 +4,19 @@ import { Link } from "react-router-dom";
 import Wrapper from './Wrapper';
 import { SignIn } from "../api/authentication/authApi";
 import { useNavigate } from 'react-router-dom'
+import userData from "../zustand/userData";
 
 function Login() {
   const { register, handleSubmit } = useForm()
   const navigate = useNavigate()
+  const setCurrentUserData = userData((state)=>state.setCurrentUserData)
 
   async function InputValues(data) {
     const responseData = await SignIn(data)
+    setCurrentUserData(responseData.data.data.user)
     if (responseData.status === 200) {
       navigate("/")
     }
-    console.log(responseData);
   }
 
   return (

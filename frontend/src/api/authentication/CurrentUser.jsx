@@ -18,14 +18,20 @@ function CurrentUser() {
                     signal: controller.signal
                 })
 
+                // if (response) {
+                    
+                // }
+                
+
                 if (isMounted) {
                     setCurrentUserData(response.data.data)
                     return response.data
                 }
             } catch (error) {
-                if (error.code !== "ERR_CANCELED") {
-                    navigate("/login", { state: { form: location }, replace: true })
-                }
+                // if (error.code !== "ERR_CANCELED") {
+                //     navigate("/", { state: { form: location }, replace: true })
+                // }
+                console.log(error);
             }
         }
 

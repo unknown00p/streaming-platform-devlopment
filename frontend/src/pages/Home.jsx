@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import Wrapper from '../components/Wrapper'
 import { getAllVideos } from '../api/videos/videoApi'
 import { userById } from '../api/authentication/authApi'
-import CurrentUser from '../api/authentication/CurrentUser'
 import formatTimeDifference from '../hooks/formateTime'
 
 function Home() {

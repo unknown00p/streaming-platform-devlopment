@@ -13,8 +13,8 @@ const generateAccessAndRefereshTokens = async (userId) => {
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
 
-        user.refreshToken = refreshToken
-        await user.save({ validateBeforeSave: false })
+        // user.refreshToken = refreshToken
+        // await user.save({ validateBeforeSave: false })
 
         return { accessToken, refreshToken }
 
@@ -126,6 +126,8 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 
     const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
+    console.log('refreshToken',refreshToken);
+    
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
@@ -194,9 +196,13 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             throw new ApiError(401, "Invalid refresh token")
         }
 
-        if (incomingRefreshToken !== user?.refreshToken) {
-            throw new ApiError(401, "Refresh token is expired or used")
-        }
+        console.log("incomingRefreshToken",incomingRefreshToken);
+        // console.log("user?.refreshToken",user);
+        
+
+        // if (incomingRefreshToken !== user?.refreshToken) {
+        //     throw new ApiError(401, "Refresh token is expired or used")
+        // }
 
         const options = {
             httpOnly: true,

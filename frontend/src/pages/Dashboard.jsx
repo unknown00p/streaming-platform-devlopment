@@ -1,11 +1,14 @@
 // import React from 'react'
 import Wrapper from '../components/Wrapper';
-import {SignOut} from '../api/authentication/authApi';
-import { Link, Outlet } from 'react-router-dom';
+import { SignOut } from '../api/authentication/authApi';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
+import userData from '../zustand/userData';
 
 function Dashboard() {
-  
-  return (
+  const currentUserData = userData((state) => state.currentUserData);
+  const navigate = useNavigate()
+
+  return currentUserData ? (
     <Wrapper>
       <div className='text-white'>
         <nav className="bg-gray-50 dark:bg-[#13151a] w-full top-14 left-0 fixed z-10">
@@ -72,11 +75,16 @@ function Dashboard() {
           </div>
         </nav>
 
-        <Outlet/>
+        <Outlet />
 
       </div>
     </Wrapper>
-  )
+  ) : (<Wrapper>
+    <div className='h-full w-full flex items-center flex-col gap-2 justify-center text-white mt-44'>
+      <div>Just login mf</div>
+      <button onClick={()=> navigate('/login')} className='bg-blue-700 w-28 px-9 py-2 rounded-sm'>Login</button>
+    </div>
+  </Wrapper>)
 }
 
 export default Dashboard
