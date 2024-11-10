@@ -38,7 +38,7 @@ async function getAllVideosOfaUser(userId, page = 1, limit = 10, sortBy = 'isPub
 }
 
 async function getVideobyId(videoId) {
-    console.log(videoId);
+    // console.log(videoId);
     
     try {
         const response = await baseUrl.get(`/videos/${videoId}`, {

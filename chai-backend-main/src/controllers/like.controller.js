@@ -8,6 +8,10 @@ import { asyncHandler } from "../utils/asyncHandler.js"
 const toggleVideoLike = asyncHandler(async (req, res) => {
     const { videoId } = req.params
     const userId = req.user._id
+
+    console.log('Line 12 videoId', videoId);
+    console.log('userId', userId);
+
     //TODO: toggle like on video
 
     if (!(videoId && userId)) {
@@ -41,8 +45,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
             ))
 
     } else {
-        console.log("nahi aa rha hai");
-        const UpdateLikeVideo = await Like.deleteOne({ video: videoId, user: userId })
+        const UpdateLikeVideo = await Like.deleteOne({ video: videoId, likedBy: userId })
 
         if (!UpdateLikeVideo) {
             throw new ApiError(
@@ -56,7 +59,7 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
             .json(new ApiResponse(
                 200,
                 {},
-                "Video deleted successfully",
+                "Unlike video successfully",
             ))
     }
 
@@ -225,9 +228,44 @@ const getLikedVideos = asyncHandler(async (req, res) => {
 
 })
 
+const getLikesOfaVideo = asyncHandler(async (req, res) => {
+    const { videoId } = req.params
+    const userId  = req.query.userId
+    const likeCount = await Like.countDocuments({ video: videoId })
+
+    if (!likeCount) {
+        new ApiError(404, "no likes founded")
+    }
+
+    if (userId) {
+        const isUserLiked = await Like.findOne({ likedBy: userId, video: videoId })
+        res
+            .status(200)
+            .json(new ApiResponse(200,
+                {
+                    likeCount,
+                    isUserLiked: userId && isUserLiked ? true : false,
+                }
+                , "Like of this video")
+            )
+    } else {
+        res
+            .status(200)
+            .json(new ApiResponse(200,
+                {
+                    likeCount
+                }
+                , "Like of this video")
+            )
+    }
+
+
+})
+
 export {
     toggleCommentLike,
     toggleTweetLike,
     toggleVideoLike,
-    getLikedVideos
+    getLikedVideos,
+    getLikesOfaVideo
 }

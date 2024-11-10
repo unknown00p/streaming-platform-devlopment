@@ -5,16 +5,25 @@ import Wrapper from "./Wrapper"
 import { useParams } from "react-router-dom"
 import { getVideobyId } from "../api/videos/videoApi"
 import { userById } from "../api/authentication/authApi"
+import { toggleVideoLike, getVideoLikes } from "../api/like/likeApi"
+import userDataStore from "../zustand/userData"
 
 function Video() {
   const [saveToPlaylist, setSaveToPlaylist] = useState(false)
   const [videoData, setVideoData] = useState(null)
   const [userData, setUserData] = useState(null)
   const { videoId } = useParams()
-
+  const [likesData, setLikesData] = useState(null)
+  const currentUserData = userDataStore((state)=>state.currentUserData)
+  // console.log(currentUserData);
+  
+  
   useEffect(() => {
-
+    const userId = currentUserData?._id
+    // console.log('userId',userId);
     async function videoByIdFunc() {
+      const res = await getVideoLikes(videoId,userId)
+      setLikesData(res.data.data)
       const response = await getVideobyId(videoId)
       if (response) {
         const response2 = await userById(response.data.data.video.owner)
@@ -24,7 +33,19 @@ function Video() {
     }
     videoByIdFunc()
 
-  }, [])
+  }, [currentUserData])
+
+  async function toggleLikes() {
+    const res = await toggleVideoLike(videoId)
+
+    if (res) {
+      const userId = currentUserData?._id
+      // console.log('userId',userId);
+      const response = await getVideoLikes(videoId,userId)
+      setLikesData(response.data.data)
+    }
+
+  }
 
   const imageUrl = [
     "https://th.bing.com/th/id/OIP.c2yh-vjm-Ze872ygDBhg3QHaEK?w=326&h=183&c=7&r=0&o=5&dpr=1.5&pid=1.7",
@@ -35,9 +56,6 @@ function Video() {
     "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
     "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7"
   ]
-
-  console.log(userData);
-
 
   return (
     <Wrapper>
@@ -87,10 +105,12 @@ function Video() {
 
 
               <div className="flex gap-5 items-center justify-between border-2 py-[0.300rem] px-2 rounded-md">
-                <p className="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" /></svg>
-                  1M
-                </p>
+                <div className="flex items-center">
+                  <div className="cursor-pointer" onClick={toggleLikes}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={likesData?.isUserLiked?'blue':'white'} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" /></svg>
+                  </div>
+                  {likesData?.likeCount}
+                </div>
 
                 <div className="bg-white h-[1.3rem] w-[0.10rem] relative -z-10"></div>
 
