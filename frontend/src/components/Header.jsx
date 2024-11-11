@@ -18,8 +18,8 @@ function Header() {
   const showUploadVideo = useHandleCssStore((state) => state.showUploadVideo)
   const [dropDownCss, setDropDownCss] = useState("hidden")
   const [searchValue, setSearchValue] = useState("")
-  const setSearchData = videoStore((state)=> state.setSearchData)  
-  const setCurrentUserData = userData((state)=>state.setCurrentUserData)
+  const setSearchData = videoStore((state) => state.setSearchData)
+  const setCurrentUserData = userData((state) => state.setCurrentUserData)
 
   useEffect(() => {
     handleClickOutside()
@@ -80,7 +80,7 @@ function Header() {
       <div className=''>
         <div className={`${headerClass} md:block`}>
           <div className='flex max-w-[90rem] text-white items-center justify-between px-7 pt-2 pb-5 text-[1.11rem] bg-[#13151a]'>
-            <div className='flex items-center gap-8'>
+            <div className='flex items-center gap-7'>
               <button className='hidden sm:block' id='mainMenu' onClick={toggleSideBar}>
                 <img src="/menubar.svg" alt="" />
               </button>
@@ -93,12 +93,13 @@ function Header() {
             <div className=''>
               <form onSubmit={searchVideo} className='flex relative'>
                 <Input
-                  className="max-w-[50rem] lg:w-[50rem] md:w-[20rem] hidden md:block  rounded-full bg-[#13131400] h-11 px-5 text-[1.1rem] outline-none border-[#8d8d8d8b] border-[1px] text-white"
+                  className="max-w-[50rem] lg:w-[35rem] md:w-[15rem] hidden md:block rounded-r-none rounded-full bg-[#121214] text-white h-10 px-5 text-[1.1rem] outline-none border-[#8d8d8d8b] border-[1px] focus:border-[#352692] placeholder:text-[#8d8d8d8b] transition-all duration-300"
                   placeholder="Search"
                   onChange={(e) => setSearchValue(e.target.value)}
                 />
-                <div>
-                  <button onClick={searchVideo} className='absolute right-0 text-center mt-[0.60rem] mr-6'>
+
+                <div className='bg-[#363e4a] items-center px-4 rounded-l-none rounded-full outline-none border-[#8d8d8d8b] border-[1px] hidden md:flex'>
+                  <button onClick={searchVideo} className=''>
                     <img className='' src="/search.svg" alt="" />
                   </button>
                 </div>

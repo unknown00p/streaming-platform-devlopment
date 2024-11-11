@@ -2,19 +2,47 @@ import SideBar from '../subComponents/SideBar'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import userData from '../zustand/userData.js'
-
+import { currentUser } from '../api/authentication/authApi.js'
 
 function Desktop() {
     const [isCurrentUser, setIsCurrentUser] = useState(true)
     const navigate = useNavigate();
-    const [data, setData] = useState(null)
-
-    const currentUserData = userData((state) => state.currentUserData);
-    // console.log(currentUserData);
+    // const [data, setData] = useState(null)
+    // const [isLoading, setIsLoading] = useState(true)
+    const [authState, setAuthState] = useState({
+        isLoading: true,
+        data: null,
+        error: null
+    })
 
     useEffect(() => {
-        setData(currentUserData)
-    }, [currentUserData])
+        async function getUser() {
+            try {
+                const response = await currentUser()
+                if (response?.data?.data) {
+                    setAuthState({
+                        isLoading:false,
+                        data: response.data.data,
+                        error: null
+                    })
+                } else{
+                    setAuthState({
+                        isLoading: false,
+                        data: null,
+                        error: 'no data found'
+                    })
+                }
+            } catch (error) {
+                console.log(error);
+                setAuthState({
+                    isLoading: false,
+                    data: null,
+                    error: error.message
+                })
+            }
+        }
+        getUser()
+    }, [])
 
     const deskCategories = [
         {
@@ -40,10 +68,23 @@ function Desktop() {
         },
     ]
 
-    console.log(data);
-    
+    // console.log('data', data);
+    // console.log('isLoading', isLoading);
 
-    return currentUserData ? (
+    // if (authState.isLoading) {
+    //     return <div className='mt-72'>loading...</div>
+    // }
+
+    if (!authState.data) {
+        return (
+            <div className='h-full w-full flex items-center flex-col gap-2 justify-center text-white mt-72'>
+                <div>Please log in</div>
+                <button onClick={() => navigate('/login')} className='bg-blue-700 w-28 px-9 py-2 rounded-sm'>Login</button>
+            </div>
+        );
+    }
+
+    return (
         <div className=''>
             <div>
                 <div className='sm:left-[8px] sm:top-20 fixed sm:hidden z-40 sm:z-0 lg:block bottom-[0px] lg:bottom-auto w-full lg:w-[5rem]'>
@@ -54,19 +95,19 @@ function Desktop() {
             <div className='lg:ml-[6rem]'>
 
                 <div className='coverImage relative'>
-                    <img className='w-full h-[18rem] object-cover' src={data?.coverImage} alt="" />
+                    <img className='w-full h-[18rem] object-cover' src={authState.data?.coverImage} alt="" />
                 </div>
 
                 <div className='px-4'>
                     <div className='flex justify-between gap-3 flex-col sm:flex-row w-full pr-3  sm:pt-3'>
                         <div className='flex gap-3 flex-col sm:flex-row'>
                             <div>
-                                <img src={data?.avatar} className='w-24 h-24 rounded-full object-cover relative top-[-3rem] sm:top-[-2rem]' alt="" />
+                                <img src={authState.data?.avatar} className='w-24 h-24 rounded-full object-cover relative top-[-3rem] sm:top-[-2rem]' alt="" />
                             </div>
 
                             <div className='text-white flex flex-col gap-1 top-[-3rem] relative sm:static pl-2 sm:pl-0'>
                                 <div className='flex justify-between items-center'>
-                                    <p className='text-2xl font-bold'>{data?.username}</p>
+                                    <p className='text-2xl font-bold'>{authState.data?.username}</p>
 
                                     <Link to={"/"}>
                                         <div className='text-white gap-2 flex sm:hidden'>
@@ -78,7 +119,7 @@ function Desktop() {
                                     </Link>
                                 </div>
 
-                                <p className='text-[#c1bfbf]'>@{data?.fullName}</p>
+                                <p className='text-[#c1bfbf]'>@{authState.data?.fullName}</p>
                                 <div className='flex gap-1 items-center text-[#b8b8b8] text-sm'>
                                     <p>600k Subscribers</p>
                                     <img src="dot.svg" alt="" />
@@ -118,12 +159,20 @@ function Desktop() {
                 </div>
             </div>
         </div>
-    ) : (
-    <div className='h-full w-full flex items-center flex-col gap-2 justify-center text-white mt-72'>
-        <div>Just login mf</div>
-        <button onClick={()=> navigate('/login')} className='bg-blue-700 w-28 px-9 py-2 rounded-sm'>Login</button>
-    </div>
+        // <div>working</div>
     )
 }
+
+// async function namer(data) {
+//     console.log('namer');
+    
+//     if (data) {
+//         console.log('hello');
+//         await fetch(data)
+//         console.log('world');        
+//     }
+
+//     console.log('waiting if data');
+// }
 
 export default Desktop

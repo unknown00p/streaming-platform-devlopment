@@ -1,18 +1,28 @@
 import baseUrl from "../baseUrl/BaseUrl";
 
 async function toggleVideoLike(videoId) {
-    const response = await baseUrl.post(`/likes/toggle/v/${videoId}`, {}, {
-        withCredentials: true
-    })
-    return response
+    try {
+        const response = await baseUrl.post(`/likes/toggle/v/${videoId}`, {}, {
+            withCredentials: true
+        })
+        return response
+    } catch (error) {
+        console.log(error);
+        throw error        
+    }
 }
 
 async function getVideoLikes(videoId, userId) {  
-    const response = await baseUrl.get(`/likes/videoLikes/${videoId}`, {
-        params: { userId: userId }
-    })
-
-    return response
+    try {
+        const response = await baseUrl.get(`/likes/videoLikes/${videoId}`, {
+            params: { userId: userId }
+        })
+    
+        return response
+    } catch (error) {
+        console.log(error);
+        throw error
+    }
 }
 
 export {

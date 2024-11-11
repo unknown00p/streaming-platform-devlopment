@@ -17,6 +17,11 @@ import VideoDashboard from "./components/VideoDashboard";
 import UserDashboard from "./components/UserDashboard";
 
 const AppRouter = () => {
+
+  function name(params) {
+    
+  }
+
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route element={<OutletComp />}>

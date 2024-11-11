@@ -7,6 +7,7 @@ import { getVideobyId } from "../api/videos/videoApi"
 import { userById } from "../api/authentication/authApi"
 import { toggleVideoLike, getVideoLikes } from "../api/like/likeApi"
 import userDataStore from "../zustand/userData"
+import { makeComment, getVideoComments } from "../api/comment/comment"
 
 function Video() {
   const [saveToPlaylist, setSaveToPlaylist] = useState(false)
@@ -14,15 +15,17 @@ function Video() {
   const [userData, setUserData] = useState(null)
   const { videoId } = useParams()
   const [likesData, setLikesData] = useState(null)
-  const currentUserData = userDataStore((state)=>state.currentUserData)
+  const currentUserData = userDataStore((state) => state.currentUserData)
+  const [commentInputData, setCommentInputData] = useState('')
+  const [comments, setComments] = useState([])
   // console.log(currentUserData);
-  
-  
+
+
   useEffect(() => {
     const userId = currentUserData?._id
     // console.log('userId',userId);
     async function videoByIdFunc() {
-      const res = await getVideoLikes(videoId,userId)
+      const res = await getVideoLikes(videoId, userId)
       setLikesData(res.data.data)
       const response = await getVideobyId(videoId)
       if (response) {
@@ -41,7 +44,7 @@ function Video() {
     if (res) {
       const userId = currentUserData?._id
       // console.log('userId',userId);
-      const response = await getVideoLikes(videoId,userId)
+      const response = await getVideoLikes(videoId, userId)
       setLikesData(response.data.data)
     }
 
@@ -56,6 +59,27 @@ function Video() {
     "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
     "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7"
   ]
+
+  async function submitComment(e) {
+    e.preventDefault()
+    const response = await makeComment(videoId, commentInputData)
+    if (response) {
+      const responseData = await getVideoComments(videoId)
+      setComments(responseData?.data.data.retrivedVideoComments)
+      // setCommentInputData('')
+    }
+  }
+
+  useEffect(() => {
+    async function getReaponse() {
+      const response = await getVideoComments(videoId)
+      setComments(response?.data.data.retrivedVideoComments)
+    }
+
+    getReaponse()
+  }, [commentInputData])
+
+  console.log(comments);
 
   return (
     <Wrapper>
@@ -76,10 +100,16 @@ function Video() {
 
           <div className="flex flex-col text-white gap-4">
             <div className="flex items-start justify-between gap-2">
-              <p>
-                {videoData?.description}
-              </p>
-              <img onClick={() => setSaveToPlaylist(true)} src="/dots.svg" className="w-6 cursor-pointer" alt="" />
+              {videoData ? <p className="text-xl">
+                {videoData?.description.slice(0, 100) + '....'}
+              </p> :
+                <div className="">
+                  <p className="w-[35rem] h-4 bg-[#1b1e28] rounded-md"></p>
+                  <p className="w-40 h-4 bg-[#1b1e28] rounded-md mt-3"></p>
+                </div>
+              }
+
+              {videoData ? <img onClick={() => setSaveToPlaylist(true)} src="/dots.svg" className="w-6 cursor-pointer" alt="" /> : <div className="h-6 w-2 bg-[#1b1e28] rounded-lg"></div>}
             </div>
 
 
@@ -87,27 +117,28 @@ function Video() {
 
               <div className="flex justify-between gap-3 items-center">
                 <div className="flex items-center gap-1">
-                  <img onClick={() => {
+                  {videoData ? <img onClick={() => {
                     console.log("Hola");
-                  }} id='profile' className="w-9 h-9 rounded-full mr-2 object-cover" src={userData?.avatar} alt="Avatar of Jonathan Reinink" />
+                  }} id='profile' className="w-9 h-9 rounded-full mr-2 object-cover" src={userData?.avatar} alt="Avatar of Jonathan Reinink" /> : <div className="w-9 h-9 bg-[#1b1e28] rounded-full mr-2"></div>
+                  }
                   <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                     <div className='flex flex-col'>
-                      <div className="text-lg">{userData?.fullName}</div>
-                      <div className="text-sm">280k subscribers</div>
+                      {videoData ? <div className="text-lg">{userData?.fullName}</div> : <div className="w-20 h-3 bg-[#1b1e28] rounded-md mt-3"></div>}
+                      {videoData ? <div className="text-sm">280k subscribers</div> : <div className="w-10 h-2 bg-[#1b1e28] rounded-md mt-3"></div>}
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <button type="button" className="text-[#000000] bg-[#ffffff] font-medium rounded-lg text-sm px-5 py-2.5 me-2 focus:outline-none">Subscribe</button>
+                  {videoData ? <button type="button" className="text-[#000000] bg-[#ffffff] font-medium rounded-full text-sm px-5 py-2.5 me-2 focus:outline-none">Subscribe</button> : <div className="w-28 rounded-full px-5 py-2.5 me-2 bg-[#1b1e28] h-10"></div>}
                 </div>
               </div>
 
 
-              <div className="flex gap-5 items-center justify-between border-2 py-[0.300rem] px-2 rounded-md">
+              {videoData ? <div className="flex gap-5 items-center justify-between border-2 py-[0.300rem] px-2 rounded-full">
                 <div className="flex items-center">
                   <div className="cursor-pointer" onClick={toggleLikes}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={likesData?.isUserLiked?'blue':'white'} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={likesData?.isUserLiked ? 'blue' : 'white'} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" /></svg>
                   </div>
                   {likesData?.likeCount}
                 </div>
@@ -117,7 +148,7 @@ function Video() {
                 <p>
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-down"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 13v-8a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v7a1 1 0 0 0 1 1h3a4 4 0 0 1 4 4v1a2 2 0 0 0 4 0v-5h3a2 2 0 0 0 2 -2l-1 -5a2 3 0 0 0 -2 -2h-7a3 3 0 0 0 -3 3" /></svg>
                 </p>
-              </div>
+              </div> : <div className="w-28 rounded-full px-5 py-2.5 me-2 bg-[#1b1e28] h-10"></div>}
 
             </div>
           </div>
@@ -130,32 +161,59 @@ function Video() {
 
                 <div className="w-full my-2">
                   <textarea
-                    className="bg-gray-100 rounded border border-gray-400 leading-normal resize-none w-full h-12 py-2 px-3 font-medium text-black placeholder-gray-700 focus:outline-none focus:bg-white"
+                    className="bg-[#0000] border-x-0 border-t-0 border-b-2 outline-none border-gray-400 leading-normal resize-none w-full h-12 py-2 px-3 font-medium text-[#c1c1c1] placeholder-[#aeaeae]"
                     name="body"
                     placeholder="Type Your Comment"
                     required
+                    onChange={(e) => setCommentInputData(e.target.value)}
                   ></textarea>
                 </div>
                 <div className="w-full flex justify-end px-3">
-                  <input
+                  <button
                     type="submit"
-                    className="px-2.5 py-1.5 rounded-md text-white text-sm bg-indigo-500"
-                    value="Post Comment"
-                  />
+                    className="px-2.5 py-1.5 rounded-full text-white text-sm bg-indigo-500"
+                    onClick={submitComment}
+                  >Post Comment</button>
                 </div>
                 <div className="flex flex-col">
-                  {[1, 2, 3].map((_, index) => (
+                  {comments?.map((value, index) => (
                     <div key={index} className="rounded-md p-3 ml-3">
-                      <div className="flex gap-4 items-center">
+                      <div className="flex gap-4 items-start">
                         <img
-                          src="https://avatars.githubusercontent.com/u/22263436?v=4"
-                          className="object-cover w-8 h-8 rounded-full border-2 border-emerald-400 shadow-emerald-400"
+                          src={value?.userDetails.avatar}
+                          className="object-cover w-8 h-8 rounded-full"
                           alt="User avatar"
                         />
-                        <h3 className="font-bold">User name</h3>
+
+                        <div>
+                          <h3 className="font-bold">{value?.userDetails.username}</h3>
+                          <p className="text-gray-400 mt-2">{value?.content}</p>
+                          <div className="flex items-center gap-2 mt-2">
+                            <button
+                              className="flex items-center text-gray-500 hover:text-blue-500"
+                              onClick={(e) => {
+                                e.preventDefault();
+                              }}
+                            >
+                              <span className="">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" /></svg>
+                              </span>
+                              134
+                            </button>
+                            <button
+                              className="flex items-center text-gray-500 hover:text-blue-500"
+                              onClick={(e) => {
+                                e.preventDefault();
+                              }}
+                            >
+                              <span className="ml-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-down"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 13v-8a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v7a1 1 0 0 0 1 1h3a4 4 0 0 1 4 4v1a2 2 0 0 0 4 0v-5h3a2 2 0 0 0 2 -2l-1 -5a2 3 0 0 0 -2 -2h-7a3 3 0 0 0 -3 3" /></svg>
+                              </span>
+                            </button>
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-gray-400 mt-2">this is sample comment</p>
-                      <div className="flex items-center gap-2 mt-2">
+                      {/* <div className="flex items-center gap-2 mt-2">
                         <button
                           className="flex items-center text-gray-500 hover:text-blue-500"
                           onClick={(e) => {
@@ -179,7 +237,7 @@ function Video() {
                             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-down"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 13v-8a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v7a1 1 0 0 0 1 1h3a4 4 0 0 1 4 4v1a2 2 0 0 0 4 0v-5h3a2 2 0 0 0 2 -2l-1 -5a2 3 0 0 0 -2 -2h-7a3 3 0 0 0 -3 3" /></svg>
                           </span>
                         </button>
-                      </div>
+                      </div> */}
                     </div>
                   ))}
 

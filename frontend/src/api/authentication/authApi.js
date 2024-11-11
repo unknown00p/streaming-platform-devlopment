@@ -76,7 +76,7 @@ async function userById(userId) {
     }
 }
 
-async function currentUser(params) {
+async function currentUser() {
     try {
         const response = await baseUrl.get('/users/current-user', {
             withCredentials: true
