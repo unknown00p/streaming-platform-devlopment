@@ -2,8 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+/* body {
   background-color: #131519;
+} */
+
+@layer base {
+  body {
+    @apply bg-gradient-to-b from-[#000000] to-[#2d1f3a] min-h-screen;
+    @apply text-white
+  }
 }
 
 * {
@@ -79,4 +86,103 @@ video::-webkit-media-controls {
 
 .animate-slide-in-right {
   animation: slide-in-right 0.4s ease-in-out forwards;
+}
+
+/* General skeleton animation */
+@keyframes pulse {
+  0% {
+      background-color: #0f1219;
+  }
+  50% {
+      background-color: #312345;
+  }
+  100% {
+      background-color: #111319;
+  }
+}
+
+/* Skeleton cover image */
+.skeleton-cover {
+  width: 100%;
+  height: 18rem;
+  background: #1b1e28;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Skeleton Avatar */
+.skeleton-avatar {
+  width: 6rem;
+  height: 6rem;
+  background: #1b1e28;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Skeleton Text Placeholder */
+.skeleton-text {
+  background: #1b1e28;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Username placeholder */
+.skeleton-username {
+  width: 150px;
+  height: 24px;
+  margin-bottom: 10px;
+}
+
+/* Back button placeholder */
+.skeleton-back {
+  width: 50px;
+  height: 20px;
+}
+
+/* Full name placeholder */
+.skeleton-fullname {
+  width: 100px;
+  height: 18px;
+  margin-bottom: 8px;
+}
+
+/* Subscriber text placeholder */
+.skeleton-subscriber,
+.skeleton-subscribed {
+  width: 80px;
+  height: 16px;
+}
+
+/* Dot separator placeholder */
+.skeleton-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin: 0 5px;
+  background: #1b1e28;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Button placeholder */
+.skeleton-button {
+  width: 120px;
+  height: 40px;
+  background: #1b1e28;
+  border-radius: 8px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Navigation items */
+.skeleton-nav-item {
+  width: 80%;
+  height: 24px;
+  background: #1b1e28;
+  margin-bottom: 8px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Main content placeholder */
+.skeleton-main-content {
+  width: 100%;
+  height: 400px;
+  background: #1b1e28;
+  animation: pulse 1.5s infinite ease-in-out;
 }

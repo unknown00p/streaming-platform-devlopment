@@ -6,7 +6,7 @@ function OutletComp() {
     CurrentUser()
 
     return (
-        <div className='max-w-[90rem] mx-auto'>
+        <div className='max-w-[2560px] mx-auto'>
             <div className='fixed z-20 w-full'>
                 <Header />
             </div>

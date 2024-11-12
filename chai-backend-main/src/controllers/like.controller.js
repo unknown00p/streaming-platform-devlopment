@@ -183,10 +183,7 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
 )
 
 const getLikedVideos = asyncHandler(async (req, res) => {
-    //TODO: get all liked videos of user
     const userId = req.user._id
-    // console.log(userId);
-
 
     if (!userId) {
         throw new ApiError(
@@ -230,12 +227,12 @@ const getLikedVideos = asyncHandler(async (req, res) => {
 
 const getLikesOfaVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params
-    const userId  = req.query.userId
+    const userId = req.query.userId
     const likeCount = await Like.countDocuments({ video: videoId })
 
-    if (!likeCount) {
-        new ApiError(404, "no likes founded")
-    }
+    // if (!likeCount) {
+    //     new ApiError(404, "no likes founded")
+    // }
 
     if (userId) {
         const isUserLiked = await Like.findOne({ likedBy: userId, video: videoId })
@@ -243,7 +240,7 @@ const getLikesOfaVideo = asyncHandler(async (req, res) => {
             .status(200)
             .json(new ApiResponse(200,
                 {
-                    likeCount,
+                    likeCount: likeCount ? likeCount : 0,
                     isUserLiked: userId && isUserLiked ? true : false,
                 }
                 , "Like of this video")
@@ -261,6 +258,40 @@ const getLikesOfaVideo = asyncHandler(async (req, res) => {
 
 
 })
+
+// const getLikesOfComment = asyncHandler(async (req, res) => {
+//     const { commentId } = req.params
+//     const userId = req.query.userId
+//     const likeCount = await Like.countDocuments({ video: videoId })
+
+//     // if (!likeCount) {
+//     //     new ApiError(404, "no likes founded")
+//     // }
+
+//     if (userId) {
+//         const isUserLiked = await Like.findOne({ likedBy: userId, video: videoId })
+//         res
+//             .status(200)
+//             .json(new ApiResponse(200,
+//                 {
+//                     likeCount: likeCount ? likeCount : 0,
+//                     isUserLiked: userId && isUserLiked ? true : false,
+//                 }
+//                 , "Like of this video")
+//             )
+//     } else {
+//         res
+//             .status(200)
+//             .json(new ApiResponse(200,
+//                 {
+//                     likeCount
+//                 }
+//                 , "Like of this video")
+//             )
+//     }
+
+
+// })
 
 export {
     toggleCommentLike,

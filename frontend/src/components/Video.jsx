@@ -5,9 +5,10 @@ import Wrapper from "./Wrapper"
 import { useParams } from "react-router-dom"
 import { getVideobyId } from "../api/videos/videoApi"
 import { userById } from "../api/authentication/authApi"
-import { toggleVideoLike, getVideoLikes } from "../api/like/likeApi"
+import { toggleVideoLike, getVideoLikes,toggleCommentLike } from "../api/like/likeApi"
 import userDataStore from "../zustand/userData"
 import { makeComment, getVideoComments } from "../api/comment/comment"
+import formatTimeDifference from "../hooks/formateTime"
 
 function Video() {
   const [saveToPlaylist, setSaveToPlaylist] = useState(false)
@@ -19,7 +20,6 @@ function Video() {
   const [commentInputData, setCommentInputData] = useState('')
   const [comments, setComments] = useState([])
   // console.log(currentUserData);
-
 
   useEffect(() => {
     const userId = currentUserData?._id
@@ -58,15 +58,17 @@ function Video() {
     "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
     "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
     "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7"
-  ]
+  ]  
 
   async function submitComment(e) {
     e.preventDefault()
-    const response = await makeComment(videoId, commentInputData)
-    if (response) {
-      const responseData = await getVideoComments(videoId)
-      setComments(responseData?.data.data.retrivedVideoComments)
-      // setCommentInputData('')
+    if (commentInputData) {
+      const response = await makeComment(videoId, commentInputData)
+      if (response) {
+        const responseData = await getVideoComments(videoId)
+        setComments(responseData?.data.data.retrivedVideoComments)
+        // setCommentInputData('')
+      }
     }
   }
 
@@ -79,7 +81,14 @@ function Video() {
     getReaponse()
   }, [commentInputData])
 
-  console.log(comments);
+  // console.log('videoData', comments);
+  
+  async function likeComment(e,commentId) {
+    console.log('valueId', commentId);
+    e.preventDefault()
+    const response = await toggleCommentLike(commentId)
+    console.log(response);
+  }
 
   return (
     <Wrapper>
@@ -101,7 +110,7 @@ function Video() {
           <div className="flex flex-col text-white gap-4">
             <div className="flex items-start justify-between gap-2">
               {videoData ? <p className="text-xl">
-                {videoData?.description.slice(0, 100) + '....'}
+                {videoData?.title > 100 ? videoData?.title.slice(0, 100) + '....' : videoData?.title}
               </p> :
                 <div className="">
                   <p className="w-[35rem] h-4 bg-[#1b1e28] rounded-md"></p>
@@ -153,9 +162,17 @@ function Video() {
             </div>
           </div>
 
+          <div className="description text-white mt-7 w-full bg-[#0b0415c2] p-3 rounded-md">
+            <div className="flex gap-3 items-center font-semibold text-md">
+              <h4>132 views</h4>
+              {formatTimeDifference(videoData?.createdAt)}
+            </div>
+            <p className="text-md mt-2">{videoData?.description}</p>
+          </div>
+
 
           <div className="comment">
-            <div className="w-full bg-[#13151a] text-white rounded-lg my-4">
+            <div className="w-full text-white rounded-lg my-4">
               <form>
                 <h3 className="font-bold mt-10">Comments</h3>
 
@@ -164,7 +181,6 @@ function Video() {
                     className="bg-[#0000] border-x-0 border-t-0 border-b-2 outline-none border-gray-400 leading-normal resize-none w-full h-12 py-2 px-3 font-medium text-[#c1c1c1] placeholder-[#aeaeae]"
                     name="body"
                     placeholder="Type Your Comment"
-                    required
                     onChange={(e) => setCommentInputData(e.target.value)}
                   ></textarea>
                 </div>
@@ -191,9 +207,7 @@ function Video() {
                           <div className="flex items-center gap-2 mt-2">
                             <button
                               className="flex items-center text-gray-500 hover:text-blue-500"
-                              onClick={(e) => {
-                                e.preventDefault();
-                              }}
+                              onClick={(e)=>likeComment(e,value?._id)}
                             >
                               <span className="">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" /></svg>

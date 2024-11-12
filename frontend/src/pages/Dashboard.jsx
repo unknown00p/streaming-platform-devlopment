@@ -7,8 +7,10 @@ import userData from '../zustand/userData';
 function Dashboard() {
   const currentUserData = userData((state) => state.currentUserData);
   const navigate = useNavigate()
+  const storageVlaue = localStorage.getItem('isLogin')
+  const isUserFlag = JSON.parse(storageVlaue)
 
-  return currentUserData ? (
+  return isUserFlag ? (
     <Wrapper>
       <div className='text-white'>
         <nav className="bg-gray-50 dark:bg-[#13151a] w-full top-14 left-0 fixed z-10">

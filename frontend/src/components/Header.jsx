@@ -20,6 +20,7 @@ function Header() {
   const [searchValue, setSearchValue] = useState("")
   const setSearchData = videoStore((state) => state.setSearchData)
   const setCurrentUserData = userData((state) => state.setCurrentUserData)
+  const [headerBg, setHeaderBg] = useState('010204')
 
   useEffect(() => {
     handleClickOutside()
@@ -66,8 +67,11 @@ function Header() {
 
   function searchVideo(e) {
     e.preventDefault()
-    setSearchData(searchValue)
-    navigate('/searchResult')
+    if (searchValue) {
+      const response = setSearchData(searchValue)
+      console.log(response);
+      navigate('/searchResult')
+    }
   }
 
   function logout(params) {
@@ -79,7 +83,7 @@ function Header() {
     <>
       <div className=''>
         <div className={`${headerClass} md:block`}>
-          <div className='flex max-w-[90rem] text-white items-center justify-between px-7 pt-2 pb-5 text-[1.11rem] bg-[#13151a]'>
+          <div onScroll={()=>setHeaderBg('fffff')} className={`flex max-w-[2560px] text-white items-center justify-between px-7 pt-2 pb-5 text-[1.11rem] bg-[#010204]`}>
             <div className='flex items-center gap-7'>
               <button className='hidden sm:block' id='mainMenu' onClick={toggleSideBar}>
                 <img src="/menubar.svg" alt="" />
@@ -98,8 +102,8 @@ function Header() {
                   onChange={(e) => setSearchValue(e.target.value)}
                 />
 
-                <div className='bg-[#363e4a] items-center px-4 rounded-l-none rounded-full outline-none border-[#8d8d8d8b] border-[1px] hidden md:flex'>
-                  <button onClick={searchVideo} className=''>
+                <div onClick={searchVideo} className='bg-[#363e4a] items-center px-4 rounded-l-none rounded-full outline-none border-[#8d8d8d8b] border-[1px] hidden md:flex cursor-pointer'>
+                  <button className=''>
                     <img className='' src="/search.svg" alt="" />
                   </button>
                 </div>

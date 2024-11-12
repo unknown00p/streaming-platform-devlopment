@@ -9,6 +9,16 @@ async function SignIn({ email, password }) {
             { withCredentials: true }
         )
 
+        if (response) {
+            const now = new Date();
+            const oneMonth = 30 * 24 * 60 * 60 * 1000;
+            const item = {
+                value: true,
+                expiry: now.getTime() + oneMonth,
+            };
+            localStorage.setItem('isLogin', JSON.stringify(item))
+        }
+
         return response
     } catch (error) {
         console.log(error?.response?.data);
@@ -19,7 +29,9 @@ async function SignIn({ email, password }) {
 async function SignOut() {
     try {
         const response = await baseUrl.post("/users/logout", {}, { withCredentials: true })
-        console.log(response);
+        if (response) {
+            localStorage.removeItem('isLogin')
+        }
         return response
     } catch (error) {
         console.log(error);
