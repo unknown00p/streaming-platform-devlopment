@@ -5,10 +5,11 @@ import Wrapper from "./Wrapper"
 import { useParams } from "react-router-dom"
 import { getVideobyId } from "../api/videos/videoApi"
 import { userById } from "../api/authentication/authApi"
-import { toggleVideoLike, getVideoLikes,toggleCommentLike } from "../api/like/likeApi"
+import { toggleVideoLike, getVideoLikes, toggleCommentLike, getCommentLikes } from "../api/like/likeApi"
 import userDataStore from "../zustand/userData"
 import { makeComment, getVideoComments } from "../api/comment/comment"
 import formatTimeDifference from "../hooks/formateTime"
+
 
 function Video() {
   const [saveToPlaylist, setSaveToPlaylist] = useState(false)
@@ -19,6 +20,8 @@ function Video() {
   const currentUserData = userDataStore((state) => state.currentUserData)
   const [commentInputData, setCommentInputData] = useState('')
   const [comments, setComments] = useState([])
+  const [commentLikes, setCommentLikes] = useState({})
+  const [commentLikesData, setCommentLikesData] = useState(null)
   // console.log(currentUserData);
 
   useEffect(() => {
@@ -58,7 +61,7 @@ function Video() {
     "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
     "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7",
     "https://th.bing.com/th/id/OIP.t57OzeATZKjBDDrzXqbc5gHaE7?w=257&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7"
-  ]  
+  ]
 
   async function submitComment(e) {
     e.preventDefault()
@@ -67,27 +70,46 @@ function Video() {
       if (response) {
         const responseData = await getVideoComments(videoId)
         setComments(responseData?.data.data.retrivedVideoComments)
-        // setCommentInputData('')
       }
     }
   }
 
   useEffect(() => {
-    async function getReaponse() {
-      const response = await getVideoComments(videoId)
+    getVideoComments(videoId).then((response) => {
       setComments(response?.data.data.retrivedVideoComments)
+    })
+  }, [])
+
+  useEffect(() => {    
+    const userId = currentUserData?._id
+    comments?.forEach((value) => {
+      getCommentLikes(value?._id, userId).then((val) => {
+        setCommentLikes((previous) => ({
+          ...previous,
+          [val?.data.data.commentId]: {
+            isUserLiked: val?.data.data.isUserLiked,
+            likeCount: val?.data.data.likeCount
+          }
+        }))
+      })
     }
+    )
+  }, [comments,commentLikesData])
 
-    getReaponse()
-  }, [commentInputData])
+  // useEffect(() => {
+  //   async function getLikeOfComments(commentId) {
+  //     const userId = currentUserData?._id
+  //     const response = await getCommentLikes(commentId, userId)
+  //     // console.log(response.data.data.likeCount);
+  //     return response.data.data
+  //   }
+  // }, [])
 
-  // console.log('videoData', comments);
-  
-  async function likeComment(e,commentId) {
+  async function likeComment(e, commentId) {
     console.log('valueId', commentId);
     e.preventDefault()
     const response = await toggleCommentLike(commentId)
-    console.log(response);
+    setCommentLikesData(response.data.data)
   }
 
   return (
@@ -147,7 +169,7 @@ function Video() {
               {videoData ? <div className="flex gap-5 items-center justify-between border-2 py-[0.300rem] px-2 rounded-full">
                 <div className="flex items-center">
                   <div className="cursor-pointer" onClick={toggleLikes}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={likesData?.isUserLiked ? 'blue' : 'white'} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill={likesData?.isUserLiked ?"white" : "none"} stroke={likesData?.isUserLiked ? 'blue' : 'white'} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" /></svg>
                   </div>
                   {likesData?.likeCount}
                 </div>
@@ -207,12 +229,12 @@ function Video() {
                           <div className="flex items-center gap-2 mt-2">
                             <button
                               className="flex items-center text-gray-500 hover:text-blue-500"
-                              onClick={(e)=>likeComment(e,value?._id)}
+                              onClick={(e) => likeComment(e, value?._id)}
                             >
                               <span className="">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" /></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill={commentLikes[value?._id]?.isUserLiked ? "white" : "none"} stroke={commentLikes[value?._id]?.isUserLiked ? "blue" : "white"} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" /></svg>
                               </span>
-                              134
+                              {commentLikes[value?._id]?.likeCount || 0}
                             </button>
                             <button
                               className="flex items-center text-gray-500 hover:text-blue-500"

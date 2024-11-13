@@ -175,7 +175,7 @@ function Header() {
 
         <div className={`${coverAll}`}>
           <aside id="logo-sidebar" className={`fixed overflow-hidden top-0 ${toggleBarCss} w-64 h-screen transition-all`} aria-label="Sidebar">
-            <div className="h-full px-3 py-4 bg-gray-50 dark:bg-[#13151a]">
+            <div className="h-full px-3 py-4 bg-gray-50 dark:bg-[#14071a]">
 
               <div className='flex items-center pb-5 gap-5 pl-1'>
                 <div>

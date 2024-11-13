@@ -36,7 +36,7 @@ function SideBar() {
     ];
 
     return (
-        <div className='flex lg:flex-col bg-[#13151a] lg:bg-[#0000] w-full lg:w-[4rem] gap-8 text-white justify-center lg:justify-normal lg:gap-8 p-3 pr-6 lg:p-0'>
+        <div className='flex lg:flex-col bg-[#13151a00] lg:bg-[#0000] w-full lg:w-[4rem] gap-8 text-white justify-center lg:justify-normal lg:gap-8 p-3 pr-6 lg:p-0'>
             {sidebarVal.map((value) => (
                 <div key={value.name} className='flex flex-col items-center'>
                     {value.onClick ? (

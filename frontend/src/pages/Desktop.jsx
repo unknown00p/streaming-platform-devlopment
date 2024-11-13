@@ -66,7 +66,7 @@ function Desktop() {
     },
   ]
 
-  const storageVlaue = localStorage.getItem('isLogin')
+  const storageVlaue = sessionStorage.getItem('isLogin')
   const isUserFlag = JSON.parse(storageVlaue)
 
   if (!isUserFlag) {

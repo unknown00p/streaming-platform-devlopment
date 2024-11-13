@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react"
+import BounceLoader from 'react-spinners/BounceLoader'
 import Hls from "hls.js"
 
 function CustomVideoPlayer({ qualityObj, duration }) {
@@ -18,9 +19,8 @@ function CustomVideoPlayer({ qualityObj, duration }) {
   const [storedTime, setStoredTime] = useState(0)
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {    
+  useEffect(() => {
     try {
-      setLoading(true)
       const videoElement = videoRef.current;
       if (Hls.isSupported() && videoElement) {
         const hls = new Hls({
@@ -44,7 +44,19 @@ function CustomVideoPlayer({ qualityObj, duration }) {
     }
 
   }, [quality]);
-  
+
+  useEffect(() => {
+    const handleWaiting = () => setLoading(true)
+    const handleCanplay = () => setLoading(false)
+
+    videoRef.current.addEventListener('waiting', handleWaiting)
+    videoRef.current.addEventListener('canplay', handleCanplay)
+
+    return () => {
+      videoRef.current?.removeEventListener('waiting', handleWaiting)
+      videoRef.current?.removeEventListener('canplay', handleCanplay)
+    }
+  }, [])
 
   function togglePlayPause() {
     if (videoRef.current.paused) {
@@ -75,7 +87,7 @@ function CustomVideoPlayer({ qualityObj, duration }) {
     } else {
       setSoundRangeValue(40)
     }
-  }  
+  }
 
   useEffect(() => {
     videoRef.current.volume = soundRangeValue / 100
@@ -166,22 +178,40 @@ function CustomVideoPlayer({ qualityObj, duration }) {
 
   function changeQuality(e) {
     console.log(e.target.innerText);
-    setStoredTime(videoRef.current.currentTime)
-    if (e.target.innerText == 'auto') {
-      setQuality(qualityObj?.auto)
-    }else if (e.target.innerText == '1080p'){
-      setQuality(qualityObj?.quality1080p)
-    }
-    else if (e.target.innerText == '720p') {
-      setQuality(qualityObj?.quality720p)
-    }
-    else if (e.target.innerText == '480p') {
-      setQuality(qualityObj?.quality480p)
-    }
-    else if (e.target.innerText == '320p') {
-      setQuality(qualityObj?.quality320p)
+    try {
+      setStoredTime(videoRef.current.currentTime)
+      if (e.target.innerText == 'auto') {
+        setQuality(qualityObj?.auto)
+      } else if (e.target.innerText == '1080p') {
+        setQuality(qualityObj?.quality1080p)
+      }
+      else if (e.target.innerText == '720p') {
+        setQuality(qualityObj?.quality720p)
+      }
+      else if (e.target.innerText == '480p') {
+        setQuality(qualityObj?.quality480p)
+      }
+      else if (e.target.innerText == '320p') {
+        setQuality(qualityObj?.quality320p)
+      }
+    } catch (error) {
+      console.log(error);
+    }finally{
+      setShowSetting(false)
     }
   }
+
+  const override = {
+    borderColor: "black",
+  };
+
+  const qualitiesArray = [
+    "auto",
+    "1080p",
+    "720p",
+    "480p",
+    "320p"
+  ]
 
   return (
     <>
@@ -206,6 +236,18 @@ function CustomVideoPlayer({ qualityObj, duration }) {
           <source src={qualityObj?.quality1080p} type="application/x-mpegURL" />
 
         </video>
+
+        {/* {loading && <div className="absolute">Loading chunks...</div>} */}
+        {loading && <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-[#09090960] text-white text-xl">
+          <BounceLoader
+            color={'#c90aea'}
+            loading={loading}
+            cssOverride={override}
+            size={60}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+        </div>}
 
         {duration && <div className={`${onHoverShow} absolute custom-video-controls bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent py-2`}>
           <div className="px-4 pb-[0.33rem]">
@@ -262,7 +304,12 @@ function CustomVideoPlayer({ qualityObj, duration }) {
                 )} src="/dots2.svg" alt="" />
                 {showSetting && <div className="bg-[#211e1e7a] absolute w-[8.75rem] p-2 top-[-13rem] left-[-5rem] rounded-md">
                   <ul className="flex flex-col gap-3">
-                    <button className="text-left">
+                    {qualitiesArray.map((value) => (
+                      <button className="text-left">
+                        <li onClick={changeQuality}>{value}</li>
+                      </button>
+                    ))}
+                    {/* <button className="text-left">
                       <li onClick={changeQuality}>auto</li>
                     </button>
                     <button className="text-left">
@@ -276,7 +323,7 @@ function CustomVideoPlayer({ qualityObj, duration }) {
                     </button>
                     <button className="text-left">
                       <li onClick={changeQuality}>320p</li>
-                    </button>
+                    </button> */}
                   </ul>
                 </div>}
               </div>

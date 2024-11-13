@@ -38,8 +38,20 @@ async function toggleCommentLike(commentId) {
     }
 }
 
+async function getCommentLikes(commentId, userId) {
+    try {
+        const response = await baseUrl(`/likes/commentLikes/${commentId}`,{
+            params: {userId: userId}
+        })
+        return response
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export {
     toggleVideoLike,
     getVideoLikes,
-    toggleCommentLike
+    toggleCommentLike,
+    getCommentLikes
 }

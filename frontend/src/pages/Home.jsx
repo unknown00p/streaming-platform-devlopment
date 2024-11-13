@@ -57,7 +57,7 @@ function Home() {
         </div>
 
         <div className='right w-full pt-3 overflow-hidden sm:mx-3 pb-16 sm:pb-0'>
-          <div className='lg:ml-[6rem] ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5'>
+          <div className='lg:ml-[6rem] ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5'>
             {videoArray && videoArray.map((value) => {          
               return <div key={value._id} className='cursor-pointer'>
                 <div onClick={(e) => {

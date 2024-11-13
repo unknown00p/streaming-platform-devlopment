@@ -259,44 +259,47 @@ const getLikesOfaVideo = asyncHandler(async (req, res) => {
 
 })
 
-// const getLikesOfComment = asyncHandler(async (req, res) => {
-//     const { commentId } = req.params
-//     const userId = req.query.userId
-//     const likeCount = await Like.countDocuments({ video: videoId })
+const getLikesOfComment = asyncHandler(async (req, res) => {
+    const { commentId } = req.params
+    const userId = req.query.userId
+    
+    console.log('commentId',commentId);
+    console.log('userId',userId);
+    
+    const likeCount = await Like.countDocuments({ comment: commentId })
 
-//     // if (!likeCount) {
-//     //     new ApiError(404, "no likes founded")
-//     // }
-
-//     if (userId) {
-//         const isUserLiked = await Like.findOne({ likedBy: userId, video: videoId })
-//         res
-//             .status(200)
-//             .json(new ApiResponse(200,
-//                 {
-//                     likeCount: likeCount ? likeCount : 0,
-//                     isUserLiked: userId && isUserLiked ? true : false,
-//                 }
-//                 , "Like of this video")
-//             )
-//     } else {
-//         res
-//             .status(200)
-//             .json(new ApiResponse(200,
-//                 {
-//                     likeCount
-//                 }
-//                 , "Like of this video")
-//             )
-//     }
+    if (userId) {
+        const isUserLiked = await Like.findOne({ likedBy: userId, comment: commentId })
+        res
+            .status(200)
+            .json(new ApiResponse(200,
+                {
+                    likeCount: likeCount ? likeCount : 0,
+                    commentId: commentId,
+                    isUserLiked: userId && isUserLiked ? true : false,
+                }
+                , "Like of this Comment")
+            )
+    } else {
+        res
+            .status(200)
+            .json(new ApiResponse(200,
+                {
+                    likeCount,
+                    commentId: commentId
+                }
+                , "Like of this comment")
+            )
+    }
 
 
-// })
+})
 
 export {
     toggleCommentLike,
     toggleTweetLike,
     toggleVideoLike,
     getLikedVideos,
-    getLikesOfaVideo
+    getLikesOfaVideo,
+    getLikesOfComment
 }

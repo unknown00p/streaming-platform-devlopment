@@ -16,7 +16,7 @@ async function SignIn({ email, password }) {
                 value: true,
                 expiry: now.getTime() + oneMonth,
             };
-            localStorage.setItem('isLogin', JSON.stringify(item))
+            sessionStorage.setItem('isLogin', JSON.stringify(item))
         }
 
         return response
@@ -30,7 +30,7 @@ async function SignOut() {
     try {
         const response = await baseUrl.post("/users/logout", {}, { withCredentials: true })
         if (response) {
-            localStorage.removeItem('isLogin')
+            sessionStorage.removeItem('isLogin')
         }
         return response
     } catch (error) {
