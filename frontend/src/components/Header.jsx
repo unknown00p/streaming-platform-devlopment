@@ -6,7 +6,6 @@ import { SignOut } from '../api/authentication/authApi';
 import { videoStore } from '../zustand/videoStore';
 import userData from '../zustand/userData';
 
-
 function Header() {
   const toggleBarCss = useHandleCssStore((state) => state.toggelBarCss)
   const toggleSideBar = useHandleCssStore((state) => state.toggleSideBar)
@@ -20,7 +19,9 @@ function Header() {
   const [searchValue, setSearchValue] = useState("")
   const setSearchData = videoStore((state) => state.setSearchData)
   const setCurrentUserData = userData((state) => state.setCurrentUserData)
-  const [headerBg, setHeaderBg] = useState('010204')
+  const currentUserData = userData((state) => state.currentUserData)
+  const storegeResponse = sessionStorage.getItem('isLogin')
+  const isLogin = JSON.parse(storegeResponse)
 
   useEffect(() => {
     handleClickOutside()
@@ -83,7 +84,7 @@ function Header() {
     <>
       <div className=''>
         <div className={`${headerClass} md:block`}>
-          <div onScroll={()=>setHeaderBg('fffff')} className={`flex max-w-[2560px] text-white items-center justify-between px-7 pt-2 pb-5 text-[1.11rem] bg-[#010204]`}>
+          <div onScroll={() => setHeaderBg('fffff')} className={`flex max-w-[2560px] text-white items-center justify-between px-7 pt-2 pb-5 text-[1.11rem] bg-[#010204]`}>
             <div className='flex items-center gap-7'>
               <button className='hidden sm:block' id='mainMenu' onClick={toggleSideBar}>
                 <img src="/menubar.svg" alt="" />
@@ -118,7 +119,10 @@ function Header() {
                 <img onClick={DashboardFunc} className='uploadVideoBtn' src="/uploadVideo.svg" alt="" />
               </button>
               <div>
-                <img className='relative cursor-pointer userDropdownBtn' src="/avatar.svg" alt="" />
+                {isLogin ? currentUserData ? <img className='w-[29px] h-[29px] object-cover rounded-full userDropdownBtn cursor-pointer' src={currentUserData?.avatar} alt="" />
+                  : <div className='w-[29px] h-[29px] rounded-full bg-slate-700'></div>
+                  : <img className='relative cursor-pointer userDropdownBtn' src="/avatar.svg" alt="" />
+                }
 
                 <div id="userDropdown" className={`z-10 ${dropDownCss} absolute right-7 bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-[#252934] dark:divide-gray-600 top-14`}>
                   <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">

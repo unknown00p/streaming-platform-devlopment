@@ -69,7 +69,7 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
     const { commentId } = req.params
     const userId = req.user._id
 
-    //TODO: toggle like on comment
+    //todo: There is a reace condition problem that I have to fix
 
     if (!(commentId && userId)) {
         throw new ApiError(
@@ -79,14 +79,13 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
     }
 
     const likedComment = await Like.findOne({ comment: commentId, likedBy: userId })
-    console.log(likedComment);
 
 
     if (!likedComment) {
 
         const LikeComment = await Like.create({
-            likedBy: userId,
             comment: commentId,
+            likedBy: userId,
         })
 
         if (!LikeComment) {
@@ -122,9 +121,6 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
                 "Comment unliked successfully",
             ))
     }
-
-
-
 })
 
 const toggleTweetLike = asyncHandler(async (req, res) => {

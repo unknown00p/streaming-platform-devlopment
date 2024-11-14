@@ -31,7 +31,6 @@ function CustomVideoPlayer({ qualityObj, duration }) {
         hls.loadSource(quality);
         hls.attachMedia(videoElement);
         videoElement.currentTime = storedTime
-        console.log('loaded');
         videoElement.play()
       } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
         videoElement.currentTime = storedTime
@@ -177,7 +176,6 @@ function CustomVideoPlayer({ qualityObj, duration }) {
   }
 
   function changeQuality(e) {
-    console.log(e.target.innerText);
     try {
       setStoredTime(videoRef.current.currentTime)
       if (e.target.innerText == 'auto') {
@@ -198,6 +196,7 @@ function CustomVideoPlayer({ qualityObj, duration }) {
       console.log(error);
     }finally{
       setShowSetting(false)
+      setIsPlaying(true)
     }
   }
 
@@ -238,7 +237,7 @@ function CustomVideoPlayer({ qualityObj, duration }) {
         </video>
 
         {/* {loading && <div className="absolute">Loading chunks...</div>} */}
-        {loading && <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-[#09090960] text-white text-xl">
+        {loading && <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-[#0909093b] text-white text-xl">
           <BounceLoader
             color={'#c90aea'}
             loading={loading}

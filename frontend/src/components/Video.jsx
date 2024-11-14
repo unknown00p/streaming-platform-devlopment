@@ -9,7 +9,7 @@ import { toggleVideoLike, getVideoLikes, toggleCommentLike, getCommentLikes } fr
 import userDataStore from "../zustand/userData"
 import { makeComment, getVideoComments } from "../api/comment/comment"
 import formatTimeDifference from "../hooks/formateTime"
-
+import { toggleSubscription, isChannelSubscribed, getSubscribersOfchannel } from "../api/subscription/subscription"
 
 function Video() {
   const [saveToPlaylist, setSaveToPlaylist] = useState(false)
@@ -22,16 +22,26 @@ function Video() {
   const [comments, setComments] = useState([])
   const [commentLikes, setCommentLikes] = useState({})
   const [commentLikesData, setCommentLikesData] = useState(null)
-  // console.log(currentUserData);
+  const [subscribed, setSubscribed] = useState(false)
+  const [subscriberCount, setSubscriberCount] = useState(0)
 
   useEffect(() => {
     const userId = currentUserData?._id
-    // console.log('userId',userId);
     async function videoByIdFunc() {
       const res = await getVideoLikes(videoId, userId)
       setLikesData(res.data.data)
       const response = await getVideobyId(videoId)
       if (response) {
+        isChannelSubscribed(response.data.data.video?.owner).then((value) => {
+          if (value?.data.data.isSubscribed.length > 0) {
+            setSubscribed(true)
+          } else {
+            setSubscribed(false)
+          }
+        })
+        const res = await getSubscribersOfchannel(response.data.data.video?.owner)
+        setSubscriberCount(res?.data.data.Subscribers)
+
         const response2 = await userById(response.data.data.video.owner)
         setUserData(response2.data.data.userData)
       }
@@ -80,7 +90,7 @@ function Video() {
     })
   }, [])
 
-  useEffect(() => {    
+  useEffect(() => {
     const userId = currentUserData?._id
     comments?.forEach((value) => {
       getCommentLikes(value?._id, userId).then((val) => {
@@ -94,7 +104,8 @@ function Video() {
       })
     }
     )
-  }, [comments,commentLikesData])
+  }, [comments, commentLikesData])
+
 
   // useEffect(() => {
   //   async function getLikeOfComments(commentId) {
@@ -106,10 +117,23 @@ function Video() {
   // }, [])
 
   async function likeComment(e, commentId) {
-    console.log('valueId', commentId);
+    // console.log('valueId', commentId);
     e.preventDefault()
     const response = await toggleCommentLike(commentId)
     setCommentLikesData(response.data.data)
+  }
+
+  async function subscribeToChannel() {
+    console.log('videoData', videoData?.owner)
+    const response = await toggleSubscription(videoData?.owner)
+    const res = await getSubscribersOfchannel(videoData?.owner)
+    setSubscriberCount(res?.data.data.Subscribers)
+    // console.log('subscribed Data', response?.data.data)
+    if (response?.data.data.length > 0) {
+      setSubscribed(true)
+    } else if (response?.data.data.length == undefined) {
+      setSubscribed(false)
+    }
   }
 
   return (
@@ -126,7 +150,7 @@ function Video() {
         <div className="left flex relative flex-col">
           <div className="mb-4">
 
-            {videoData ? <CustomVideoPlayer duration={videoData?.duration} qualityObj={videoData?.videoUrl} /> : <div className="w-full aspect-video bg-[#1b1e28] rounded-md"></div>}
+            {videoData ? <CustomVideoPlayer duration={videoData?.duration} qualityObj={videoData?.videoUrl} /> : <div className="w-full aspect-video bg-[#4b3b5c] rounded-md"></div>}
           </div>
 
           <div className="flex flex-col text-white gap-4">
@@ -135,12 +159,12 @@ function Video() {
                 {videoData?.title > 100 ? videoData?.title.slice(0, 100) + '....' : videoData?.title}
               </p> :
                 <div className="">
-                  <p className="w-[35rem] h-4 bg-[#1b1e28] rounded-md"></p>
-                  <p className="w-40 h-4 bg-[#1b1e28] rounded-md mt-3"></p>
+                  <p className="w-[35rem] h-4 bg-[#4b3b5c] rounded-md"></p>
+                  <p className="w-40 h-4 bg-[#4b3b5c] rounded-md mt-3"></p>
                 </div>
               }
 
-              {videoData ? <img onClick={() => setSaveToPlaylist(true)} src="/dots.svg" className="w-6 cursor-pointer" alt="" /> : <div className="h-6 w-2 bg-[#1b1e28] rounded-lg"></div>}
+              {videoData ? <img onClick={() => setSaveToPlaylist(true)} src="/dots.svg" className="w-6 cursor-pointer" alt="" /> : <div className="h-6 w-2 bg-[#4b3b5c] rounded-lg"></div>}
             </div>
 
 
@@ -150,18 +174,18 @@ function Video() {
                 <div className="flex items-center gap-1">
                   {videoData ? <img onClick={() => {
                     console.log("Hola");
-                  }} id='profile' className="w-9 h-9 rounded-full mr-2 object-cover" src={userData?.avatar} alt="Avatar of Jonathan Reinink" /> : <div className="w-9 h-9 bg-[#1b1e28] rounded-full mr-2"></div>
+                  }} id='profile' className="w-9 h-9 rounded-full mr-2 object-cover" src={userData?.avatar} alt="Avatar of Jonathan Reinink" /> : <div className="w-9 h-9 bg-[#4b3b5c] rounded-full mr-2"></div>
                   }
                   <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                     <div className='flex flex-col'>
-                      {videoData ? <div className="text-lg">{userData?.fullName}</div> : <div className="w-20 h-3 bg-[#1b1e28] rounded-md mt-3"></div>}
-                      {videoData ? <div className="text-sm">280k subscribers</div> : <div className="w-10 h-2 bg-[#1b1e28] rounded-md mt-3"></div>}
+                      {videoData ? <div className="text-lg">{userData?.fullName}</div> : <div className="w-20 h-3 bg-[#4b3b5c] rounded-md mt-3"></div>}
+                      {videoData ? <div className="text-sm">{subscriberCount} subscribers</div> : <div className="w-10 h-2 bg-[#4b3b5c] rounded-md mt-3"></div>}
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  {videoData ? <button type="button" className="text-[#000000] bg-[#ffffff] font-medium rounded-full text-sm px-5 py-2.5 me-2 focus:outline-none">Subscribe</button> : <div className="w-28 rounded-full px-5 py-2.5 me-2 bg-[#1b1e28] h-10"></div>}
+                  {videoData ? <button type="button" onClick={subscribeToChannel} className={`${subscribed ? 'bg-[#0502086e] text-white backdrop-blur-sm border-[1.5px] border-[#6b6767]' : 'bg-[#fff] text-black backdrop-blur-none'} font-medium rounded-full text-sm px-5 py-2.5 me-2 focus:outline-none`}>{subscribed ? 'Unsubscribe' : 'Subscribe'}</button> : <div className="w-28 rounded-full px-5 py-2.5 me-2 bg-[#4b3b5c] h-10"></div>}
                 </div>
               </div>
 
@@ -169,7 +193,7 @@ function Video() {
               {videoData ? <div className="flex gap-5 items-center justify-between border-2 py-[0.300rem] px-2 rounded-full">
                 <div className="flex items-center">
                   <div className="cursor-pointer" onClick={toggleLikes}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill={likesData?.isUserLiked ?"white" : "none"} stroke={likesData?.isUserLiked ? 'blue' : 'white'} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill={likesData?.isUserLiked ? "white" : "none"} stroke={likesData?.isUserLiked ? 'blue' : 'white'} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-up"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" /></svg>
                   </div>
                   {likesData?.likeCount}
                 </div>
@@ -179,7 +203,7 @@ function Video() {
                 <p>
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-thumb-down"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 13v-8a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v7a1 1 0 0 0 1 1h3a4 4 0 0 1 4 4v1a2 2 0 0 0 4 0v-5h3a2 2 0 0 0 2 -2l-1 -5a2 3 0 0 0 -2 -2h-7a3 3 0 0 0 -3 3" /></svg>
                 </p>
-              </div> : <div className="w-28 rounded-full px-5 py-2.5 me-2 bg-[#1b1e28] h-10"></div>}
+              </div> : <div className="w-28 rounded-full px-5 py-2.5 me-2 bg-[#4b3b5c] h-10"></div>}
 
             </div>
           </div>
@@ -200,7 +224,7 @@ function Video() {
 
                 <div className="w-full my-2">
                   <textarea
-                    className="bg-[#0000] border-x-0 border-t-0 border-b-2 outline-none border-gray-400 leading-normal resize-none w-full h-12 py-2 px-3 font-medium text-[#c1c1c1] placeholder-[#aeaeae]"
+                    className="bg-[#0000] border-x-0 border-t-0 border-b-2 outline-none border-gray-400 leading-normal resize-none w-full h-12 py-2 px-3 font-medium text-[#c1c1c1] placeholder-[#aeaeae] focus:border-[#ffffff]"
                     name="body"
                     placeholder="Type Your Comment"
                     onChange={(e) => setCommentInputData(e.target.value)}
@@ -284,11 +308,11 @@ function Video() {
           </div>
         </div>
 
-        <div className="right flex flex-col flex-grow gap-4">
+        <div className="right flex flex-col flex-grow gap-3">
           {imageUrl.map((url, index) => (
-            <div key={index} className="flex gap-3 rounded-md bg-[#13151a]">
+            <div key={index} className="flex gap-3 rounded-xl">
               <div className="flex-shrink-0">
-                <img className="rounded-sm w-32 h-24 object-cover" src={url} alt="" />
+                <img className="rounded-sm w-40 h-[5.8rem] object-cover" src={url} alt="" />
               </div>
               <div className="text-white flex-grow">
                 <p className="text-sm lg:text-base">Lorem ipsum dolor sit amet consec</p>
