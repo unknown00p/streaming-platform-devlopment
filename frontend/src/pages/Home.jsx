@@ -14,8 +14,8 @@ function Home() {
   useEffect(() => {
     async function getAllVideosFunc() {
       const response = await getAllVideos()
+      // setHasVideo(false)
       if (response) {
-        setHasVideo(true)
         const videoData = response.data.data.allvideos
 
         const awaitResponse = videoData.map((val) => userById(val?.owner))
@@ -28,8 +28,6 @@ function Home() {
           }));
 
         setVideoArray(enrichedVideos)
-      } else {
-        setHasVideo(false)
       }
     }
     getAllVideosFunc()
@@ -95,9 +93,9 @@ function Home() {
                         }} id='profile' className="w-10 h-10 object-cover rounded-full mr-4" src={value?.userData?.avatar} alt="Avatar of Jonathan Reinink" />
                         <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                           <div className='flex gap-2'>
-                            <div className="text-lg font-semibold">{value?.title}</div>
+                            <div className="text-base font-medium">{value?.title}</div>
                           </div>
-                          <p className="leading-none text-[#a1a1a1]">{value?.userData?.username}</p>
+                          <p className="leading-none text-sm text-[#a1a1a1]">{value?.userData?.username}</p>
                           <div className='flex gap-1 text-[#a1a1a1]'>
                             <p>{value?.views} views.</p>
                             <p>{formatTimeDifference(value?.createdAt)}</p>

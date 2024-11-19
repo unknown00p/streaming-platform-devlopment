@@ -5,7 +5,6 @@ import { uploadImagesToBucket } from "../utils/tebi_s3.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
-import e from "express";
 
 const generateAccessAndRefereshTokens = async (userId) => {
     try {
@@ -55,8 +54,6 @@ const registerUser = asyncHandler(async (req, res) => {
     
 
     const coverImgLocalPath = req.files?.coverImage[0]?.path;
-    // console.log("1st one coverImgLocalPath",coverImgLocalPath);
-
 
     let coverImageLocalPath;
     if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
@@ -67,8 +64,8 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Avatar file is required")
     }
 
-    const avatar = await uploadImagesToBucket(avatarLocalPath)
-    const coverImage = await uploadImagesToBucket(coverImgLocalPath)
+    const avatar = await uploadImagesToBucket(avatarLocalPath,true)
+    const coverImage = await uploadImagesToBucket(coverImgLocalPath,{isUser: true })
 
     if (!avatar) {
         throw new ApiError(400, "Avatar file is required")
@@ -284,7 +281,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     const previousImgId = req.user?.avatar.split("/").pop().split('.').shift()
     // console.log(previousImgId);
 
-    const avatar = await uploadImagesToBucket(avatarLocalPath)
+    const avatar = await uploadImagesToBucket(avatarLocalPath,true)
 
     if (!avatar.url) {
         throw new ApiError(400, "Error while uploading on avatar")
@@ -322,7 +319,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     const previousImgId = req.user?.avatar.split("/").pop().split('.').shift()
 
 
-    const coverImage = await uploadImagesToBucket(coverImageLocalPath)
+    const coverImage = await uploadImagesToBucket(coverImageLocalPath,{isUser: true })
 
     if (!coverImage.url) {
         throw new ApiError(400, "Error while uploading on avatar")

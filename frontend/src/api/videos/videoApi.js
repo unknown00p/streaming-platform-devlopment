@@ -39,7 +39,7 @@ async function getAllVideosOfaUser(userId, page = 1, limit = 10, sortBy = 'isPub
 
 async function getVideobyId(videoId) {
     // console.log(videoId);
-    
+
     try {
         const response = await baseUrl.get(`/videos/${videoId}`, {
             params: {
@@ -84,17 +84,18 @@ async function togglePublicStatus({ videoId }) {
     }
 }
 
-async function postVideo(title, description, videoFile, thumbnail) {
-    
+async function postVideo(title, description, videoFile, thumbnail,setProgress) {
+    // console.log(title, description, videoFile, thumbnail)
+
     let formData = new FormData()
     formData.append("videoFile", videoFile)
     formData.append("thumbnail", thumbnail)
     formData.append("title", title)
-    formData.append('description', description)  
+    formData.append('description', description)
 
     try {
         const response = await baseUrl.post("/videos", formData, {
-            headers:{
+            headers: {
                 "Content-Type": "multipart/form-data"
             },
             withCredentials: true
@@ -105,7 +106,7 @@ async function postVideo(title, description, videoFile, thumbnail) {
     }
 }
 
-async function getAllSearchVideos({page = 1, limit = 10, sortBy = 'isPublished', query}) {
+async function getAllSearchVideos({ page = 1, limit = 10, sortBy = 'isPublished', query }) {
     // console.log('query',query);    
     let queryToLower = query?.toLowerCase()
 

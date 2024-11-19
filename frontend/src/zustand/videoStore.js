@@ -1,14 +1,18 @@
 import { create } from 'zustand'
 
-
 const videoStore = create((set) => (
     {
         searchData: null,
+        progress: 0,
 
-        setSearchData: (data) => set(() => (            
+        setSearchData: (data) => set(() => (
             { searchData: data }
+        )),
+
+        setProgress: (data) => set(() => (
+            { progress: data }
         ))
     }
 ))
 
-export {videoStore}
+export { videoStore }

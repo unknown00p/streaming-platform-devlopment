@@ -4,9 +4,7 @@ import { User } from "../models/user.model.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
-import { uploadVideosToBucket, uploadImagesToBucket, listFolderContents } from "../utils/tebi_s3.js"
-import { GetObjectCommand } from '@aws-sdk/client-s3'
-
+import { uploadVideosToBucket, uploadImagesToBucket, listFolderContents, deleteVideoFromBucket } from "../utils/tebi_s3.js"
 
 const getAllVideosOfaUser = asyncHandler(async (req, res) => {
     const { page, limit, query, sortBy, sortType, userId } = req.query
@@ -83,43 +81,55 @@ const publishAVideo = asyncHandler(async (req, res) => {
     // TODO: get video, upload to cloudinary, create video    
     const { title, description } = req.body
     const video = req.files?.videoFile[0]?.path
-    const thumbnail = req.files?.thumbnail[0]?.path
+    const thumbnail = req.files?.thumbnail && req.files.thumbnail[0]?.path;
+    const isThumbnail = thumbnail ? true : false
 
-    const { videoUrlId, duration } = await uploadVideosToBucket(video)
-    const responseImageFromBucket = await uploadImagesToBucket(thumbnail)
+    const { videoUrlId, duration, result, url } = await uploadVideosToBucket(video,isThumbnail)
+
+    let responseImageFromBucket;
+    if(isThumbnail === true){
+        responseImageFromBucket = await uploadImagesToBucket(thumbnail)
+    }
 
     if (!videoUrlId) {
         throw new ApiError(404, "video is undefined")
     }
 
-    if (!responseImageFromBucket) {
+    if (!responseImageFromBucket && !url) {
         throw new ApiError(404, "thumbnail is undefined")
     }
 
-    const uploadVideo = await Video.create(
-        {
-            title,
-            description,
-            thumbnail: responseImageFromBucket,
-            videoUrlId: videoUrlId,
-            isPublished: true,
-            duration: duration,
-            owner: req.user?._id
-        }
-    )
-
-    if (!uploadVideo) {
-        throw new ApiError(500, "uplodation failed")
+    if (!result) {
+        throw new ApiError(404, "got error while uploading Image")
     }
 
-    res
-        .status(200)
-        .json(
-            new ApiResponse(200,
-                { uploadVideo },
-                "Video uploaded successfully"
-            )
+    if (result) {
+
+        const uploadVideo = await Video.create(
+            {
+                title,
+                description,
+                thumbnail: url || responseImageFromBucket,
+                videoUrlId: videoUrlId,
+                isPublished: true,
+                duration: duration,
+                owner: req.user?._id
+            }
         )
+
+        if (!uploadVideo) {
+            throw new ApiError(500, "uplodation failed")
+        }
+
+        res
+            .status(200)
+            .json(
+                new ApiResponse(200,
+                    { uploadVideo },
+                    "Video uploaded successfully"
+                )
+            )
+    }
 
 })
 
@@ -196,30 +206,25 @@ const updateVideo = asyncHandler(async (req, res) => {
 
 const deleteVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params
+    const userId = req.user._id
     //TODO: delete video
 
     if (!videoId) {
         throw new ApiError(400, "videoId is undefined")
     }
 
-    const deleteVideo = await Video.findByIdAndDelete(videoId)
+    const video = await Video.findById(videoId)
 
-    if (!deleteVideo) {
-        throw new ApiError(500, "server error failed to delete video")
+    if (JSON.stringify(video.owner) !== JSON.stringify(userId)) {
+        throw new ApiError(400, "bsdk ye tera Video nhi hai")
     }
 
-    const clodinaryVideoId = deleteVideo.videoFile[0].default.split("/").pop().split(".").shift()
-    const clodinaryThumbnailId = deleteVideo.thumbnail.split("/").pop().split(".").shift()
+    const response = await deleteVideoFromBucket(video?.videoUrlId)
 
-    // const deletedVideoFromCloudinary = deletePreviousVideo(clodinaryVideoId)
-    // const deletedThumbnailFromCloudinary = deletePreviousImage(clodinaryThumbnailId)
-
-    if (!deletedVideoFromCloudinary) {
-        throw new ApiError(500, "deletion of clodinary video files failed")
-    }
-
-    if (!deletedThumbnailFromCloudinary) {
-        throw new ApiError(500, "deletion of clodinary image files failed")
+    // if (response) {
+    const deleted = await Video.findByIdAndDelete(videoId)
+    if(!deleted){
+        throw new ApiError(404, "not able to delete the video")
     }
 
     return res
@@ -230,6 +235,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
                 "video deleted successfully"
             )
         )
+    // }
 })
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
@@ -265,6 +271,19 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 
 })
 
+const addViewsToVideos = asyncHandler(async (req, res) => {
+    try {
+        const videoId = req.params
+        if (!videoId) {
+            throw new ApiError(400, 'video ID is not defined')
+        }
+
+        const added = await Video.findById(videoId)
+        console.log(added)
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 export {
     getAllVideosOfaUser,
@@ -274,5 +293,6 @@ export {
     deleteVideo,
     togglePublishStatus,
     getAllVideos,
-    getSearchedVideos
+    getSearchedVideos,
+    addViewsToVideos
 }
