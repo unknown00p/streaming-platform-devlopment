@@ -107,8 +107,8 @@ async function postVideo(title, description, videoFile, thumbnail,setProgress) {
 }
 
 async function getAllSearchVideos({ page = 1, limit = 10, sortBy = 'isPublished', query }) {
-    // console.log('query',query);    
-    let queryToLower = query?.toLowerCase()
+    let queryToLower = query?.trim().toLowerCase()
+    console.log('query',queryToLower);    
 
     try {
         return await baseUrl.get("/videos/searchVideos", {
@@ -139,6 +139,16 @@ async function getAllVideos(page = 1, limit = 10) {
     }
 }
 
+async function addViwes(videoId) {
+    try{
+        const response = await baseUrl.patch(`/videos/addViews/${videoId}`)
+        return response
+    }catch(error){
+        console.log(error)
+        throw error
+    }
+}
+
 export {
     deleteVideo,
     getAllVideosOfaUser,
@@ -147,5 +157,6 @@ export {
     togglePublicStatus,
     postVideo,
     getAllVideos,
-    getAllSearchVideos
+    getAllSearchVideos,
+    addViwes
 }

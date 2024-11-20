@@ -51,10 +51,8 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
 const getSearchedVideos = asyncHandler(async (req, res) => {
     const { page, limit, query, sortBy, sortType, } = req.query
-    console.log('query', query);
 
-
-    const searchCondition = query ? { title: { $regex: query, $options: "i" }, description: { $regex: query, $options: "i" } } : null
+    const searchCondition = query ? { $or: [{ title: { $regex: query, $options: "i" } }, { description: { $regex: query, $options: "i" } }] } : null
 
     if (searchCondition) {
         const videos = await Video.find(searchCondition)
@@ -84,10 +82,10 @@ const publishAVideo = asyncHandler(async (req, res) => {
     const thumbnail = req.files?.thumbnail && req.files.thumbnail[0]?.path;
     const isThumbnail = thumbnail ? true : false
 
-    const { videoUrlId, duration, result, url } = await uploadVideosToBucket(video,isThumbnail)
+    const { videoUrlId, duration, result, url } = await uploadVideosToBucket(video, isThumbnail)
 
     let responseImageFromBucket;
-    if(isThumbnail === true){
+    if (isThumbnail === true) {
         responseImageFromBucket = await uploadImagesToBucket(thumbnail)
     }
 
@@ -223,7 +221,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
 
     // if (response) {
     const deleted = await Video.findByIdAndDelete(videoId)
-    if(!deleted){
+    if (!deleted) {
         throw new ApiError(404, "not able to delete the video")
     }
 
@@ -273,13 +271,27 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 
 const addViewsToVideos = asyncHandler(async (req, res) => {
     try {
-        const videoId = req.params
+        const { videoId } = req.params
+        // console.log('videoId',videoId.videoId)
         if (!videoId) {
             throw new ApiError(400, 'video ID is not defined')
         }
 
-        const added = await Video.findById(videoId)
-        console.log(added)
+        const video = await Video.findById(videoId)
+
+        if (!video) {
+            throw new ApiError(404, "not video founded based on that Id")
+        }
+
+        const added = await Video.findByIdAndUpdate(videoId, { views: video.views + 1 })
+
+        if (!added) {
+            throw new ApiError(404, "got error while adding the views")
+        }
+
+        return res
+            .status(200)
+            .json(new ApiResponse(200, { added }, "views added sucessfully"))
     } catch (error) {
         console.log(error)
     }

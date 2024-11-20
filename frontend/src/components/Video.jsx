@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import SideBar from "../subComponents/SideBar"
 import Wrapper from "./Wrapper"
 import { useParams } from "react-router-dom"
-import { getVideobyId } from "../api/videos/videoApi"
+import { getVideobyId, addViwes } from "../api/videos/videoApi"
 import { userById } from "../api/authentication/authApi"
 import { toggleVideoLike, getVideoLikes, toggleCommentLike, getCommentLikes } from "../api/like/likeApi"
 import userDataStore from "../zustand/userData"
@@ -50,6 +50,16 @@ function Video() {
     videoByIdFunc()
 
   }, [currentUserData])
+
+  useEffect(() => {
+    const videoPlayed = Math.round(videoData?.duration) / 20;
+    const timeoutId = setTimeout(() => { 
+      addViwes(videoData?._id)
+      console.log('not')
+    }, videoPlayed * 1000)
+
+    return ()=>clearTimeout(timeoutId)
+  }, [videoData])
 
   async function toggleLikes() {
     const res = await toggleVideoLike(videoId)
@@ -105,16 +115,6 @@ function Video() {
     }
     )
   }, [comments, commentLikesData])
-
-
-  // useEffect(() => {
-  //   async function getLikeOfComments(commentId) {
-  //     const userId = currentUserData?._id
-  //     const response = await getCommentLikes(commentId, userId)
-  //     // console.log(response.data.data.likeCount);
-  //     return response.data.data
-  //   }
-  // }, [])
 
   async function likeComment(e, commentId) {
     // console.log('valueId', commentId);
@@ -208,13 +208,17 @@ function Video() {
             </div>
           </div>
 
-          <div className="description text-white mt-7 w-full bg-[#0b0415c2] p-3 rounded-md">
+          {videoData ? <div className="description text-white mt-7 w-full bg-[#0b0415c2] p-3 rounded-md">
             <div className="flex gap-3 items-center font-semibold text-md">
-              <h4>132 views</h4>
+              <h4>{videoData.views} views</h4>
               {formatTimeDifference(videoData?.createdAt)}
             </div>
             <p className="text-md mt-2">{videoData?.description}</p>
-          </div>
+          </div> :
+            <div className='mt-7 m-3'>
+              <p className="w-36 h-3 rounded-full bg-[#4b3b5c]"></p>
+              <div className='w-full h-14 rounded-full bg-[#4b3b5c] mt-3'></div>
+            </div>}
 
 
           <div className="comment">

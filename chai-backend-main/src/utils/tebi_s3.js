@@ -119,7 +119,10 @@ async function uploadVideosToBucket(video, isThumbnail) {
                     const videoKey = `${videoName.split('.')[0]}.jpg`
                     const thumbnailPath = path.resolve(outputDir, videoKey)
                     console.log('thumbnailPath', thumbnailPath)
-                    const extractThumbnail = `ffmpeg -i "${video}" -vf "thumbnail" -q:v 2 -frames:v 1 "${thumbnailPath}"`
+                    const extractThumbnail = `ffmpeg -i "${video}" -vf "scale=1280:720:force_original_aspect_ratio=decrease" -q:v 2 -frames:v 1 "${thumbnailPath}"`
+
+                    // ffmpeg -i "${video}" -vf "scale=1280:720:force_original_aspect_ratio=decrease" -q:v 2 -frames:v 1 "${thumbnailPath}.jpg"
+
 
                     console.log('extractThumbnail',extractThumbnail)
                     const response = await new Promise((resolve, reject) => {
