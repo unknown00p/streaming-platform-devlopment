@@ -23,10 +23,15 @@ function Login() {
     <>
       <Wrapper>
         <div className='flex flex-col items-center justify-center'>
-          <form className="flex flex-col gap-4 px-7 py-6 bg-slate-800 rounded-md w-full max-w-md" onSubmit={handleSubmit(InputValues)}>
+          <form className="flex flex-col gap-4 px-7 py-6 bg-[#250e29] rounded-md w-full max-w-md" onSubmit={handleSubmit(InputValues)}>
 
             <h1 className='text-white text-[1.3rem]'>Login</h1>
             <hr />
+            <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full">
+              <img src="google.svg" alt="" />
+              <p className="text-black">Login with Google</p>
+            </div>
+            <p className="text-center">Or</p>
             <Input
               id="email"
               type="email"
@@ -47,7 +52,7 @@ function Login() {
               {...register("password")}
             />
 
-            <Button type="submit" buttonTxt="Submit" className="bg-white rounded-sm mt-2 py-2 w-full" />
+            <Button type="submit" buttonTxt="Submit" className="bg-white text-black rounded-sm mt-2 py-2 w-full" />
 
             <p className='text-white text-center'>Does not have an account?
               <Link className='text-[#4f5bff] ml-2' to="/register">Sign Up</Link>

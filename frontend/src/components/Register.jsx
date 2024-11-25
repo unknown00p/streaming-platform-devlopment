@@ -11,7 +11,7 @@ function Register() {
 
 	async function InputValues(data) {
 		const returendData = await SignUp(data)
-		console.log(returendData);		
+		console.log(returendData);
 	}
 
 	function handleNext() {
@@ -26,33 +26,41 @@ function Register() {
 		<>
 			<Wrapper>
 				<div className='flex flex-col items-center justify-center'>
-					<form className="flex flex-col gap-4 px-7 py-6 bg-slate-800 rounded-md w-full max-w-md" onSubmit={handleSubmit(InputValues)}>
+					<form className="flex flex-col gap-4 px-7 py-6 bg-[#250e29] rounded-md w-full max-w-md" onSubmit={handleSubmit(InputValues)}>
 
 						<h1 className='text-white text-[1.3rem]'>Sign up</h1>
 						<hr />
 
 						{slide == 1 &&
-							<div className="animate-slide-in-right flex flex-col gap-4">
-								<Input
-									id="username"
-									type="text"
-									className="bg-transparent h-10 px-3 w-full text-[1.1rem] outline-none border-white border-[1.5px] text-white rounded-sm"
-									label="Username"
-									labelClass="text-white"
-									placeholder="Enter your username"
-									{...register("username", { required: true })}
-								/>
+							<>
+								<div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full">
+									<img src="google.svg" alt="" />
+									<p className="text-black">Sign up with Google</p>
+								</div>
+								<p className="text-center">Or</p>
 
-								<Input
-									id="fullname"
-									type="text"
-									className="bg-transparent h-10 px-3 w-full text-[1.1rem] outline-none border-white border-[1.5px] text-white rounded-sm"
-									label="Full Name"
-									labelClass="text-white"
-									placeholder="Enter your full name"
-									{...register("fullname", { required: true })}
-								/>
-							</div>
+								<div className="animate-slide-in-right flex flex-col gap-4">
+									<Input
+										id="username"
+										type="text"
+										className="bg-transparent h-10 px-3 w-full text-[1.1rem] outline-none border-white border-[1.5px] text-white rounded-sm"
+										label="Username"
+										labelClass="text-white"
+										placeholder="Enter your username"
+										{...register("username", { required: true })}
+									/>
+
+									<Input
+										id="fullname"
+										type="text"
+										className="bg-transparent h-10 px-3 w-full text-[1.1rem] outline-none border-white border-[1.5px] text-white rounded-sm"
+										label="Full Name"
+										labelClass="text-white"
+										placeholder="Enter your full name"
+										{...register("fullname", { required: true })}
+									/>
+								</div>
+							</>
 						}
 
 						{slide == 2 &&
@@ -84,7 +92,7 @@ function Register() {
 								<Input
 									id="avatar"
 									type="file"
-									className="bg-transparent h-10 px-3 w-full text-[1.1rem] outline-none border-white border-[1.5px] text-white rounded-sm"
+									className="bg-transparent py-3 px-3 w-full text-[1.1rem] outline-none border-white border-[1.5px] text-white rounded-sm"
 									label="Avatar"
 									labelClass="text-white"
 									placeholder="Choose your avatar"
@@ -93,7 +101,7 @@ function Register() {
 								<Input
 									id="coverImage"
 									type="file"
-									className="bg-transparent h-10 px-3 w-full text-[1.1rem] outline-none border-white border-[1.5px] text-white rounded-sm"
+									className="bg-transparent py-3 px-3 w-full text-[1.1rem] outline-none border-white border-[1.5px] text-white rounded-sm"
 									label="CoverImage"
 									labelClass="text-white"
 									placeholder="Choose your coverImage"
@@ -104,15 +112,15 @@ function Register() {
 
 						{slide >= 1 && slide < 3 ?
 							<div>
-								<Button type={'button'} buttonTxt={'Next'} className="bg-white rounded-sm mt-2 py-2 w-full" onClick={handleNext} />
+								<Button type={'button'} buttonTxt={'Next'} className="bg-white text-black rounded-sm mt-2 py-2 w-full" onClick={handleNext} />
 
-								{slide != 1 ? <Button type={'button'} buttonTxt={'Previous'} className="bg-white rounded-sm mt-2 py-2 w-full" onClick={handlePrevious} /> : ''}
+								{slide != 1 ? <Button type={'button'} buttonTxt={'Previous'} className="bg-white text-black rounded-sm mt-2 py-2 w-full" onClick={handlePrevious} /> : ''}
 							</div>
 							:
 							<div>
-								<Button type="button" onClick={handleSubmit(InputValues)} buttonTxt="Submit" className="bg-white rounded-sm mt-2 py-2 w-full" />
+								<Button type="button" onClick={handleSubmit(InputValues)} buttonTxt="Submit" className="bg-white text-black rounded-sm mt-2 py-2 w-full" />
 
-								<Button type={'button'} buttonTxt={'Previous'} className="bg-white rounded-sm mt-2 py-2 w-full" onClick={handlePrevious} />
+								<Button type={'button'} buttonTxt={'Previous'} className="bg-white text-black rounded-sm mt-2 py-2 w-full" onClick={handlePrevious} />
 							</div>
 						}
 
