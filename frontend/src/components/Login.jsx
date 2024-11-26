@@ -2,14 +2,14 @@ import { useForm } from "react-hook-form"
 import { Input, Button } from '../index'
 import { Link } from "react-router-dom";
 import Wrapper from './Wrapper';
-import { SignIn } from "../api/authentication/authApi";
+import { SignIn, SignInWithGoogle } from "../api/authentication/authApi";
 import { useNavigate } from 'react-router-dom'
 import userData from "../zustand/userData";
 
 function Login() {
   const { register, handleSubmit } = useForm()
   const navigate = useNavigate()
-  const setCurrentUserData = userData((state)=>state.setCurrentUserData)
+  const setCurrentUserData = userData((state) => state.setCurrentUserData)
 
   async function InputValues(data) {
     const responseData = await SignIn(data)
@@ -17,6 +17,10 @@ function Login() {
     if (responseData.status === 200) {
       navigate("/")
     }
+  }
+
+  function googleLogin(){
+    SignInWithGoogle()
   }
 
   return (
@@ -27,7 +31,7 @@ function Login() {
 
             <h1 className='text-white text-[1.3rem]'>Login</h1>
             <hr />
-            <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full">
+            <div onClick={googleLogin} className="flex items-center gap-3 bg-white px-4 py-2 rounded-full cursor-pointer">
               <img src="google.svg" alt="" />
               <p className="text-black">Login with Google</p>
             </div>

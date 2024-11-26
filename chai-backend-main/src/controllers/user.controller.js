@@ -5,6 +5,16 @@ import { uploadImagesToBucket } from "../utils/tebi_s3.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
+import admin from "firebase-admin"
+// import service-account from ''
+
+admin.initializeApp({
+    credential: admin.credential.cert({
+        project_id: process.env.FIREBASE_PROJECT_ID,
+        private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        client_email: process.env.FIREBASE_CLIENT_EMAIL,
+    })
+})
 
 const generateAccessAndRefereshTokens = async (userId) => {
     try {
@@ -50,8 +60,8 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    console.log('avatarLocalPath',avatarLocalPath);
-    
+    console.log('avatarLocalPath', avatarLocalPath);
+
 
     const coverImgLocalPath = req.files?.coverImage[0]?.path;
 
@@ -64,8 +74,8 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Avatar file is required")
     }
 
-    const avatar = await uploadImagesToBucket(avatarLocalPath,true)
-    const coverImage = await uploadImagesToBucket(coverImgLocalPath,{isUser: true })
+    const avatar = await uploadImagesToBucket(avatarLocalPath, true)
+    const coverImage = await uploadImagesToBucket(coverImgLocalPath, { isUser: true })
 
     if (!avatar) {
         throw new ApiError(400, "Avatar file is required")
@@ -123,8 +133,8 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 
     const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
-    console.log('refreshToken',refreshToken);
-    
+    console.log('refreshToken', refreshToken);
+
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
@@ -147,6 +157,28 @@ const loginUser = asyncHandler(async (req, res) => {
             )
         )
 
+})
+
+const loginUsingGoogle = asyncHandler(async (req, res) => {
+    const { idToken } = req.body
+    const coverImage = req.file?.path
+    try {
+        console.log('coverImage', coverImage)
+        console.log('idToken', idToken)
+        const decodeToken = await admin.auth().verifyIdToken(idToken)
+        const { uid, email, name } = decodeToken
+        const userRecord = await admin.auth().getUser(uid)
+        const avatar = userRecord.photoURL
+        // console.log(uid, email, name)
+        // console.log('avatar', avatar)
+        let user = User.findOne({ email })
+        if (!user) {
+            const { accessToken, refreshToken } = generateAccessAndRefereshTokens()
+            const response = await User.create({ fullName: name, email: email, avatar: avatar, coverImage: coverImage,authProvider: "google",googleUid: uid })
+        }
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 const logoutUser = asyncHandler(async (req, res) => {
@@ -281,7 +313,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     const previousImgId = req.user?.avatar.split("/").pop().split('.').shift()
     // console.log(previousImgId);
 
-    const avatar = await uploadImagesToBucket(avatarLocalPath,true)
+    const avatar = await uploadImagesToBucket(avatarLocalPath, true)
 
     if (!avatar.url) {
         throw new ApiError(400, "Error while uploading on avatar")
@@ -319,7 +351,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
     const previousImgId = req.user?.avatar.split("/").pop().split('.').shift()
 
 
-    const coverImage = await uploadImagesToBucket(coverImageLocalPath,{isUser: true })
+    const coverImage = await uploadImagesToBucket(coverImageLocalPath, { isUser: true })
 
     if (!coverImage.url) {
         throw new ApiError(400, "Error while uploading on avatar")
@@ -507,5 +539,6 @@ export {
     updateUserCoverImage,
     getUserChannelProfile,
     getWatchHistory,
-    getUserById
+    getUserById,
+    loginUsingGoogle
 }

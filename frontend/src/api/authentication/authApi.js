@@ -1,4 +1,5 @@
 import baseUrl from "../baseUrl/BaseUrl";
+import { googleLogin } from "../../hooks/firebase";
 
 async function SignIn({ email, password }) {
     try {
@@ -23,6 +24,31 @@ async function SignIn({ email, password }) {
     } catch (error) {
         console.log(error?.response?.data);
         return null
+    }
+}
+
+async function SignInWithGoogle() {
+    try {
+        const formdata = new FormData()
+        const idToken = await googleLogin()
+        console.log('idToken',idToken)
+
+        const defaultCoverImage = new File(
+            [await fetch("/images/coverImage.jpg").then((res) => res.blob())],
+            "defaultCoverImage.jpg",
+            { type: "image/jpg" }
+        )
+
+        formdata.append('idToken',idToken)
+        formdata.append('coverImage',defaultCoverImage)
+
+        const response = await baseUrl.post('/users/googleLogin', formdata,{
+            headers: {'Content-Type': 'multipart/form-data'}
+        })
+        const data = response.data
+        console.log("JWT from backend:", data);
+    } catch (error) {
+        console.log(error)
     }
 }
 
@@ -167,4 +193,4 @@ async function changeCurrentPassword({ oldPassword, newPassword }) {
     }
 }
 
-export { SignIn, SignOut, SignUp, userById, currentUser, UpdateNameEmail, UpdateAvatar, UpdateCoverImage, changeCurrentPassword }
+export { SignIn, SignOut, SignUp, userById, currentUser, UpdateNameEmail, UpdateAvatar, UpdateCoverImage, changeCurrentPassword, SignInWithGoogle }
