@@ -1,5 +1,5 @@
 import baseUrl from "../baseUrl/BaseUrl";
-import { googleLogin } from "../../hooks/firebase";
+// import { googleLogin } from "../../hooks/firebase";
 
 async function SignIn({ email, password }) {
     try {
@@ -27,11 +27,11 @@ async function SignIn({ email, password }) {
     }
 }
 
-async function SignInWithGoogle() {
+async function SignInWithGoogle(token) {
+    console.log('token',token)
     try {
         const formdata = new FormData()
-        const idToken = await googleLogin()
-        console.log('idToken',idToken)
+        // console.log('idToken',idToken)
 
         const defaultCoverImage = new File(
             [await fetch("/images/coverImage.jpg").then((res) => res.blob())],
@@ -39,14 +39,25 @@ async function SignInWithGoogle() {
             { type: "image/jpg" }
         )
 
-        formdata.append('idToken',idToken)
-        formdata.append('coverImage',defaultCoverImage)
+        formdata.append('token', token)
+        formdata.append('coverImage', defaultCoverImage)
 
-        const response = await baseUrl.post('/users/googleLogin', formdata,{
-            headers: {'Content-Type': 'multipart/form-data'}
+        const response = await baseUrl.post('/users/googleLogin', formdata, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            withCredentials: true
         })
-        const data = response.data
-        console.log("JWT from backend:", data);
+
+        console.log('response', response)
+
+        if (response) {
+            const now = new Date();
+            const oneMonth = 30 * 24 * 60 * 60 * 1000;
+            const item = {
+                value: true,
+                expiry: now.getTime() + oneMonth,
+            };
+            sessionStorage.setItem('isLogin', JSON.stringify(item))
+        }
     } catch (error) {
         console.log(error)
     }

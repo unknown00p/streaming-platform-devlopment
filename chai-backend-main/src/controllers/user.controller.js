@@ -5,22 +5,19 @@ import { uploadImagesToBucket } from "../utils/tebi_s3.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
-import admin from "firebase-admin"
-// import service-account from ''
-
-admin.initializeApp({
-    credential: admin.credential.cert({
-        project_id: process.env.FIREBASE_PROJECT_ID,
-        private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-        client_email: process.env.FIREBASE_CLIENT_EMAIL,
-    })
-})
+import passport from 'passport'
+import { Strategy as GoogleStartegy } from 'passport-google-oauth20'
+import axios from 'axios'
 
 const generateAccessAndRefereshTokens = async (userId) => {
+    // console.log('userId',userId)
     try {
         const user = await User.findById(userId)
+        // console.log('userIngen',user)
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
+
+        // console.log(accessToken,refreshToken)
 
         // user.refreshToken = refreshToken
         // await user.save({ validateBeforeSave: false })
@@ -160,26 +157,107 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 const loginUsingGoogle = asyncHandler(async (req, res) => {
-    const { idToken } = req.body
+    const { token } = req.body
     const coverImage = req.file?.path
     try {
-        console.log('coverImage', coverImage)
-        console.log('idToken', idToken)
-        const decodeToken = await admin.auth().verifyIdToken(idToken)
-        const { uid, email, name } = decodeToken
-        const userRecord = await admin.auth().getUser(uid)
-        const avatar = userRecord.photoURL
-        // console.log(uid, email, name)
-        // console.log('avatar', avatar)
-        let user = User.findOne({ email })
+        console.log('token', token)
+
+        const googleToken = token;
+        const googleOauthUrl = new URL("https://oauth2.googleapis.com/tokeninfo");
+        googleOauthUrl.searchParams.set("id_token", googleToken);
+
+        const  response = await fetch(googleOauthUrl.toString())
+        const result = await response.json()
+        console.log('result data',result)
+
+        const email = result.email 
+
+        let user = await User.findOne({email})
+
         if (!user) {
-            const { accessToken, refreshToken } = generateAccessAndRefereshTokens()
-            const response = await User.create({ fullName: name, email: email, avatar: avatar, coverImage: coverImage,authProvider: "google",googleUid: uid })
+            user = await User.create({ fullName: result.name, email: result.email, avatar: result.picture, authProvider: "google", googleToken: result.sub })
         }
+
+        console.log('user', user._id)
+
+        const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
+        console.log('accessToken', accessToken)
+        console.log('refreshToken', refreshToken)
+
+        const options = {
+            httpOnly: true,
+            secure: true,
+        }
+
+        return res.status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", refreshToken, options)
+            .json(
+                new ApiResponse(
+                    200,
+                    {
+                        user: user
+                    },
+                    "User logged In Successfully"
+                ))
+
     } catch (error) {
         console.log(error)
     }
 })
+
+// const loginUsingGoogle = asyncHandler(async (req, res) => {
+//     const { token } = req.body;
+  
+//     if (!token) {
+//       throw new ApiError(400, "Token is required!");
+//     }
+  
+//     const googleToken = token;
+//     const googleOauthUrl = new URL("https://oauth2.googleapis.com/tokeninfo");
+//     googleOauthUrl.searchParams.set("id_token", googleToken);
+  
+//     const { data } = await axios.get(googleOauthUrl.toString(), {
+//       responseType: "json",
+//     });
+  
+//     let user = await User.findOne({ email: data.email });
+  
+//     if (!user) {
+//       user = await User.create({
+//         username: data.name,
+//         email: data.email,
+//         // isVerified: data.email_verified,
+//         authProvider: "google",
+//         avatar: data.picture,
+//         googleToken: data.sub,
+//       });
+//     }
+  
+//     const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id);
+//     // console.log(a)
+  
+//     const options = {
+//       httpOnly: true,
+//       secure: true,
+//     };
+  
+//     return res
+//       .status(200)
+//       .cookie("accessToken", accessToken, options)
+//       .cookie("refreshToken", refreshToken, options)
+//       .json(
+//         new ApiResponse(
+//           200,
+//           {
+//             user,
+//             accessToken,
+//             refreshToken,
+//           },
+//           "User logged in successfully"
+//         )
+//       );
+//   });
 
 const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(

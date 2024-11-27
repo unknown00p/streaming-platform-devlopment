@@ -5,6 +5,7 @@ import Wrapper from './Wrapper';
 import { SignIn, SignInWithGoogle } from "../api/authentication/authApi";
 import { useNavigate } from 'react-router-dom'
 import userData from "../zustand/userData";
+import { GoogleLogin } from '@react-oauth/google';
 
 function Login() {
   const { register, handleSubmit } = useForm()
@@ -19,8 +20,10 @@ function Login() {
     }
   }
 
-  function googleLogin(){
-    SignInWithGoogle()
+  async function googleLogin(e){
+    // console.log(e.credential)
+    const response = await SignInWithGoogle(e.credential)
+    console.log(response)
   }
 
   return (
@@ -31,10 +34,8 @@ function Login() {
 
             <h1 className='text-white text-[1.3rem]'>Login</h1>
             <hr />
-            <div onClick={googleLogin} className="flex items-center gap-3 bg-white px-4 py-2 rounded-full cursor-pointer">
-              <img src="google.svg" alt="" />
-              <p className="text-black">Login with Google</p>
-            </div>
+            <GoogleLogin onSuccess={googleLogin} className="flex items-center gap-3 bg-white px-4 py-2 rounded-full cursor-pointer">
+            </GoogleLogin>
             <p className="text-center">Or</p>
             <Input
               id="email"

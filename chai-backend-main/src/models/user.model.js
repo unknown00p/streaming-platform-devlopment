@@ -50,7 +50,7 @@ const userSchema = new Schema(
         refreshToken: {
             type: String
         },
-        googleUid: {
+        googleToken: {
             type: String,
             required: function () { return this.authProvider === 'google'; },
           },

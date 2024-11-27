@@ -1,16 +1,16 @@
-import {getAuth,GoogleAuthProvider,signInWithPopup} from "firebase/auth"
-import fireConfig from "../firebaseConfig.js"
+// import fireConfig from "../googleConfig.js"
 
-const auth = getAuth(fireConfig)
-const provider = new GoogleAuthProvider()
+// const auth = getAuth(fireConfig)
+// const provider = new GoogleAuthProvider()
 
-export const googleLogin = async() => {
-    try{
-        const result = await signInWithPopup(auth,provider)
-        const user = result.user
-        const idToken = await user.getIdToken();
-        return idToken
-    }catch(error){
-        console.log(error)
-    }
-}
+// export const googleLogin = async() => {
+//     try{
+//         const result = await signInWithPopup(auth,provider)
+//         console.log(result,"result")
+//         const user = result.user
+//         const idToken = await user.getIdToken();
+//         return idToken
+//     }catch(error){
+//         console.log(error)
+//     }
+// }
