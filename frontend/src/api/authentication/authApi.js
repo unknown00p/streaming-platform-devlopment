@@ -28,7 +28,6 @@ async function SignIn({ email, password }) {
 }
 
 async function SignInWithGoogle(token) {
-    console.log('token',token)
     try {
         const formdata = new FormData()
         // console.log('idToken',idToken)
@@ -47,8 +46,6 @@ async function SignInWithGoogle(token) {
             withCredentials: true
         })
 
-        console.log('response', response)
-
         if (response) {
             const now = new Date();
             const oneMonth = 30 * 24 * 60 * 60 * 1000;
@@ -58,6 +55,8 @@ async function SignInWithGoogle(token) {
             };
             sessionStorage.setItem('isLogin', JSON.stringify(item))
         }
+
+        return response
     } catch (error) {
         console.log(error)
     }

@@ -5,9 +5,6 @@ import { uploadImagesToBucket } from "../utils/tebi_s3.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
-import passport from 'passport'
-import { Strategy as GoogleStartegy } from 'passport-google-oauth20'
-import axios from 'axios'
 
 const generateAccessAndRefereshTokens = async (userId) => {
     // console.log('userId',userId)
@@ -166,23 +163,23 @@ const loginUsingGoogle = asyncHandler(async (req, res) => {
         const googleOauthUrl = new URL("https://oauth2.googleapis.com/tokeninfo");
         googleOauthUrl.searchParams.set("id_token", googleToken);
 
-        const  response = await fetch(googleOauthUrl.toString())
+        const response = await fetch(googleOauthUrl.toString())
         const result = await response.json()
-        console.log('result data',result)
+        console.log('result data', result)
 
-        const email = result.email 
+        const email = result.email
 
-        let user = await User.findOne({email})
+        const coverImageUrl = await uploadImagesToBucket(coverImage,"true")
+
+        let user = await User.findOne({ email })
 
         if (!user) {
-            user = await User.create({ fullName: result.name, email: result.email, avatar: result.picture, authProvider: "google", googleToken: result.sub })
+            user = await User.create({ fullName: result.name, email: result.email, avatar: result.picture, authProvider: "google", coverImage: coverImageUrl, googleToken: result.sub })
         }
 
         console.log('user', user._id)
 
         const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
-        console.log('accessToken', accessToken)
-        console.log('refreshToken', refreshToken)
 
         const options = {
             httpOnly: true,
@@ -208,21 +205,21 @@ const loginUsingGoogle = asyncHandler(async (req, res) => {
 
 // const loginUsingGoogle = asyncHandler(async (req, res) => {
 //     const { token } = req.body;
-  
+
 //     if (!token) {
 //       throw new ApiError(400, "Token is required!");
 //     }
-  
+
 //     const googleToken = token;
 //     const googleOauthUrl = new URL("https://oauth2.googleapis.com/tokeninfo");
 //     googleOauthUrl.searchParams.set("id_token", googleToken);
-  
+
 //     const { data } = await axios.get(googleOauthUrl.toString(), {
 //       responseType: "json",
 //     });
-  
+
 //     let user = await User.findOne({ email: data.email });
-  
+
 //     if (!user) {
 //       user = await User.create({
 //         username: data.name,
@@ -233,15 +230,15 @@ const loginUsingGoogle = asyncHandler(async (req, res) => {
 //         googleToken: data.sub,
 //       });
 //     }
-  
+
 //     const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id);
 //     // console.log(a)
-  
+
 //     const options = {
 //       httpOnly: true,
 //       secure: true,
 //     };
-  
+
 //     return res
 //       .status(200)
 //       .cookie("accessToken", accessToken, options)
