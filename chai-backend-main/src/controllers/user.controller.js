@@ -157,24 +157,28 @@ const loginUsingGoogle = asyncHandler(async (req, res) => {
     const { token } = req.body
     const coverImage = req.file?.path
     try {
-        console.log('token', token)
-
         const googleToken = token;
         const googleOauthUrl = new URL("https://oauth2.googleapis.com/tokeninfo");
         googleOauthUrl.searchParams.set("id_token", googleToken);
 
         const response = await fetch(googleOauthUrl.toString())
         const result = await response.json()
-        console.log('result data', result)
+        // console.log('result data', result)
 
         const email = result.email
-
-        const coverImageUrl = await uploadImagesToBucket(coverImage,"true")
+        // console.log('email',email)
+        let coverImageUrl = ''
+        if (coverImage) {
+            coverImageUrl = await uploadImagesToBucket(coverImage, "true")
+        }
 
         let user = await User.findOne({ email })
+        const userNameEnd = result.name.split(' ')
+        const userName = userNameEnd[1] + result.email.split('@')[0]
+        console.log('userName',userName);
 
         if (!user) {
-            user = await User.create({ fullName: result.name, email: result.email, avatar: result.picture, authProvider: "google", coverImage: coverImageUrl, googleToken: result.sub })
+            user = await User.create({ fullName: result.name,username:userName, email: result.email, avatar: result.picture, authProvider: "google", coverImage: coverImageUrl, googleToken: result.sub })
         }
 
         console.log('user', user._id)

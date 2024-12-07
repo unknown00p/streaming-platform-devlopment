@@ -92,25 +92,25 @@ video::-webkit-media-controls {
 /* General skeleton animation */
 @keyframes pulse {
   0% {
-      background-color: #4b3b5c;
+      background-color: #2a282c;
   }
   50% {
-      background-color: #6b5b7a;
+      background-color: #413b48;
   }
   100% {
-      background-color: #67507c;
+      background-color: #656068;
   }
 }
 
 @keyframes HomePulse {
   0% {
-    background-color: #2a252e;
+    background-color: #111112;
   }
   50% {
-    background-color: #1f1b23;
+    background-color: #27232b;
   }
   100% {
-    background-color: #030304;
+    background-color: #1d1d1e;
   }
 }
 

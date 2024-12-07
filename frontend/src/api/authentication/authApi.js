@@ -32,14 +32,14 @@ async function SignInWithGoogle(token) {
         const formdata = new FormData()
         // console.log('idToken',idToken)
 
-        const defaultCoverImage = new File(
-            [await fetch("/images/coverImage.jpg").then((res) => res.blob())],
-            "defaultCoverImage.jpg",
-            { type: "image/jpg" }
-        )
+        // const defaultCoverImage = new File(
+        //     [await fetch("/images/coverImage.jpg").then((res) => res.blob())],
+        //     "defaultCoverImage.jpg",
+        //     { type: "image/jpg" }
+        // )
 
         formdata.append('token', token)
-        formdata.append('coverImage', defaultCoverImage)
+        // formdata.append('coverImage', defaultCoverImage)
 
         const response = await baseUrl.post('/users/googleLogin', formdata, {
             headers: { 'Content-Type': 'multipart/form-data' },

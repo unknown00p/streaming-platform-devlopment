@@ -6,9 +6,9 @@ const userSchema = new Schema(
     {
         username: {
             type: String,
-            required: function () { return this.authProvider === 'true' },
-            unique: true,
+            required: function () { return this.authProvider === 'local' },
             lowercase: true,
+            unique: true,
             trim: true,
             index: true
         },
@@ -16,7 +16,7 @@ const userSchema = new Schema(
             type: String,
             required: true,
             unique: true,
-            lowecase: true,
+            lowercase: true,
             trim: true,
         },
         fullName: {
@@ -53,22 +53,32 @@ const userSchema = new Schema(
         googleToken: {
             type: String,
             required: function () { return this.authProvider === 'google'; },
-          },
+        },
     },
     {
         timestamps: true
     }
 )
 
+// userSchema.index(
+//     {
+//         username: 1
+//     },
+//     {
+//         unique: true,
+//         partialFilterExpression: { authProvider: 'local' }
+//     }
+// )
+
 userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")|| this.authProvider === 'google') return next();
+    if (!this.isModified("password") || this.authProvider === 'google') return next();
 
     this.password = await bcrypt.hash(this.password, 10)
     next()
 })
 
 userSchema.methods.isPasswordCorrect = async function (password) {
-    if(this.authProvider === 'google') return false
+    if (this.authProvider === 'google') return false
     return await bcrypt.compare(password, this.password)
 }
 

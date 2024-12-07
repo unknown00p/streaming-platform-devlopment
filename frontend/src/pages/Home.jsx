@@ -50,16 +50,16 @@ function Home() {
     return (
       <div className="cursor-pointer">
         <div className="rounded-xl shadow-lg animate-HomePulse background-pulse">
-          <div className="w-full aspect-video rounded-xl bg-[#4b3b5c]"></div>
+          <div className="w-full aspect-video rounded-xl bg-[#313131]"></div>
           <div className="py-4">
             <div className="flex gap-4">
-              <div className="w-12 h-10 rounded-full bg-[#4b3b5c]"></div>
+              <div className="w-12 h-10 rounded-full bg-[#313131]"></div>
               <div className="flex flex-col gap-2 w-full">
-                <div className="w-3/4 h-4 bg-[#4b3b5c] rounded"></div>
-                <div className="w-1/3 h-4 bg-[#4b3b5c] rounded"></div>
+                <div className="w-3/4 h-4 bg-[#313131] rounded"></div>
+                <div className="w-1/3 h-4 bg-[#313131] rounded"></div>
                 <div className="flex gap-2 text-sm text-gray-600">
-                  <div className="w-1/4 h-4 bg-[#4b3b5c] rounded"></div>
-                  <div className="w-1/5 h-4 bg-[#4b3b5c] rounded"></div>
+                  <div className="w-1/4 h-4 bg-[#313131] rounded"></div>
+                  <div className="w-1/5 h-4 bg-[#313131] rounded"></div>
                 </div>
               </div>
             </div>
@@ -124,6 +124,10 @@ function Home() {
         <p className='text-sm text-center'>There is no video available here. please try again somtimes</p>
       </div>
     </div>)
+
+  // return (
+  //   Array.from({ length: 10 }, (_, i) => <Skeleton key={i} />)
+  // )
 }
 
 export default Home
