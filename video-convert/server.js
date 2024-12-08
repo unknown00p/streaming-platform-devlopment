@@ -233,7 +233,16 @@ const myQueue = new Worker("comunication", async (job) => {
 
 }, {
     connection: {
-        host: 'localhost',
-        port: 6379
+        host: process.env.REDIS_ENDPOINT,
+        port: process.env.REDIS_PORT,
+        password: process.env.REDIS_PASSWORD,
+        tls:{
+            rejectUnauthorized: false
+        }
+    },
+    settings:{
+        lockDuration: 30000,
+        stalledInterval: 5000,
+        maxStalledCount: 1,
     }
 })

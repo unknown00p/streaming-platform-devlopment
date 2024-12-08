@@ -85,7 +85,7 @@ function SearchResult() {
 
                                 <div>
                                     <div className='flex justify-between items-center'>
-                                        <p className='pb-1 xl:text-3xl w-full grow'>
+                                        <p className='pb-1 xl:text-xl w-full grow'>
                                             {value.title}
                                         </p>
                                     </div>

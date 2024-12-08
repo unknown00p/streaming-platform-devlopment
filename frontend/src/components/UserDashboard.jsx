@@ -90,7 +90,9 @@ function UserDashboard() {
   };
 
   const renderImagePreview = (image, alt, defaultText, className) => {
-    const src = getImageSrc(image);
+    const localSrc = '/images/coverImage.jpg'
+    console.log('localSrc',localSrc)
+    const src = getImageSrc(image || localSrc);
     // console.log('image',image);
     
     return src ? (

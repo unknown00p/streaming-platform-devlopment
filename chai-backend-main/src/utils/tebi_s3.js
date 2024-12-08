@@ -77,19 +77,35 @@ async function uploadVideosToBucket(video, isThumbnail) {
 
             const myQueue = new Queue("comunication", {
                 connection: {
-                    host: 'localhost',
-                    port: 6379
+                    host: process.env.REDIS_ENDPOINT,
+                    port: process.env.REDIS_PORT,
+                    password: process.env.REDIS_PASSWORD,
+                    tls: {
+                        rejectUnauthorized: false
+                    }
                 }
             })
+
+            // myQueue.disconnect
 
             const queueEvent = new QueueEvents("comunication", {
                 connection: {
-                    host: 'localhost',
-                    port: 6379
+                    host: process.env.REDIS_ENDPOINT,
+                    port: process.env.REDIS_PORT,
+                    password: process.env.REDIS_PASSWORD,
+                    tls: {
+                        rejectUnauthorized: false
+                    }
                 }
             })
 
-            await myQueue.add("videoKey", { key: videoName })
+            await myQueue.add("videoKey", { key: videoName },{
+                attempts: 3,
+                backoff:{
+                    type: 'exponential',
+                    delay: 5000
+                }
+            })
 
             const getJobResult = (jobId) => {
                 return new Promise((resolve) => {
@@ -124,7 +140,7 @@ async function uploadVideosToBucket(video, isThumbnail) {
                     // ffmpeg -i "${video}" -vf "scale=1280:720:force_original_aspect_ratio=decrease" -q:v 2 -frames:v 1 "${thumbnailPath}.jpg"
 
 
-                    console.log('extractThumbnail',extractThumbnail)
+                    console.log('extractThumbnail', extractThumbnail)
                     const response = await new Promise((resolve, reject) => {
                         exec(extractThumbnail, (error, stdout, stderr) => {
                             if (error) {
@@ -165,7 +181,7 @@ async function uploadVideosToBucket(video, isThumbnail) {
                             const videoUrlId = videoName
                             fs.unlinkSync(thumbnailPath)
                             return { videoUrlId, duration, result, url }
-                        }else{
+                        } else {
                             fs.unlinkSync(thumbnailPath)
                         }
                     }
