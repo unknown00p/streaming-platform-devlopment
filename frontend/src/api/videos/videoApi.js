@@ -84,7 +84,7 @@ async function togglePublicStatus({ videoId }) {
     }
 }
 
-async function postVideo(title, description, videoFile, thumbnail,setProgress) {
+async function postVideo(title, description, videoFile, thumbnail, setProgress) {
     // console.log(title, description, videoFile, thumbnail)
 
     let formData = new FormData()
@@ -108,7 +108,7 @@ async function postVideo(title, description, videoFile, thumbnail,setProgress) {
 
 async function getAllSearchVideos({ page = 1, limit = 10, sortBy = 'isPublished', query }) {
     let queryToLower = query?.trim().toLowerCase()
-    console.log('query',queryToLower);    
+    console.log('query', queryToLower);
 
     try {
         return await baseUrl.get("/videos/searchVideos", {
@@ -140,10 +140,10 @@ async function getAllVideos(page = 1, limit = 10) {
 }
 
 async function addViwes(videoId) {
-    try{
+    try {
         const response = await baseUrl.patch(`/videos/addViews/${videoId}`)
         return response
-    }catch(error){
+    } catch (error) {
         console.log(error)
         throw error
     }

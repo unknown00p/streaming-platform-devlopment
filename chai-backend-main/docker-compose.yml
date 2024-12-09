@@ -1,0 +1,12 @@
+services:
+  youtube-backend:
+    build: .
+    container_name: strBackend
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/youtube-backend
+      - /youtube-backend/node_modules
+    command: npm start

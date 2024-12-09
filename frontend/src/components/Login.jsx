@@ -23,6 +23,7 @@ function Login() {
   async function googleLogin(e){
     // console.log(e.credential)
     const response = await SignInWithGoogle(e.credential)
+    console.log('response',response)
     setCurrentUserData(response.data.data.user)
     if (response.status === 200) {
       navigate("/")

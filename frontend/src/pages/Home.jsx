@@ -16,7 +16,8 @@ function Home() {
       const response = await getAllVideos()
       // setHasVideo(false)
       if (response) {
-        const videoData = response.data.data.allvideos
+        console.log(response)
+        const videoData = response?.data.data.allvideos
 
         const awaitResponse = videoData.map((val) => userById(val?.owner))
         const userDataResponse = await Promise.all(awaitResponse)

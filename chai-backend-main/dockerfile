@@ -2,12 +2,15 @@ FROM node:18-alpine
 
 WORKDIR /youtube-backend
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
-RUN npm install
+RUN npm ci --only=production
 
 COPY . .
 
+RUN addgroup appgroup && adduser -S appuser -G appgroup
+USER appuser
+
 EXPOSE 8000
 
-CMD ["node", "src/index.js"]
+CMD ["npm", "start"]
