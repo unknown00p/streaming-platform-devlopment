@@ -31,7 +31,7 @@ function Desktop() {
           })
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
         setAuthState({
           isLoading: false,
           data: null,
@@ -70,12 +70,12 @@ function Desktop() {
   const isUserFlag = JSON.parse(storageVlaue)
 
   if (!isUserFlag) {
-      return (
-          <div className='h-full w-full flex items-center flex-col gap-2 justify-center text-white mt-72'>
-              <div>Please log in</div>
-              <button onClick={() => navigate('/login')} className='bg-blue-700 w-28 px-9 py-2 rounded-sm'>Login</button>
-          </div>
-      );
+    return (
+      <div className='h-full w-full flex items-center flex-col gap-2 justify-center text-white mt-72'>
+        <div>Please log in</div>
+        <button onClick={() => navigate('/login')} className='bg-blue-700 w-28 px-9 py-2 rounded-sm'>Login</button>
+      </div>
+    );
   }
 
   return (

@@ -9,33 +9,33 @@ async function toggleSubscription(channelId) {
 
         return response
     } catch (error) {
-        console.log(error)
+        // console.log(error)
     }
 }
 
-async function isChannelSubscribed(channelId){
-    try{
-        const response = await baseUrl.get(`/subscriptions/c/getIsChannelSubscribed/${channelId}`,{
+async function isChannelSubscribed(channelId) {
+    try {
+        const response = await baseUrl.get(`/subscriptions/c/getIsChannelSubscribed/${channelId}`, {
             withCredentials: true
         })
 
         return response
-    }catch(error){
-        console.log(error)
+    } catch (error) {
+        // console.log(error)
     }
 }
 
-async function getSubscribersOfchannel(channelId){
-    try{
+async function getSubscribersOfchannel(channelId) {
+    try {
         const response = await baseUrl.get(`/subscriptions/c/${channelId}`)
 
         return response
-    }catch(error){
-        console.log(error)
+    } catch (error) {
+        // console.log(error)
     }
 }
 
-export{
+export {
     toggleSubscription,
     isChannelSubscribed,
     getSubscribersOfchannel

@@ -53,12 +53,12 @@ function Video() {
 
   useEffect(() => {
     const videoPlayed = Math.round(videoData?.duration) / 20;
-    const timeoutId = setTimeout(() => { 
+    const timeoutId = setTimeout(() => {
       addViwes(videoData?._id)
-      console.log('not')
+      // console.log('not')
     }, videoPlayed * 1000)
 
-    return ()=>clearTimeout(timeoutId)
+    return () => clearTimeout(timeoutId)
   }, [videoData])
 
   async function toggleLikes() {
@@ -66,7 +66,7 @@ function Video() {
 
     if (res) {
       const userId = currentUserData?._id
-      // console.log('userId',userId);
+      // // console.log('userId',userId);
       const response = await getVideoLikes(videoId, userId)
       setLikesData(response.data.data)
     }
@@ -117,18 +117,18 @@ function Video() {
   }, [comments, commentLikesData])
 
   async function likeComment(e, commentId) {
-    // console.log('valueId', commentId);
+    // // console.log('valueId', commentId);
     e.preventDefault()
     const response = await toggleCommentLike(commentId)
     setCommentLikesData(response.data.data)
   }
 
   async function subscribeToChannel() {
-    console.log('videoData', videoData?.owner)
+    // console.log('videoData', videoData?.owner)
     const response = await toggleSubscription(videoData?.owner)
     const res = await getSubscribersOfchannel(videoData?.owner)
     setSubscriberCount(res?.data.data.Subscribers)
-    // console.log('subscribed Data', response?.data.data)
+    // // console.log('subscribed Data', response?.data.data)
     if (response?.data.data.length > 0) {
       setSubscribed(true)
     } else if (response?.data.data.length == undefined) {
@@ -173,7 +173,7 @@ function Video() {
               <div className="flex justify-between gap-3 items-center">
                 <div className="flex items-center gap-1">
                   {videoData ? <img onClick={() => {
-                    console.log("Hola");
+                    // console.log("Hola");
                   }} id='profile' className="w-9 h-9 rounded-full mr-2 object-cover" src={userData?.avatar} alt="Avatar of Jonathan Reinink" /> : <div className="w-9 h-9 bg-[#4b3b5c] rounded-full mr-2"></div>
                   }
                   <div className="text-base flex flex-col gap-1 text-[#dfdede]">

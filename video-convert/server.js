@@ -10,7 +10,7 @@ import fs from 'fs/promises'
 import { createReadStream, existsSync, createWriteStream } from 'fs'
 import { PassThrough } from 'stream'
 import { fileURLToPath } from 'url';
-// console.log(numCors);
+// // console.log(numCors);
 
 dotenv.config({
     path: ".env"
@@ -27,7 +27,7 @@ const s3Client = new S3Client({
     region: "global"
 })
 
-console.log("running...");
+// console.log("running...");
 
 const myQueue = new Worker("comunication", async (job) => {
     let outputDir;
@@ -80,7 +80,7 @@ const myQueue = new Worker("comunication", async (job) => {
                     .videoBitrate(videoBitrate)
                     .outputOptions('-hls_segment_filename', segments)
                     .on('end', function () {
-                        console.log(`Stream for ${size} created successfully.`);
+                        // console.log(`Stream for ${size} created successfully.`);
                         resolve(`Success: ${size}`);
                     })
                     .on('error', function (err) {
@@ -115,8 +115,8 @@ const myQueue = new Worker("comunication", async (job) => {
             ))
 
         if (response) {
-            console.log('completed');
-            console.log(response);
+            // console.log('completed');
+            // console.log(response);
         }
 
         const __filename = fileURLToPath(import.meta.url);
@@ -173,7 +173,7 @@ const myQueue = new Worker("comunication", async (job) => {
                 });
 
                 await upload.done();
-                console.log(`Upload for ${filePath} completed`);
+                // console.log(`Upload for ${filePath} completed`);
             } catch (err) {
                 console.error(`Error uploading file ${s3Key}:`, err);
             }
@@ -195,7 +195,7 @@ const myQueue = new Worker("comunication", async (job) => {
                     await Promise.all(uploadPromise)
 
                 } catch (error) {
-                    console.log(error);
+                    // console.log(error);
                     return false
                 }
             } else if (pathType.isFile() && path.extname(secondOutputDir) === '.m3u8') {
@@ -214,20 +214,20 @@ const myQueue = new Worker("comunication", async (job) => {
 
     }
     catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error(error)
     }
     finally {
         try {
             if (existsSync(outputDir)) {
-                console.log(`Removing directory: ${outputDir}`);
+                // console.log(`Removing directory: ${outputDir}`);
                 await fs.rm(outputDir, { recursive: true, force: true });
-                console.log('Directory removed successfully.');
+                // console.log('Directory removed successfully.');
             } else {
-                console.log(`Directory does not exist: ${outputDir}`);
+                // console.log(`Directory does not exist: ${outputDir}`);
             }
         } catch (error) {
-            console.log(`Failed to remove directory ${outputDir}:`, error);
+            // console.log(`Failed to remove directory ${outputDir}:`, error);
         }
     }
 
@@ -236,11 +236,11 @@ const myQueue = new Worker("comunication", async (job) => {
         host: process.env.REDIS_ENDPOINT,
         port: process.env.REDIS_PORT,
         password: process.env.REDIS_PASSWORD,
-        tls:{
+        tls: {
             rejectUnauthorized: false
         }
     },
-    settings:{
+    settings: {
         lockDuration: 30000,
         stalledInterval: 5000,
         maxStalledCount: 1,

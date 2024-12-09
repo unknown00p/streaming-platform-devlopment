@@ -22,17 +22,17 @@ function ProfileVideos() {
 
   useEffect(() => {
     async function processFetch() {
-      console.log(currentUserData);
+      // console.log(currentUserData);
 
       const response = await getAllVideosOfaUser(currentUserData._id)
-      console.log('response',response);
+      // console.log('response',response);
 
       setVideos(response?.data?.data?.videos)
     }
     processFetch()
   }, [currentUserData])
 
-  console.log(videos);
+  // console.log(videos);
 
 
 

@@ -1,7 +1,7 @@
 import baseUrl from "../baseUrl/BaseUrl"
 
 async function UpdateEmailPassword(fullName, email) {
-    console.log(fullName, email);
+    // console.log(fullName, email);
 
     try {
         const updatedValue = await baseUrl.patch("/users/update-account",
@@ -14,7 +14,7 @@ async function UpdateEmailPassword(fullName, email) {
 
         return updatedValue
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
@@ -31,13 +31,13 @@ async function UpdateAvatar(avatarFile) {
         })
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
 async function UpdateCoverImage(CoverImage) {
     try {
-        console.log(CoverImage);
+        // console.log(CoverImage);
 
         const formData = new FormData()
         formData.append("coverImage", CoverImage)
@@ -48,12 +48,12 @@ async function UpdateCoverImage(CoverImage) {
         })
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
 async function changeCurrentPassword({ oldPassword, newPassword }) {
-    console.log(oldPassword, newPassword);
+    // console.log(oldPassword, newPassword);
 
     try {
         const response = await baseUrl.post("/users/change-password", {
@@ -63,7 +63,7 @@ async function changeCurrentPassword({ oldPassword, newPassword }) {
 
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 

@@ -17,7 +17,7 @@ function UploadVideo() {
     setUploading(true)
     const response = await postVideo(e?.title, e?.description, e?.video[0], e?.thumbnail[0])
     setUploading(false)
-    console.log(response);
+    // console.log(response);
   }
 
   function handleClick() {

@@ -17,7 +17,7 @@ function Following() {
                 <div key={i} className='flex items-center justify-between py-2'>
                     <div className="flex items-center">
                         <img onClick={() => {
-                            console.log("Hola");
+                            // console.log("Hola");
                         }} id='profile' className="w-10 h-10 rounded-full mr-2" src="https://th.bing.com/th/id/OIP.HLuY60jzx5puuKjbqmWRRwHaEK?w=328&h=185&c=7&r=0&o=5&dpr=1.5&pid=1.7" alt="Avatar of Jonathan Reinink" />
                         <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                             <div className='flex flex-col'>

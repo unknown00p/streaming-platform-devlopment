@@ -70,7 +70,7 @@ function Header() {
     e.preventDefault()
     if (searchValue) {
       const response = setSearchData(searchValue)
-      console.log(response);
+      // console.log(response);
       navigate('/searchResult')
     }
   }
@@ -84,7 +84,7 @@ function Header() {
     <>
       <div className=''>
         <div className={`${headerClass} md:block`}>
-          <div onScroll={() => setHeaderBg('fffff')} className={`flex max-w-[2560px] text-white items-center justify-between px-7 pt-2 pb-5 text-[1.11rem] bg-[#0f0f0f]`}>
+          <div onScroll={() => setHeaderBg('fffff')} className={`flex max-w-[2560px] text-white items-center justify-between px-7 pt-2 pb-5 text-[1.11rem] bg-[#18181b]`}>
             <div className='flex items-center gap-7'>
               <button className='hidden sm:block' id='mainMenu' onClick={toggleSideBar}>
                 <img src="/menubar.svg" alt="" />

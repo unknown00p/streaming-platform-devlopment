@@ -8,13 +8,13 @@ function VideoDashboard() {
   const showUploadVideoCss = useHandleCssStore((state) => state.showUploadVideoCss)
   const showUploadVideo = useHandleCssStore((state) => state.showUploadVideo)
   const [hidden, setHidden] = useState("hidden")
-  const [toggleDelete, setToggleDelete] = useState("hidden")  
+  const [toggleDelete, setToggleDelete] = useState("hidden")
 
   useEffect(() => {
     function handleClickOutside(e) {
       if (e.target.closest("#uploadVideo") && !e.target.closest(".uploadVideoBtn")) {
         showUploadVideo("block")
-        // console.log(e.target);
+        // // console.log(e.target);
 
       }
       else if (!e.target.closest(".uploadVideoBtn")) {

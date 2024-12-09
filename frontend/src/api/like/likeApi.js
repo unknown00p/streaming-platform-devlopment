@@ -7,45 +7,45 @@ async function toggleVideoLike(videoId) {
         })
         return response
     } catch (error) {
-        console.log(error);
-        throw error        
+        // console.log(error);
+        throw error
     }
 }
 
-async function getVideoLikes(videoId, userId) {  
+async function getVideoLikes(videoId, userId) {
     try {
         const response = await baseUrl.get(`/likes/videoLikes/${videoId}`, {
             params: { userId: userId }
         })
-    
+
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw error
     }
 }
 
 async function toggleCommentLike(commentId) {
-    console.log(commentId);
-    
+    // console.log(commentId);
+
     try {
-        const response = await baseUrl.post(`/likes/toggle/c/${commentId}`,{},{
+        const response = await baseUrl.post(`/likes/toggle/c/${commentId}`, {}, {
             withCredentials: true
         })
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
 async function getCommentLikes(commentId, userId) {
     try {
-        const response = await baseUrl(`/likes/commentLikes/${commentId}`,{
-            params: {userId: userId}
+        const response = await baseUrl(`/likes/commentLikes/${commentId}`, {
+            params: { userId: userId }
         })
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 

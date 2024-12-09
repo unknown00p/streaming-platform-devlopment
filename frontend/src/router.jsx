@@ -21,13 +21,13 @@ import UserDashboard from "./components/UserDashboard";
 const AppRouter = () => {
 
   // async function renderComponent() {
-  //   console.log('running');
+  //   // console.log('running');
   //   try {
   //     const response = await currentUser()
   //     return response ? <Desktop /> : <ShowLogin />
   //   } catch (error) {
-  //     console.log(error);
-      
+  //     // console.log(error);
+
   //   }
   // }
 
@@ -39,7 +39,7 @@ const AppRouter = () => {
         <Route path='login' element={<Login />} />
         <Route path='video/:videoId' element={<Video />} />
         <Route path='userSection' element={<UserSection />} />
-        <Route path='searchResult' element={<SearchResult/>} />
+        <Route path='searchResult' element={<SearchResult />} />
 
         <Route path='desktop' element={<Desktop />} >
           <Route index element={<Navigate to="videos" replace />} />

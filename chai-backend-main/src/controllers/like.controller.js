@@ -9,8 +9,8 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
     const { videoId } = req.params
     const userId = req.user._id
 
-    console.log('Line 12 videoId', videoId);
-    console.log('userId', userId);
+    // console.log('Line 12 videoId', videoId);
+    // console.log('userId', userId);
 
     //TODO: toggle like on video
 
@@ -216,7 +216,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
         }
     ])
 
-    console.log(getAllLikedVideos);
+    // console.log(getAllLikedVideos);
 
 
 })
@@ -258,10 +258,10 @@ const getLikesOfaVideo = asyncHandler(async (req, res) => {
 const getLikesOfComment = asyncHandler(async (req, res) => {
     const { commentId } = req.params
     const userId = req.query.userId
-    
-    console.log('commentId',commentId);
-    console.log('userId',userId);
-    
+
+    // console.log('commentId',commentId);
+    // console.log('userId',userId);
+
     const likeCount = await Like.countDocuments({ comment: commentId })
 
     if (userId) {

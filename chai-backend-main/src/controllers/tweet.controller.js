@@ -11,7 +11,7 @@ const createTweet = asyncHandler(async (req, res) => {
 
     // steps to Make tweet controler
     // 1: get the todo content from frontend
-    console.log("user: ", req.user?._id);
+    // console.log("user: ", req.user?._id);
     const { content } = req.body
 
     // 2: check if i got the content correctly
@@ -55,7 +55,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
     // send the res array of tweets
 
     const { userId } = req.params
-    console.log(userId);
+    // console.log(userId);
 
     if (!userId) {
         throw new ApiError(404, "userId is undefined")
@@ -100,7 +100,7 @@ const updateTweet = asyncHandler(async (req, res) => {
         content: content
     })
 
-    console.log(updatedTweet);
+    // console.log(updatedTweet);
 
     return res
         .status(200)

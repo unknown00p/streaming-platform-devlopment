@@ -13,12 +13,12 @@ function SearchResult() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        // console.log(searchData);
+        // // console.log(searchData);
         async function getData(params) {
             const response = await getAllSearchVideos({ query: searchData })
             const pendingResponse = response.data.data.videos.map((val) => userById(val?.owner))
             const resolvedResponse = await Promise.all(pendingResponse)
-            // console.log(resolvedResponse);
+            // // console.log(resolvedResponse);
 
             const all = response.data.data.videos.map((video, index) => (
                 {
@@ -66,7 +66,7 @@ function SearchResult() {
         }
     }
 
-    // console.log(videos);
+    // // console.log(videos);
 
     return searchResult ? (
         <Wrapper>

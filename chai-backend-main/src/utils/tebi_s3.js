@@ -42,14 +42,14 @@ async function uploadImagesToBucket(image, isUser = false) {
 
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     } finally {
         fs.unlinkSync(image)
     }
 }
 
 async function uploadVideosToBucket(video, isThumbnail) {
-    console.log('isThumbnail', isThumbnail);
+    // console.log('isThumbnail', isThumbnail);
 
     try {
         const videoName = path.basename(video)
@@ -99,9 +99,9 @@ async function uploadVideosToBucket(video, isThumbnail) {
                 }
             })
 
-            await myQueue.add("videoKey", { key: videoName },{
+            await myQueue.add("videoKey", { key: videoName }, {
                 attempts: 3,
-                backoff:{
+                backoff: {
                     type: 'exponential',
                     delay: 5000
                 }
@@ -123,7 +123,7 @@ async function uploadVideosToBucket(video, isThumbnail) {
                 const metaData = await new Promise((resolve, reject) => {
                     ffmpegCommand.ffprobe(video, (err, metaData) => {
                         if (err) {
-                            console.log(err);
+                            // console.log(err);
                             return reject(err)
                         } else {
                             resolve(metaData)
@@ -134,13 +134,13 @@ async function uploadVideosToBucket(video, isThumbnail) {
                 if (isThumbnail === false) {
                     const videoKey = `${videoName.split('.')[0]}.jpg`
                     const thumbnailPath = path.resolve(outputDir, videoKey)
-                    console.log('thumbnailPath', thumbnailPath)
+                    // console.log('thumbnailPath', thumbnailPath)
                     const extractThumbnail = `ffmpeg -i "${video}" -vf "scale=1280:720:force_original_aspect_ratio=decrease" -q:v 2 -frames:v 1 "${thumbnailPath}"`
 
                     // ffmpeg -i "${video}" -vf "scale=1280:720:force_original_aspect_ratio=decrease" -q:v 2 -frames:v 1 "${thumbnailPath}.jpg"
 
 
-                    console.log('extractThumbnail', extractThumbnail)
+                    // console.log('extractThumbnail', extractThumbnail)
                     const response = await new Promise((resolve, reject) => {
                         exec(extractThumbnail, (error, stdout, stderr) => {
                             if (error) {
@@ -148,7 +148,7 @@ async function uploadVideosToBucket(video, isThumbnail) {
                                 return reject(error);
                             }
                             if (stderr) console.error("FFmpeg stderr:");
-                            console.log("Thumbnail generated");
+                            // console.log("Thumbnail generated");
                             resolve(true);
                         })
                     })
@@ -159,7 +159,7 @@ async function uploadVideosToBucket(video, isThumbnail) {
                                 const file = await fs.promises.readFile(thumbnailPath)
                                 return file
                             } catch (err) {
-                                console.log(err)
+                                // console.log(err)
                             }
                         }
                         const file = await readFile()
@@ -195,7 +195,7 @@ async function uploadVideosToBucket(video, isThumbnail) {
         }
     }
     catch (error) {
-        console.log(error);
+        // console.log(error);
         throw error
     } finally {
         fs.unlinkSync(video)
@@ -204,7 +204,7 @@ async function uploadVideosToBucket(video, isThumbnail) {
 }
 
 async function deleteVideoFromBucket(objectKey) {
-    console.log(objectKey)
+    // console.log(objectKey)
     try {
         const listParams = {
             Bucket: process.env.TEBI_HLS_BUCKET_NAME,
@@ -221,12 +221,12 @@ async function deleteVideoFromBucket(objectKey) {
             })
 
             const forward = await s3client.send(res)
-            console.log('forward')
+            // console.log('forward')
         }
 
         if (response.CommonPrefixes) {
             response.CommonPrefixes.forEach((folder) => {
-                console.log('folder', folder.Prefix)
+                // console.log('folder', folder.Prefix)
                 const listParams = {
                     Bucket: process.env.TEBI_HLS_BUCKET_NAME,
                     Prefix: `${folder.Prefix}`,
@@ -236,14 +236,14 @@ async function deleteVideoFromBucket(objectKey) {
                 s3client.send(command).then((value) => {
                     if (value.Contents) {
                         value.Contents.forEach((val) => {
-                            console.log(val.Key)
+                            // console.log(val.Key)
                             const res = new DeleteObjectCommand({
                                 Bucket: process.env.TEBI_HLS_BUCKET_NAME,
                                 Key: val.Key
                             })
 
                             s3client.send(res).then((isOk) => {
-                                console.log('isOk')
+                                // console.log('isOk')
                             })
                         })
                     }
@@ -258,7 +258,7 @@ async function deleteVideoFromBucket(objectKey) {
         await s3client.send(tempRes)
 
     } catch (error) {
-        console.log(error)
+        // console.log(error)
     }
 }
 
@@ -275,7 +275,7 @@ async function listFolderContents({ folderName }) {
 
     // const dataCommand = new ListObjectsV2Command(listParams)
     // const folders = await s3client.send(dataCommand)
-    // console.log('folders',folders.Contents[0]?.Key); 
+    // // console.log('folders',folders.Contents[0]?.Key); 
 
     try {
         const incodedFolderName = encodeURIComponent(folderName)

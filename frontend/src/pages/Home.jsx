@@ -16,7 +16,7 @@ function Home() {
       const response = await getAllVideos()
       // setHasVideo(false)
       if (response) {
-        console.log(response)
+        // console.log(response)
         const videoData = response?.data.data.allvideos
 
         const awaitResponse = videoData.map((val) => userById(val?.owner))
@@ -90,7 +90,7 @@ function Home() {
                     <div className="py-4">
                       <div className="flex gap-0">
                         <img onClick={() => {
-                          console.log("Hola");
+                          // console.log("Hola");
                         }} id='profile' className="w-10 h-10 object-cover rounded-full mr-4" src={value?.userData?.avatar} alt="Avatar of Jonathan Reinink" />
                         <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                           <div className='flex gap-2'>
@@ -106,7 +106,7 @@ function Home() {
                     </div>
                   </div>
                 </div>
-              }) : Array.from({ length: 10 }, (_, i) => <Skeleton key={i}/>)
+              }) : Array.from({ length: 10 }, (_, i) => <Skeleton key={i} />)
             }
           </div>
         </div>

@@ -6,7 +6,7 @@ function CurrentUser() {
     const PrivetBaseUrl = useAxiosPrivet()
     const navigate = useNavigate()
     const location = useLocation()
-    const setCurrentUserData = userData((state)=> state.setCurrentUserData)
+    const setCurrentUserData = userData((state) => state.setCurrentUserData)
 
     useEffect(() => {
         const controller = new AbortController()
@@ -19,9 +19,9 @@ function CurrentUser() {
                 })
 
                 // if (response) {
-                    
+
                 // }
-                
+
 
                 if (isMounted) {
                     setCurrentUserData(response.data.data)
@@ -31,7 +31,7 @@ function CurrentUser() {
                 // if (error.code !== "ERR_CANCELED") {
                 //     navigate("/", { state: { form: location }, replace: true })
                 // }
-                console.log(error);
+                // console.log(error);
             }
         }
 

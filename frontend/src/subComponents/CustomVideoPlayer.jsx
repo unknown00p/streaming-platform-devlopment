@@ -35,11 +35,11 @@ function CustomVideoPlayer({ qualityObj, duration }) {
       } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
         videoElement.currentTime = storedTime
         videoElement.src = quality
-        console.log('loaded');
+        // console.log('loaded');
         videoElement.play()
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
 
   }, [quality]);
@@ -96,7 +96,7 @@ function CustomVideoPlayer({ qualityObj, duration }) {
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime;
       const duration = videoRef.current.duration;
-      // console.log("slider", duration);
+      // // console.log("slider", duration);
 
       if (duration > 0) {
         const newValue = (currentTime / duration) * 100;
@@ -138,7 +138,7 @@ function CustomVideoPlayer({ qualityObj, duration }) {
   }, [soundRangeValue])
 
   function playNextVideo() {
-    console.log(qualityObj.length);
+    // console.log(qualityObj.length);
     if (videoIndex < qualityObj.length) {
       setVideoIndex(prev => prev + 1)
     }
@@ -193,8 +193,8 @@ function CustomVideoPlayer({ qualityObj, duration }) {
         setQuality(qualityObj?.quality320p)
       }
     } catch (error) {
-      console.log(error);
-    }finally{
+      // console.log(error);
+    } finally {
       setShowSetting(false)
       setIsPlaying(true)
     }

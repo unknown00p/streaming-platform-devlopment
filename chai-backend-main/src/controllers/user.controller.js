@@ -7,14 +7,14 @@ import jwt from "jsonwebtoken"
 import mongoose from "mongoose";
 
 const generateAccessAndRefereshTokens = async (userId) => {
-    // console.log('userId',userId)
+    // // console.log('userId',userId)
     try {
         const user = await User.findById(userId)
-        // console.log('userIngen',user)
+        // // console.log('userIngen',user)
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
 
-        // console.log(accessToken,refreshToken)
+        // // console.log(accessToken,refreshToken)
 
         // user.refreshToken = refreshToken
         // await user.save({ validateBeforeSave: false })
@@ -54,7 +54,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    console.log('avatarLocalPath', avatarLocalPath);
+    // console.log('avatarLocalPath', avatarLocalPath);
 
 
     const coverImgLocalPath = req.files?.coverImage[0]?.path;
@@ -108,7 +108,7 @@ const loginUser = asyncHandler(async (req, res) => {
     //send cookie
 
     const { email, password } = req.body
-    // console.log(email,password);
+    // // console.log(email,password);
 
     if (!email) {
         throw new ApiError(400, "email is required")
@@ -127,7 +127,7 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 
     const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
-    console.log('refreshToken', refreshToken);
+    // console.log('refreshToken', refreshToken);
 
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
@@ -135,7 +135,8 @@ const loginUser = asyncHandler(async (req, res) => {
     const options = {
         httpOnly: true,
         secure: true,
-        sameSite: 'none'
+        sameSite: 'none',
+        domain: 'youtube-backend-latest.onrender.com'
     }
 
     return res
@@ -164,10 +165,10 @@ const loginUsingGoogle = asyncHandler(async (req, res) => {
 
         const response = await fetch(googleOauthUrl.toString())
         const result = await response.json()
-        // console.log('result data', result)
+        // // console.log('result data', result)
 
         const email = result.email
-        // console.log('email',email)
+        // // console.log('email',email)
         let coverImageUrl = ''
         if (coverImage) {
             coverImageUrl = await uploadImagesToBucket(coverImage, "true")
@@ -176,20 +177,21 @@ const loginUsingGoogle = asyncHandler(async (req, res) => {
         let user = await User.findOne({ email })
         const userNameEnd = result.name.split(' ')
         const userName = userNameEnd[1] + result.email.split('@')[0]
-        console.log('userName',userName);
+        // console.log('userName',userName);
 
         if (!user) {
-            user = await User.create({ fullName: result.name,username:userName, email: result.email, avatar: result.picture, authProvider: "google", coverImage: coverImageUrl, googleToken: result.sub })
+            user = await User.create({ fullName: result.name, username: userName, email: result.email, avatar: result.picture, authProvider: "google", coverImage: coverImageUrl, googleToken: result.sub })
         }
 
-        console.log('user', user._id)
+        // console.log('user', user._id)
 
         const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
 
         const options = {
             httpOnly: true,
             secure: true,
-            sameSite:'none'
+            sameSite: 'none',
+            domain: 'youtube-backend-latest.onrender.com'
         }
 
         return res.status(200)
@@ -205,7 +207,7 @@ const loginUsingGoogle = asyncHandler(async (req, res) => {
                 ))
 
     } catch (error) {
-        console.log(error)
+        // console.log(error)
     }
 })
 
@@ -238,7 +240,7 @@ const loginUsingGoogle = asyncHandler(async (req, res) => {
 //     }
 
 //     const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id);
-//     // console.log(a)
+//     // // console.log(a)
 
 //     const options = {
 //       httpOnly: true,
@@ -309,7 +311,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         const options = {
             httpOnly: true,
             secure: true,
-            sameSite: 'none'
+            sameSite: 'none',
+            domain: 'youtube-backend-latest.onrender.com'
         }
 
         const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
@@ -332,7 +335,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 const changeCurrentPassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body
-    // console.log(oldPassword,newPassword);
+    // // console.log(oldPassword,newPassword);
 
     const user = await User.findById(req.user?._id)
     const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
@@ -385,7 +388,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 
 const updateUserAvatar = asyncHandler(async (req, res) => {
     const avatarLocalPath = req.file?.path
-    // console.log("whats here avatarLocalPath",avatarLocalPath);
+    // // console.log("whats here avatarLocalPath",avatarLocalPath);
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is missing")
@@ -393,7 +396,7 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 
     //TODO: delete old image - assignment
     const previousImgId = req.user?.avatar.split("/").pop().split('.').shift()
-    // console.log(previousImgId);
+    // // console.log(previousImgId);
 
     const avatar = await uploadImagesToBucket(avatarLocalPath, true)
 
@@ -422,9 +425,9 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
 })
 
 const updateUserCoverImage = asyncHandler(async (req, res) => {
-    // console.log("whats here req.file",req.file);
+    // // console.log("whats here req.file",req.file);
     const coverImageLocalPath = req.file?.path
-    // console.log("whats here coverImageLocalPath",coverImageLocalPath);
+    // // console.log("whats here coverImageLocalPath",coverImageLocalPath);
     if (!coverImageLocalPath) {
         throw new ApiError(400, "Cover image file is missing")
     }

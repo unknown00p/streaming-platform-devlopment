@@ -238,7 +238,7 @@ const deleteVideo = asyncHandler(async (req, res) => {
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
     const { videoId } = req.params
-    console.log(videoId);
+    // console.log(videoId);
     //TODO: toggle publish status
 
     if (!videoId) {
@@ -272,7 +272,7 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 const addViewsToVideos = asyncHandler(async (req, res) => {
     try {
         const { videoId } = req.params
-        // console.log('videoId',videoId.videoId)
+        // // console.log('videoId',videoId.videoId)
         if (!videoId) {
             throw new ApiError(400, 'video ID is not defined')
         }
@@ -293,7 +293,7 @@ const addViewsToVideos = asyncHandler(async (req, res) => {
             .status(200)
             .json(new ApiResponse(200, { added }, "views added sucessfully"))
     } catch (error) {
-        console.log(error)
+        // console.log(error)
     }
 })
 

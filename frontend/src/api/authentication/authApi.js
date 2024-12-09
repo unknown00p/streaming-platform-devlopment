@@ -22,7 +22,7 @@ async function SignIn({ email, password }) {
 
         return response
     } catch (error) {
-        console.log(error?.response?.data);
+        // console.log(error?.response?.data);
         return null
     }
 }
@@ -30,7 +30,7 @@ async function SignIn({ email, password }) {
 async function SignInWithGoogle(token) {
     try {
         const formdata = new FormData()
-        // console.log('idToken',idToken)
+        // // console.log('idToken',idToken)
 
         // const defaultCoverImage = new File(
         //     [await fetch("/images/coverImage.jpg").then((res) => res.blob())],
@@ -58,7 +58,7 @@ async function SignInWithGoogle(token) {
 
         return response
     } catch (error) {
-        console.log(error)
+        // console.log(error)
     }
 }
 
@@ -70,13 +70,13 @@ async function SignOut() {
         }
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return null
     }
 }
 
 async function SignUp({ username, fullname, email, password, avatar, coverImage }) {
-    // console.log(username, fullname, email, password, avatar[0], coverImage[0]);
+    // // console.log(username, fullname, email, password, avatar[0], coverImage[0]);
     const formData = new FormData();
 
     const defaultAvatar = new File(
@@ -120,7 +120,7 @@ async function userById(userId) {
 
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
@@ -131,13 +131,13 @@ async function currentUser() {
         })
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw error
     }
 }
 
 async function UpdateNameEmail(fullName, email) {
-    console.log(fullName, email);
+    // console.log(fullName, email);
 
     try {
         const updatedValue = await baseUrl.patch("/users/update-account",
@@ -150,7 +150,7 @@ async function UpdateNameEmail(fullName, email) {
 
         return updatedValue
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
@@ -167,13 +167,13 @@ async function UpdateAvatar(avatarFile) {
         })
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
 async function UpdateCoverImage(CoverImage) {
     try {
-        console.log(CoverImage);
+        // console.log(CoverImage);
 
         const formData = new FormData()
         formData.append("coverImage", CoverImage)
@@ -184,12 +184,12 @@ async function UpdateCoverImage(CoverImage) {
         })
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
 async function changeCurrentPassword({ oldPassword, newPassword }) {
-    console.log(oldPassword, newPassword);
+    // console.log(oldPassword, newPassword);
 
     try {
         const response = await baseUrl.post("/users/change-password", {
@@ -199,7 +199,7 @@ async function changeCurrentPassword({ oldPassword, newPassword }) {
 
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 

@@ -8,14 +8,14 @@ const useRefreshToken = () => {
     const refresh = async () => {
         try {
             const response = await baseUrl.post("/users/refresh-token", {}, { withCredentials: true })
-            console.log('response',response.data.data.accessToken);
+            // console.log('response',response.data.data.accessToken);
 
             if (response.status === 200) {
                 setAuthData(response.data.data.accessToken)
             }
             return response.data.data.accessToken
         } catch (error) {
-            console.log(error)
+            // console.log(error)
         }
     }
 

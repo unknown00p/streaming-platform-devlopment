@@ -5,7 +5,7 @@ import { currentUser, UpdateNameEmail, UpdateAvatar, UpdateCoverImage, changeCur
 
 function UserDashboard() {
   const [isEditing, setIsEditing] = useState(false);
-  const { register, handleSubmit,watch } = useForm()
+  const { register, handleSubmit, watch } = useForm()
   const [mainData, setMainData] = useState(null)
   const [avatarSrc, setAvatarSrc] = useState('')
   const [coverImageSrc, setCoverImageSrc] = useState('')
@@ -33,17 +33,17 @@ function UserDashboard() {
 
   useEffect(() => {
     if (avatar) {
-      console.log('avatar',avatar);
+      // console.log('avatar',avatar);
       renderImagePreview(avatar[0])
-    }else if(coverImage){
-      console.log('coverImage',coverImage);
+    } else if (coverImage) {
+      // console.log('coverImage',coverImage);
       renderImagePreview(coverImage[0])
     }
-  }, [avatar,coverImage])
+  }, [avatar, coverImage])
 
   const handleInputChange = (e) => {
     const { name, value, type, file } = e.target;
-    
+
     if (type === 'file') {
       setUserData(prevData => ({
         ...prevData,
@@ -58,24 +58,24 @@ function UserDashboard() {
   };
 
   const handleSubmitData = async (data) => {
-    // console.log('userData',userData);
-    // console.log('mainData',mainData);
+    // // console.log('userData',userData);
+    // // console.log('mainData',mainData);
     if (data.fullName !== mainData.fullName || data.email !== mainData.email) {
-      console.log('yes');
+      // console.log('yes');
       const response = await UpdateNameEmail(data.fullName, data.email)
-      console.log("responseData", response);
+      // console.log("responseData", response);
     }
     if (data.avatar[0]) {
       const response = await UpdateAvatar(data.avatar[0])
-      console.log("responseData", response);
+      // console.log("responseData", response);
     }
     if (data.coverImage[0]) {
       const responseCover = await UpdateCoverImage(data.coverImage[0])
-      console.log("responseData", responseCover);
+      // console.log("responseData", responseCover);
     }
     if (data.currentPassword && data.newPassword) {
       const response = await changeCurrentPassword({ oldPassword: data.currentPassword, newPassword: data.newPassword })
-      console.log(response);
+      // console.log(response);
     }
     setIsEditing(false);
   };
@@ -91,10 +91,10 @@ function UserDashboard() {
 
   const renderImagePreview = (image, alt, defaultText, className) => {
     const localSrc = '/images/coverImage.jpg'
-    console.log('localSrc',localSrc)
+    // console.log('localSrc',localSrc)
     const src = getImageSrc(image || localSrc);
-    // console.log('image',image);
-    
+    // // console.log('image',image);
+
     return src ? (
       <img src={src} alt={alt} className={className} />
     ) : (

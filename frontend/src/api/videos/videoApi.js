@@ -8,10 +8,10 @@ async function deleteVideo(videoId) {
             }
         )
 
-        console.log(response);
+        // console.log(response);
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
@@ -33,12 +33,12 @@ async function getAllVideosOfaUser(userId, page = 1, limit = 10, sortBy = 'isPub
         }
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
 async function getVideobyId(videoId) {
-    // console.log(videoId);
+    // // console.log(videoId);
 
     try {
         const response = await baseUrl.get(`/videos/${videoId}`, {
@@ -49,7 +49,7 @@ async function getVideobyId(videoId) {
         })
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
@@ -63,10 +63,10 @@ async function updateVideo({ videoId, title, description, thumbnail }) {
             params: videoId,
             withCredentials: true
         })
-        console.log(response);
+        // console.log(response);
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
@@ -76,16 +76,16 @@ async function togglePublicStatus({ videoId }) {
             videoId
         }, { withCredentials: true })
 
-        console.log(response);
+        // console.log(response);
         return response
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
 async function postVideo(title, description, videoFile, thumbnail, setProgress) {
-    // console.log(title, description, videoFile, thumbnail)
+    // // console.log(title, description, videoFile, thumbnail)
 
     let formData = new FormData()
     formData.append("videoFile", videoFile)
@@ -102,13 +102,13 @@ async function postVideo(title, description, videoFile, thumbnail, setProgress) 
         })
         return response
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
 async function getAllSearchVideos({ page = 1, limit = 10, sortBy = 'isPublished', query }) {
     let queryToLower = query?.trim().toLowerCase()
-    console.log('query', queryToLower);
+    // console.log('query', queryToLower);
 
     try {
         return await baseUrl.get("/videos/searchVideos", {
@@ -121,7 +121,7 @@ async function getAllSearchVideos({ page = 1, limit = 10, sortBy = 'isPublished'
             withCredentials: true
         })
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
@@ -135,7 +135,7 @@ async function getAllVideos(page = 1, limit = 10) {
             withCredentials: true
         })
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
@@ -144,7 +144,7 @@ async function addViwes(videoId) {
         const response = await baseUrl.patch(`/videos/addViews/${videoId}`)
         return response
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         throw error
     }
 }
