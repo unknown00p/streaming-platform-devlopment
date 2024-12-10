@@ -26,7 +26,7 @@ const AppRouter = () => {
   //     const response = await currentUser()
   //     return response ? <Desktop /> : <ShowLogin />
   //   } catch (error) {
-  //     // console.log(error);
+  //     console.log(error);
 
   //   }
   // }

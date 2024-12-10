@@ -31,7 +31,7 @@ function Desktop() {
           })
         }
       } catch (error) {
-        // console.log(error);
+        console.log(error);
         setAuthState({
           isLoading: false,
           data: null,

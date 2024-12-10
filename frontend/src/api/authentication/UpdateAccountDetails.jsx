@@ -14,7 +14,7 @@ async function UpdateEmailPassword(fullName, email) {
 
         return updatedValue
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -31,7 +31,7 @@ async function UpdateAvatar(avatarFile) {
         })
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -48,7 +48,7 @@ async function UpdateCoverImage(CoverImage) {
         })
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -63,7 +63,7 @@ async function changeCurrentPassword({ oldPassword, newPassword }) {
 
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 

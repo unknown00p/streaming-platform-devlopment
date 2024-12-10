@@ -6,7 +6,7 @@ async function getVideoComments(videoId) {
         // // console.log(response);
         return response
     } catch (error) {
-        // console.log(error);      
+        console.log(error);
         throw error
     }
 }
@@ -22,7 +22,7 @@ async function makeComment(videoId, content) {
         // // console.log(response);
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         throw error
     }
 }

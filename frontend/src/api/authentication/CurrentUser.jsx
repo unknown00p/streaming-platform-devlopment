@@ -31,7 +31,7 @@ function CurrentUser() {
                 // if (error.code !== "ERR_CANCELED") {
                 //     navigate("/", { state: { form: location }, replace: true })
                 // }
-                // console.log(error);
+                console.log(error);
             }
         }
 

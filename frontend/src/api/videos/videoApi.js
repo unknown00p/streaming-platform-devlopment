@@ -11,7 +11,7 @@ async function deleteVideo(videoId) {
         // console.log(response);
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -33,7 +33,7 @@ async function getAllVideosOfaUser(userId, page = 1, limit = 10, sortBy = 'isPub
         }
 
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -49,7 +49,7 @@ async function getVideobyId(videoId) {
         })
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -66,7 +66,7 @@ async function updateVideo({ videoId, title, description, thumbnail }) {
         // console.log(response);
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -80,7 +80,7 @@ async function togglePublicStatus({ videoId }) {
         return response
 
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -102,7 +102,7 @@ async function postVideo(title, description, videoFile, thumbnail, setProgress) 
         })
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -121,7 +121,7 @@ async function getAllSearchVideos({ page = 1, limit = 10, sortBy = 'isPublished'
             withCredentials: true
         })
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -135,7 +135,7 @@ async function getAllVideos(page = 1, limit = 10) {
             withCredentials: true
         })
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -144,7 +144,7 @@ async function addViwes(videoId) {
         const response = await baseUrl.patch(`/videos/addViews/${videoId}`)
         return response
     } catch (error) {
-        // console.log(error)
+        console.log(error)
         throw error
     }
 }

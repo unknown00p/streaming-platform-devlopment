@@ -11,6 +11,6 @@
 //         const idToken = await user.getIdToken();
 //         return idToken
 //     }catch(error){
-//         // console.log(error)
+//         console.log(error)
 //     }
 // }

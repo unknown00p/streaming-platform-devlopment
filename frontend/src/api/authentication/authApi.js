@@ -30,16 +30,8 @@ async function SignIn({ email, password }) {
 async function SignInWithGoogle(token) {
     try {
         const formdata = new FormData()
-        // // console.log('idToken',idToken)
-
-        // const defaultCoverImage = new File(
-        //     [await fetch("/images/coverImage.jpg").then((res) => res.blob())],
-        //     "defaultCoverImage.jpg",
-        //     { type: "image/jpg" }
-        // )
 
         formdata.append('token', token)
-        // formdata.append('coverImage', defaultCoverImage)
 
         const response = await baseUrl.post('/users/googleLogin', formdata, {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -58,7 +50,7 @@ async function SignInWithGoogle(token) {
 
         return response
     } catch (error) {
-        // console.log(error)
+        console.log(error)
     }
 }
 
@@ -70,7 +62,7 @@ async function SignOut() {
         }
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         return null
     }
 }
@@ -120,7 +112,7 @@ async function userById(userId) {
 
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -131,7 +123,7 @@ async function currentUser() {
         })
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         throw error
     }
 }
@@ -150,7 +142,7 @@ async function UpdateNameEmail(fullName, email) {
 
         return updatedValue
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -167,7 +159,7 @@ async function UpdateAvatar(avatarFile) {
         })
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -184,7 +176,7 @@ async function UpdateCoverImage(CoverImage) {
         })
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -199,7 +191,7 @@ async function changeCurrentPassword({ oldPassword, newPassword }) {
 
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 

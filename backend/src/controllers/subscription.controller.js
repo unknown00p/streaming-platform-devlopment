@@ -68,7 +68,7 @@ const getIsSubscribed = asyncHandler(async (req, res) => {
                 .json(new ApiResponse(200, { isSubscribed: find }, "User is subscribed"))
         }
     } catch (error) {
-        // console.log(error)
+        console.log(error)
     }
 })
 
@@ -134,7 +134,7 @@ const getUserChannelSubscribers = asyncHandler(async (req, res) => {
 //     try{
 
 //     }catch(error){
-//         // console.log(error)
+//         console.log(error)
 //     }
 // })
 

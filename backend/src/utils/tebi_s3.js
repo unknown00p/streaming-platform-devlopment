@@ -42,7 +42,7 @@ async function uploadImagesToBucket(image, isUser = false) {
 
 
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     } finally {
         fs.unlinkSync(image)
     }
@@ -195,7 +195,7 @@ async function uploadVideosToBucket(video, isThumbnail) {
         }
     }
     catch (error) {
-        // console.log(error);
+        console.log(error);
         throw error
     } finally {
         fs.unlinkSync(video)
@@ -258,7 +258,7 @@ async function deleteVideoFromBucket(objectKey) {
         await s3client.send(tempRes)
 
     } catch (error) {
-        // console.log(error)
+        console.log(error)
     }
 }
 

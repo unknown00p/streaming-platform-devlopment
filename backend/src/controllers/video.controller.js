@@ -293,7 +293,7 @@ const addViewsToVideos = asyncHandler(async (req, res) => {
             .status(200)
             .json(new ApiResponse(200, { added }, "views added sucessfully"))
     } catch (error) {
-        // console.log(error)
+        console.log(error)
     }
 })
 

@@ -39,7 +39,7 @@ function CustomVideoPlayer({ qualityObj, duration }) {
         videoElement.play()
       }
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     }
 
   }, [quality]);
@@ -193,7 +193,7 @@ function CustomVideoPlayer({ qualityObj, duration }) {
         setQuality(qualityObj?.quality320p)
       }
     } catch (error) {
-      // console.log(error);
+      console.log(error);
     } finally {
       setShowSetting(false)
       setIsPlaying(true)

@@ -7,7 +7,7 @@ async function toggleVideoLike(videoId) {
         })
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         throw error
     }
 }
@@ -20,7 +20,7 @@ async function getVideoLikes(videoId, userId) {
 
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
         throw error
     }
 }
@@ -34,7 +34,7 @@ async function toggleCommentLike(commentId) {
         })
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 
@@ -45,7 +45,7 @@ async function getCommentLikes(commentId, userId) {
         })
         return response
     } catch (error) {
-        // console.log(error);
+        console.log(error);
     }
 }
 

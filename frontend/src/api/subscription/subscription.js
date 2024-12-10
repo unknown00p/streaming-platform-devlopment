@@ -9,7 +9,7 @@ async function toggleSubscription(channelId) {
 
         return response
     } catch (error) {
-        // console.log(error)
+        console.log(error)
     }
 }
 
@@ -21,7 +21,7 @@ async function isChannelSubscribed(channelId) {
 
         return response
     } catch (error) {
-        // console.log(error)
+        console.log(error)
     }
 }
 
@@ -31,7 +31,7 @@ async function getSubscribersOfchannel(channelId) {
 
         return response
     } catch (error) {
-        // console.log(error)
+        console.log(error)
     }
 }
 

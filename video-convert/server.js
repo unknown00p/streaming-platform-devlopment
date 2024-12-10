@@ -195,7 +195,7 @@ const myQueue = new Worker("comunication", async (job) => {
                     await Promise.all(uploadPromise)
 
                 } catch (error) {
-                    // console.log(error);
+                    console.log(error);
                     return false
                 }
             } else if (pathType.isFile() && path.extname(secondOutputDir) === '.m3u8') {
@@ -214,7 +214,7 @@ const myQueue = new Worker("comunication", async (job) => {
 
     }
     catch (error) {
-        // console.log(error);
+        console.log(error);
         throw new Error(error)
     }
     finally {

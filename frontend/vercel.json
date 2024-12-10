@@ -2,7 +2,7 @@
     "rewrites": [
       {
         "source": "/api/:path*",
-        "destination": "https://youtube-backend-latest.onrender.com:path*"
+        "destination": "https://str-app.vercel.app*"
       },
       {
         "source": "/:path*",
