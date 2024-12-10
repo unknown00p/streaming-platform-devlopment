@@ -7,13 +7,34 @@ const app = express()
 
 app.use(morgan("dev"));
 
+// console.log(process.env.CORS_ORIGIN)
+
 const corsOptions = {
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173/',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS','PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: (origin, callback) => {
+        const allowedOrigins = [
+            process.env.CORS_ORIGIN,
+            'http://localhost:5173',
+            'https://str-app-git-main-unknown00ps-projects.vercel.app'
+        ]
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true)
+        } else {
+            callback(new Error('not allowed by cors'))
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
     optionsSuccessStatus: 204,
     credentials: true
 }
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://str-app-git-main-unknown00ps-projects.vercel.app');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+});
 
 app.use(cors(corsOptions));
 

@@ -11,5 +11,5 @@ createRoot(document.getElementById('root')).render(
     <GoogleOAuthProvider clientId={clientID}>
       <AppRouter />
     </GoogleOAuthProvider>
-  </StrictMode>,
+  </StrictMode>
 )
