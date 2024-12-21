@@ -134,9 +134,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const options = {
         httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-        domain: 'youtube-backend-latest.onrender.com'
+        secure: true
     }
 
     return res
@@ -189,9 +187,7 @@ const loginUsingGoogle = asyncHandler(async (req, res) => {
 
         const options = {
             httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            domain: 'youtube-backend-latest.onrender.com'
+            secure: true
         }
 
         return res.status(200)
@@ -310,9 +306,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
         const options = {
             httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            domain: 'youtube-backend-latest.onrender.com'
+            secure: true
         }
 
         const { accessToken, refreshToken } = await generateAccessAndRefereshTokens(user._id)
@@ -353,6 +347,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
 })
 
 const getCurrentUser = asyncHandler(async (req, res) => {
+    // const User = req.user ? true : false
     return res
         .status(200)
         .json(new ApiResponse(

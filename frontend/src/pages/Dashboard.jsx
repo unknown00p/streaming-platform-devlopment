@@ -7,16 +7,26 @@ import userData from '../zustand/userData';
 function Dashboard() {
   const currentUserData = userData((state) => state.currentUserData);
   const navigate = useNavigate()
-  const storageVlaue = sessionStorage.getItem('isLogin')
-  const isUserFlag = JSON.parse(storageVlaue)
 
-  return isUserFlag ? (
+  // console.log('currentUserData', currentUserData.data)
+  console.log('loading', currentUserData.loading)
+  console.log('isUser', currentUserData.isUser)
+
+
+  if (currentUserData.notUser) {
+    return (
+      <div className='h-full w-full flex items-center flex-col gap-2 justify-center text-white mt-44'>
+        <div>Just login mf</div>
+        <button onClick={() => navigate('/login')} className='bg-blue-700 w-28 px-9 py-2 rounded-sm'>Login</button>
+      </div>
+    )
+  }
+
+  return currentUserData.isUser ? (
     <Wrapper>
       <div className='text-white'>
-        <nav className="bg-gray-50 dark:bg-[#13151a] w-full top-14 left-0 fixed z-10">
+        <nav className="bg-gray-50 dark:bg-[#18181b] w-full top-14 left-0 fixed z-10">
           <div className="px-4 py-4 flex justify-between items-center">
-            {/* Left section (Logo or Title) */}
-            {/* Right section (Nav Links) */}
             <ul className="flex space-x-4 font-medium flex-wrap">
               <li className='sm:text-lg text-[9px]'>
                 <Link
@@ -82,10 +92,7 @@ function Dashboard() {
       </div>
     </Wrapper>
   ) : (<Wrapper>
-    <div className='h-full w-full flex items-center flex-col gap-2 justify-center text-white mt-44'>
-      <div>Just login mf</div>
-      <button onClick={()=> navigate('/login')} className='bg-blue-700 w-28 px-9 py-2 rounded-sm'>Login</button>
-    </div>
+    <div>loading...</div>
   </Wrapper>)
 }
 
