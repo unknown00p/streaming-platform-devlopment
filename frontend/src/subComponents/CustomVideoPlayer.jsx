@@ -8,7 +8,7 @@ function CustomVideoPlayer({ qualityObj, duration }) {
   const divRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [videoRangeValue, setVideoRangeValue] = useState(0)
-  const [soundRangeValue, setSoundRangeValue] = useState(0)
+  const [soundRangeValue, setSoundRangeValue] = useState(10)
   const [volumeUrl, setVolumeUrl] = useState("volume-full.svg")
   const [videoIndex, setVideoIndex] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)

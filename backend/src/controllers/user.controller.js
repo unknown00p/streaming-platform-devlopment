@@ -552,6 +552,32 @@ const getUserById = asyncHandler(async (req, res) => {
     }
 })
 
+const addVideosToWatchHistory = asyncHandler(async (req, res) => {
+    const userId = req.user._id
+    const { videoId } = req.body
+    if (!userId) {
+        throw new ApiError(401, "unAuthorized request")
+    }
+
+    if (!videoId) {
+        throw new ApiError(404, "videoId is required")
+    }
+
+    const result = await User.findByIdAndUpdate(userId,
+        { $addToSet: { watchHistory: videoId } },
+        { new: true, useFindAndModify: false }
+    )
+
+    if(!result){
+       throw new ApiError("got error while updating watch history")
+    }
+
+    res
+    .status(200)
+    .json(new ApiResponse(200,"video added to watche history",result))
+
+})
+
 const getWatchHistory = asyncHandler(async (req, res) => {
     const user = await User.aggregate([
         {
@@ -619,5 +645,6 @@ export {
     getUserChannelProfile,
     getWatchHistory,
     getUserById,
-    loginUsingGoogle
+    loginUsingGoogle,
+    addVideosToWatchHistory
 }

@@ -26,9 +26,10 @@ function Video() {
   const [subscriberCount, setSubscriberCount] = useState(0)
 
   useEffect(() => {
-    const userId = currentUserData?._id
+    const userId = currentUserData?.data?._id
     async function videoByIdFunc() {
       const res = await getVideoLikes(videoId, userId)
+      // console.log("getVideoLikes",res)
       setLikesData(res.data.data)
       const response = await getVideobyId(videoId)
       if (response) {
@@ -63,10 +64,10 @@ function Video() {
 
   async function toggleLikes() {
     const res = await toggleVideoLike(videoId)
+    console.log('res',res)
 
     if (res) {
-      const userId = currentUserData?._id
-      // // console.log('userId',userId);
+      const userId = currentUserData?.data?._id
       const response = await getVideoLikes(videoId, userId)
       setLikesData(response.data.data)
     }
@@ -120,8 +121,10 @@ function Video() {
     // // console.log('valueId', commentId);
     e.preventDefault()
     const response = await toggleCommentLike(commentId)
+    // console.log("isUserLiked",response)
     setCommentLikesData(response.data.data)
   }
+
 
   async function subscribeToChannel() {
     // console.log('videoData', videoData?.owner)

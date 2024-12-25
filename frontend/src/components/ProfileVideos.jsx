@@ -7,10 +7,14 @@ import formatTimeDifference from '../hooks/formateTime'
 import { currentUser } from '../api/authentication/authApi'
 
 function ProfileVideos() {
-  const [hasVideo, setHasVideo] = useState(false)
-  const [videos, setVideos] = useState([])
-  // const currentUserData = userData((state) => state.currentUserData)
-  const {userId} = useParams()
+  // const [hasVideo, setHasVideo] = useState(true)
+  // const [videos, setVideos] = useState([])
+  const [videoData, setVideoData] = useState({
+    videos: [],
+    hasVideo: true,
+    loading: false
+  })
+  const { userId } = useParams()
 
   const navigate = useNavigate()
   const videoClick = (e) => {
@@ -22,10 +26,18 @@ function ProfileVideos() {
 
   useEffect(() => {
     async function processFetch() {
-      const response = await getAllVideosOfaUser(userId)
-      console.log('response', response)
-      setHasVideo(true)
-      setVideos(response?.data?.data?.videos)
+      try {
+        setVideoData({ loading: true })
+        const response = await getAllVideosOfaUser(userId)
+        // console.log('response', response.data.data.videos.length)
+        if (response.data.data.videos.length == 0) {
+          setVideoData({ hasVideo: false, loading: false })
+        }
+        setVideoData({ videos: response?.data?.data?.videos, hasVideo: true, loading: false })
+      } catch (error) {
+        console.log(error)
+        setVideoData({ hasVideo: false, videos: [], loading: false })
+      }
     }
     processFetch()
   }, [userId])
@@ -34,10 +46,10 @@ function ProfileVideos() {
     navigate("/dashboard")
   }
 
-  // console.log(videos)
+  // console.log(videoData)
 
-  if (videos?.length == 0) {
-    return videos?.length === 0 && (<div className='flex h-[15rem] justify-center flex-col text-white items-center'>
+  if (videoData.hasVideo == false) {
+    return videoData.videos?.length === 0 && (<div className='flex h-[15rem] justify-center flex-col text-white items-center'>
       <div className='flex flex-col justify-center items-center w-[18rem] gap-2'>
         <p>
           <img className='bg-[#45434370] p-2 rounded-full' src="/play.svg" alt="" />
@@ -61,17 +73,17 @@ function ProfileVideos() {
     )
   }
 
-  return (
+  return videoData.loading == false ? (
     <div>
       <div className='right w-full overflow-hidden'>
         <div className='max-w-full ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 cursor-pointer'>
-          {videos && videos.map((value, i) => {
+          {videoData.videos && videoData.videos.map((value, i) => {
             return <div key={i} className=''>
               <div onClick={(e) => {
                 videoClick(e)
               }} className="rounded-xl shadow-lg">
                 <div className=''>
-                  <img className="object-cover w-full h-[13rem] rounded-sm" src={value?.thumbnail} alt="Sunset in the mountains" />
+                  <img className="object-cover w-full h-[13rem] rounded-lg" src={value?.thumbnail} alt="Sunset in the mountains" />
                 </div>
                 <div className="py-4 h-[120px]">
                   <div className="flex gap-1">
@@ -95,7 +107,7 @@ function ProfileVideos() {
         </div>
       </div>
     </div>
-  )
+  ) : <div>loading...</div>
 }
 
 export default ProfileVideos

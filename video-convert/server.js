@@ -10,7 +10,6 @@ import fs from 'fs/promises'
 import { createReadStream, existsSync, createWriteStream } from 'fs'
 import { PassThrough } from 'stream'
 import { fileURLToPath } from 'url';
-// // console.log(numCors);
 
 dotenv.config({
     path: ".env"
@@ -113,11 +112,6 @@ const myQueue = new Worker("comunication", async (job) => {
                 ffmpegPromise(url, quality.outputDir, quality.hlsTime, quality.size, quality.audioBitrate, quality.videoBitrate, quality.segments
                 )
             ))
-
-        if (response) {
-            // console.log('completed');
-            // console.log(response);
-        }
 
         const __filename = fileURLToPath(import.meta.url);
         const __dirname = path.dirname(__filename);

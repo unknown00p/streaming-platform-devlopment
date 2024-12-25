@@ -28,7 +28,7 @@ function SideBar() {
         {
             "name": "You",
             "src": "/currentUser.svg",
-            "link": `/desktop/${currentUserData?.data?._id}`,
+            "link": `/userSection`,
             // "onClick": handleDesktopNavigation
         },
         {

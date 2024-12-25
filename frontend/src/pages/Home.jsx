@@ -80,7 +80,7 @@ function Home() {
         </div>
 
         <div className='right w-full pt-3 overflow-hidden p-2 sm:mx-3 pb-16 sm:pb-0'>
-          <div className='lg:ml-[4.5rem] ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4'>
+          <div className='lg:ml-[4.5rem] ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3'>
             {
               videoArray.length > 0 ? videoArray.map((value) => {
                 return <div key={value._id} className='cursor-pointer'>

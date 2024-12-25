@@ -223,7 +223,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
 
 const getLikesOfaVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params
-    const userId = req.query.userId
+    const { userId } = req.query
     const likeCount = await Like.countDocuments({ video: videoId })
 
     // if (!likeCount) {
@@ -238,6 +238,7 @@ const getLikesOfaVideo = asyncHandler(async (req, res) => {
                 {
                     likeCount: likeCount ? likeCount : 0,
                     isUserLiked: userId && isUserLiked ? true : false,
+                    // likedBy: isUserLiked
                 }
                 , "Like of this video")
             )
