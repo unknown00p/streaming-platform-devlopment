@@ -4,12 +4,14 @@ import SideBar from "../subComponents/SideBar"
 import Wrapper from "./Wrapper"
 import { useParams } from "react-router-dom"
 import { getVideobyId, addViwes } from "../api/videos/videoApi"
+import {addVideosToWatchHistory} from "../api/authentication/authApi"
 import { userById } from "../api/authentication/authApi"
 import { toggleVideoLike, getVideoLikes, toggleCommentLike, getCommentLikes } from "../api/like/likeApi"
 import userDataStore from "../zustand/userData"
 import { makeComment, getVideoComments } from "../api/comment/comment"
 import formatTimeDifference from "../hooks/formateTime"
 import { toggleSubscription, isChannelSubscribed, getSubscribersOfchannel } from "../api/subscription/subscription"
+import AddToPlaylist from "./AddToPlaylist"
 
 function Video() {
   const [saveToPlaylist, setSaveToPlaylist] = useState(false)
@@ -29,7 +31,6 @@ function Video() {
     const userId = currentUserData?.data?._id
     async function videoByIdFunc() {
       const res = await getVideoLikes(videoId, userId)
-      // console.log("getVideoLikes",res)
       setLikesData(res.data.data)
       const response = await getVideobyId(videoId)
       if (response) {
@@ -54,8 +55,11 @@ function Video() {
 
   useEffect(() => {
     const videoPlayed = Math.round(videoData?.duration) / 20;
+    const videoId = videoData?._id
     const timeoutId = setTimeout(() => {
-      addViwes(videoData?._id)
+      addViwes(videoId).then(()=>{
+        addVideosToWatchHistory(videoId)
+      })
       // console.log('not')
     }, videoPlayed * 1000)
 
@@ -333,36 +337,9 @@ function Video() {
           ))}
         </div>
 
-        {saveToPlaylist && <div className={`fixed inset-0 z-50 bg-[#2b2b2b87] flex justify-center items-center`}>
-          <div>
-            <div className='flex justify-center text-white'>
-              <div className='bg-[#151826] rounded-sm gap-3 p-10 flex flex-col justify-center'>
-                <div className='flex items-center justify-between'>
-                  <p>Save to playlist</p>
-                  <img onClick={() => setSaveToPlaylist(false)} className="cursor-pointer" src="x.svg" alt="" />
-                </div>
-
-                <div className='flex flex-col gap-2'>
-                  {Array.from([1, 2, 3, 4]).map((value) => (
-                    <div className='flex items-center gap-3' key={value}>
-                      <input type="checkbox" id={1} />
-                      <p>name of playlist</p>
-                    </div>
-                  ))}
-                </div>
-
-                <div>
-                  <div>name</div>
-                  <input type="text" className='w-56 h-8 rounded-md px-2 text-black' placeholder='enter playlist name' />
-                </div>
-
-                <div>
-                  <button className='bg-[#24094b] text-[#fff] rounded-md text-md px-2 py-1'>create new playlist</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>}
+        {saveToPlaylist && 
+        <AddToPlaylist/>
+        }
       </main>
     </Wrapper>
   )

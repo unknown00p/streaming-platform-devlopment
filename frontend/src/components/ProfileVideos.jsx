@@ -76,25 +76,25 @@ function ProfileVideos() {
   return videoData.loading == false ? (
     <div>
       <div className='right w-full overflow-hidden'>
-        <div className='max-w-full ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 cursor-pointer'>
+        <div className='max-w-full ml-0 items-center grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 cursor-pointer'>
           {videoData.videos && videoData.videos.map((value, i) => {
-            return <div key={i} className=''>
+            return <div key={value?._id} className=''>
               <div onClick={(e) => {
                 videoClick(e)
               }} className="rounded-xl shadow-lg">
                 <div className=''>
-                  <img className="object-cover w-full h-[13rem] rounded-lg" src={value?.thumbnail} alt="Sunset in the mountains" />
+                  <img className="object-cover w-full h-[9rem] rounded-lg" src={value?.thumbnail} alt="Sunset in the mountains" />
                 </div>
-                <div className="py-4 h-[120px]">
+                <div className="py-2 h-[120px]">
                   <div className="flex gap-1">
                     <div className="text-base flex flex-col gap-1 text-[#dfdede]">
                       <div className='flex gap-2 items-baseline'>
-                        <div className="text-lg">{value?.title.length > 30 ? value.title.substring(0, 30) + '...' : value.title}</div>
+                        <div className="text-base font-semibold">{value?.title.length > 30 ? value.title.substring(0, 30) + '...' : value.title}</div>
                         <div>
                         </div>
                       </div>
                       {/* <p className="leading-none text-[#a1a1a1]">{value?.description.length > 90 ? value.description.substring(0, 90) + "..." : value.description}</p> */}
-                      <div className='flex gap-1 text-[#a1a1a1]'>
+                      <div className='flex gap-1 text-sm text-[#a1a1a1]'>
                         <p>173K views.</p>
                         <p>{formatTimeDifference(value?.createdAt)}</p>
                       </div>

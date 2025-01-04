@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { Link, NavLink, useNavigate, useParams } from 'react-router-dom';
 import userData from '../zustand/userData';
 import SideBar from '../subComponents/SideBar';
+import {watchHistory} from "../api/authentication/authApi"
+import formatTimeDifference from '../hooks/formateTime';
 
 function UserSection() {
     const currentUserData = userData((state) => state.currentUserData);
     const navigate = useNavigate();
-    const { userId } = useParams()
+    const [history, setHistory] = useState([])
   
     const deskCategories = [
       {
@@ -31,6 +33,18 @@ function UserSection() {
         "url": "following"
       },
     ]
+
+    useEffect(() => {
+      async function getResult() {
+        const result = await watchHistory()
+        setHistory(result?.data.data)
+      }
+
+      getResult()
+    }, [])
+    
+    console.log(history)
+
   
     if (currentUserData.notUser) {
       return (
@@ -48,7 +62,6 @@ function UserSection() {
             <SideBar />
           </div>
         </div>
-  
   
         <div>
           {currentUserData.loading == false ?
@@ -84,7 +97,53 @@ function UserSection() {
                     </div>
                   </div>
                 </div>
+
+                <div className='pt-7'>
+                  <div className='text-xl font-semibold flex justify-between items-center pr-3'>
+                    <h1>History</h1>
+                    <button className='px-3 py-1 rounded-full text-base border-[0.8px] '>view all</button>
+                  </div>
+
+                  <div className='grid grid-cols-5 gap-2 pt-4'>
+                  {history && history.map((value) => {
+                      return <div key={value?._id} className=''>
+                        <div onClick={(e) => {
+                          videoClick(e)
+                        }} className="rounded-xl shadow-lg">
+                          <div className=''>
+                            <img className="object-cover w-full h-[8rem] rounded-lg" src={value?.thumbnail} alt="Sunset in the mountains" />
+                          </div>
+                          <div className="flex justify-between py-2 h-[120px]">
+                            <div className="flex gap-1">
+                              <div className="text-base flex flex-col gap-1 text-[#dfdede]">
+                                <div className='flex gap-2 items-baseline'>
+                                  <div className="text-base font-semibold">{value?.title.length > 30 ? value.title.substring(0, 30) + '...' : value.title}</div>
+                                  <div>
+                                  </div>
+                                </div>
+                                {/* <p className="leading-none text-[#a1a1a1]">{value?.description.length > 90 ? value.description.substring(0, 90) + "..." : value.description}</p> */}
+                                <div className='gap-1 text-sm text-[#a1a1a1]'>
+                                  <h1>{value?.owner.username}</h1>
+                                  <div className='flex'>
+                                    <p>173K views.</p>
+                                    <p>{formatTimeDifference(value?.createdAt)}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <p>
+                              <img className='hover:bg-[#b0afaf8d] rounded-full cursor-pointer' src="dots.svg" alt="" />
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                  })} 
+
+                  </div>
+                </div>
+
               </div>
+
             </div>
             : <div>
               {/* Cover Image Skeleton */}
@@ -126,20 +185,9 @@ function UserSection() {
                     ))}
                   </div>
                 </div>
-  
-                {/* Main Content Skeleton */}
-                {/* <div className='text-white pb-20 sm:pb-0 w-[95%] m-auto'>
-                  <div className='skeleton-main-content'></div>
-                </div> */}
               </div>
             </div>
           }
-  
-          {/* <div className='lg:ml-[7.7rem] mt-7'>
-            <div className='text-white pb-20 sm:pb-0 w-[95%] m-auto'>
-              <Outlet />
-            </div>
-          </div> */}
         </div>
       </div>
     )

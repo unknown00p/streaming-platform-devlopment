@@ -6,6 +6,8 @@ import Wrapper from '../components/Wrapper'
 import { getAllVideos } from '../api/videos/videoApi'
 import { userById } from '../api/authentication/authApi'
 import formatTimeDifference from '../hooks/formateTime'
+import { Playlists, Video } from '../components'
+
 
 function Home() {
   const [hasVideo, setHasVideo] = useState(true)
@@ -41,7 +43,7 @@ function Home() {
       navigate(`video/${value?._id}`)
     }
     if (target == "profile") {
-      console.log(value?.owner)
+      // console.log(value?.owner)
       navigate(`desktop/${value?.owner}`)
     }
   }
@@ -74,7 +76,6 @@ function Home() {
   return hasVideo ? (
     <Wrapper>
       <div className='flex'>
-
         <div className='left fixed sm:hidden md:p-2 p-0 lg:block bottom-0 lg:bottom-auto w-full lg:w-[4rem]'>
           <SideBar />
         </div>
@@ -89,18 +90,24 @@ function Home() {
                       <img loading='lazy' className="w-full object-contain aspect-video rounded-xl bg-black" src={value?.thumbnail} alt="Sunset in the mountains" />
                     </div>
                     <div className="py-4">
-                      <div className="flex gap-0">
-                        <img id='profile' className="w-10 h-10 object-cover rounded-full mr-4" src={value?.userData?.avatar} alt="Avatar of Jonathan Reinink" />
-                        <div className="text-base flex flex-col gap-1 text-[#dfdede]">
-                          <div className='flex gap-2'>
-                            <div className="text-base font-medium">{value?.title}</div>
-                          </div>
-                          <p className="leading-none text-sm text-[#a1a1a1]">{value?.userData?.username}</p>
-                          <div className='flex gap-1 text-[#a1a1a1]'>
-                            <p>{value?.views} views.</p>
-                            <p>{formatTimeDifference(value?.createdAt)}</p>
+
+                      <div className="flex justify-between items-start">
+                        <div className='flex'>
+                          <img id='profile' className="w-10 h-10 object-cover rounded-full mr-4" src={value?.userData?.avatar} alt="Avatar of Jonathan Reinink" />
+                          <div className="text-base flex flex-col gap-1 text-[#dfdede]">
+                            <div className='flex gap-2'>
+                              <div className="text-base font-medium">{value?.title}</div>
+                            </div>
+                            <p className="leading-none text-sm text-[#a1a1a1]">{value?.userData?.username}</p>
+                            <div className='flex gap-1 text-[#a1a1a1]'>
+                              <p>{value?.views} views.</p>
+                              <p>{formatTimeDifference(value?.createdAt)}</p>
+                            </div>
                           </div>
                         </div>
+
+
+                        <img className='text-sm p-1.5 hover:bg-[#b0afaf8d] rounded-full' src="dots.svg" alt="" />
                       </div>
                     </div>
                   </div>

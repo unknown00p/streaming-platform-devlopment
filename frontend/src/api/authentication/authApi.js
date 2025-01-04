@@ -192,4 +192,27 @@ async function changeCurrentPassword({ oldPassword, newPassword }) {
     }
 }
 
-export { SignIn, SignOut, SignUp, userById, currentUser, UpdateNameEmail, UpdateAvatar, UpdateCoverImage, changeCurrentPassword, SignInWithGoogle }
+async function addVideosToWatchHistory(videoId){
+    console.log(videoId)
+    try {
+        const result = await baseUrl.patch("/users/addVideosToWatchHistory",{
+            videoId: videoId
+        },{withCredentials: true})
+        console.log("addVideosToWatchHistory",result)
+        return result
+    } catch (error) {
+        console.log(error)
+        throw new Error(error)
+    }
+}
+
+async function watchHistory(){
+    try {
+        const result = await baseUrl.get("/users/watchHistory",{withCredentials: true})
+        return result
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+export { SignIn, SignOut, SignUp, userById, currentUser, UpdateNameEmail, UpdateAvatar, UpdateCoverImage, changeCurrentPassword, SignInWithGoogle, addVideosToWatchHistory, watchHistory }

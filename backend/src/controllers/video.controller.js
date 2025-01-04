@@ -280,7 +280,7 @@ const addViewsToVideos = asyncHandler(async (req, res) => {
         const video = await Video.findById(videoId)
 
         if (!video) {
-            throw new ApiError(404, "not video founded based on that Id")
+            throw new ApiError(404, "video not founded based on that Id")
         }
 
         const added = await Video.findByIdAndUpdate(videoId, { views: video.views + 1 })
