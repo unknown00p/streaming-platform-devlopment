@@ -14,6 +14,7 @@
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^5.16.7",
     "@react-oauth/google": "^0.12.1",
+    "@vibrant/core": "^4.0.0",
     "axios": "^1.7.5",
     "hls.js": "^0.8.5",
     "react": "^18.3.1",
@@ -24,6 +25,7 @@
     "react-router-dom": "^6.26.0",
     "react-spinners": "^0.14.1",
     "swiper": "^11.1.12",
+    "vibrant": "^0.0.1",
     "zustand": "^4.5.5"
   },
   "devDependencies": {

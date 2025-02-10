@@ -65,7 +65,7 @@ async function SignOut() {
 }
 
 async function SignUp({ username, fullname, email, password, avatar, coverImage }) {
-    // // console.log(username, fullname, email, password, avatar[0], coverImage[0]);
+    // console.log(avatar[0], coverImage[0]);
     const formData = new FormData();
 
     const defaultAvatar = new File(

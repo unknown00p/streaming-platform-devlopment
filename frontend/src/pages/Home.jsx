@@ -6,12 +6,14 @@ import Wrapper from '../components/Wrapper'
 import { getAllVideos } from '../api/videos/videoApi'
 import { userById } from '../api/authentication/authApi'
 import formatTimeDifference from '../hooks/formateTime'
-import { Playlists, Video } from '../components'
+import { Playlists, Video, AddToPlaylist } from '../components'
 
 
 function Home() {
   const [hasVideo, setHasVideo] = useState(true)
   const [videoArray, setVideoArray] = useState([])
+  const [showPlaylist, setShowPlaylist] = useState(false)
+  const [videoId, setVideoId] = useState('')
 
   useEffect(() => {
     async function getAllVideosFunc() {
@@ -107,7 +109,7 @@ function Home() {
                         </div>
 
 
-                        <img className='text-sm p-1.5 hover:bg-[#b0afaf8d] rounded-full' src="dots.svg" alt="" />
+                        <img id='dot' onClick={()=> { setShowPlaylist(true), setVideoId(value._id) }} className='text-sm p-1.5 hover:bg-[#b0afaf8d] rounded-full' src="dots.svg" alt="" />
                       </div>
                     </div>
                   </div>
@@ -117,6 +119,10 @@ function Home() {
           </div>
         </div>
       </div>
+
+      {showPlaylist && <div>
+        <AddToPlaylist playlistState={{showPlaylist,setShowPlaylist}} videoId={videoId}/>
+      </div>}
 
       {/* <div className='w-[373px] aspect-video rounded-xl bg-black'></div> */}
     </Wrapper >

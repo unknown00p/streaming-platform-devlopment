@@ -1,40 +1,96 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import { createPlaylist,getPlaylistsOfUser,addVideoToPlaylist } from "../api/playlist/playlist";
+import userData from "../zustand/userData";
 
-function AddToPlaylist({videoId}) {
+function AddToPlaylist({ playlistState,videoId }) {
+  const { showPlaylist, setShowPlaylist } = playlistState;
+  const [playlistName, setPlaylistName] = useState('')
+  const [allPlaylist, setAllPlaylist] = useState([])
+  const currentUserData = userData((state)=> state.currentUserData)
+
+  async function bakait() {
+    const result = await getPlaylistsOfUser(currentUserData.data._id)
+    setAllPlaylist(result?.data.data.userPlaylist)
+    console.log(result?.data.data.userPlaylist)
+  }
+
+  async function createPlaylistFunc() {
+    await createPlaylist(playlistName)
+    bakait()
+  }
+
+  useEffect(() => {
+    bakait()
+  }, [])
+  
+
+  function togglePlaylistCard(e) {
+    if (!e.target.closest(".mainContent")) {
+      setShowPlaylist(false);
+    }
+  }
+
+  async function addVideoToPlaylistFunc(playlistId) {
+    const result = await addVideoToPlaylist(playlistId,videoId)
+    console.log("result",result)
+  }
+
   return (
     <div>
-        <div className={`fixed inset-0 z-50 bg-[#2b2b2b87] flex justify-center items-center`}>
-          <div>
-            <div className='flex justify-center text-white'>
-              <div className='bg-[#151826] rounded-sm gap-3 p-10 flex flex-col justify-center'>
-                <div className='flex items-center justify-between'>
-                  <p>Save to playlist</p>
-                  <img onClick={() => setSaveToPlaylist(false)} className="cursor-pointer" src="x.svg" alt="" />
-                </div>
+      {showPlaylist && (
+        <div
+          onClick={togglePlaylistCard}
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex justify-center items-center"
+        >
+          <div className="bg-[#1c1f2e] rounded-lg shadow-lg p-6 w-80 mainContent">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-lg font-medium text-white">Save to Playlist</p>
+              <img
+                onClick={() => setShowPlaylist(false)}
+                className="cursor-pointer w-5 h-5 opacity-80 hover:opacity-100 transition"
+                src="x.svg"
+                alt="Close"
+              />
+            </div>
 
-                <div className='flex flex-col gap-2'>
-                  {Array.from([1, 2, 3, 4]).map((value) => (
-                    <div className='flex items-center gap-3' key={value}>
-                      <input type="checkbox" id={1} />
-                      <p>name of playlist</p>
-                    </div>
-                  ))}
-                </div>
+            {/* Playlist Options */}
+            <div className="space-y-2">
+              {allPlaylist.map((value) => (
+                <label key={value?._id} className="flex items-center gap-3 text-white cursor-pointer">
+                  <input
+                    onClick={()=>addVideoToPlaylistFunc(value?._id)}
+                    type="checkbox"
+                    className="accent-[#8a4bff] w-4 h-4"
+                    id={`playlist-${value?._id}`}
+                  />
+                  <p className="text-sm">{value?.name}</p>
+                </label>
+              ))}
+            </div>
 
-                <div>
-                  <div>name</div>
-                  <input type="text" className='w-56 h-8 rounded-md px-2 text-black' placeholder='enter playlist name' />
-                </div>
+            {/* New Playlist Input */}
+            <div className="mt-4">
+              <label className="text-sm text-gray-300">New Playlist</label>
+              <input
+                onChange={(e)=> setPlaylistName(e.target.value)}
+                type="text"
+                className="w-full h-10 rounded-md px-3 mt-1 bg-gray-700 text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-[#8a4bff]"
+                placeholder="Enter playlist name"
+              />
+            </div>
 
-                <div>
-                  <button className='bg-[#24094b] text-[#fff] rounded-md text-md px-2 py-1'>create new playlist</button>
-                </div>
-              </div>
+            {/* Create Playlist Button */}
+            <div className="mt-4">
+              <button onClick={createPlaylistFunc} className="w-full bg-[#8a4bff] text-white py-2 rounded-md hover:bg-[#7a3bff] transition">
+                Create New Playlist
+              </button>
             </div>
           </div>
         </div>
+      )}
     </div>
-  )
+  );
 }
 
-export default AddToPlaylist
+export default AddToPlaylist;

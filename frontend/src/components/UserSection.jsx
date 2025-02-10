@@ -4,11 +4,91 @@ import userData from '../zustand/userData';
 import SideBar from '../subComponents/SideBar';
 import {watchHistory} from "../api/authentication/authApi"
 import formatTimeDifference from '../hooks/formateTime';
+import { getPlaylistsOfUser } from '../api/playlist/playlist';
+import { getVideobyId } from '../api/videos/videoApi';
+import { Vibrant } from "@vibrant/core";
+
+
+const PlaylistItem = ({ value }) => {
+  const navigate = useNavigate();
+  const [thumbnail, setThumbnail] = useState({
+    url: null,
+    loading: true
+  });
+  const [color, setColor] = useState('')
+
+  async function fetchVideoData(videoId) {
+    if (videoId) {
+      const result = await getVideobyId(videoId)
+      // console.log('result',result?.data.data.video.thumbnail)
+      return result?.data.data.video.thumbnail
+    }
+  }
+
+  // console.log(thumbnail.url)
+
+  useEffect(() => {
+    const fetchThumbnail = async () => {
+      try {
+        if (value?.videos?.[0]) {
+          const url = await fetchVideoData(value.videos[0]);
+          console.log('url',url)
+          setThumbnail({
+            url: url,
+            loading: false
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching thumbnail:', error);
+        setThumbnail({
+          url: 'pngwing.com.png',
+          loading: false
+        });
+      }
+    };
+
+    fetchThumbnail();
+  }, [value?._id]);
+
+  return (
+    <div key={value?._id} className="">
+      <div className="rounded-xl shadow-lg cursor-pointer">
+        <div className="relative rounded-lg shadow-lg">
+          {/* {thumbnail?.loading == true?
+          <div className='object-cover w-full h-[8rem] rounded-lg'></div>: */}
+          <img
+            className="object-cover w-full h-[8rem] rounded-lg"
+            src={thumbnail?.url || '/images/image.png'}
+            alt="Video thumbnail"
+          />
+          {/* } */}
+          <div className='absolute right-1 top-24 text-[12px] bg-[#1a1919d2] px-[8px] py-[2px] rounded-md font-medium'>{value?.videos.length == 0? "No":value?.videos.length} {value?.videos.length == 1 ? "video":"videos"}</div>
+
+          <div className='bg-[#1b286a] top-[-8px] w-[95%] m-auto rounded-lg h-full inset-0 -z-10 absolute'></div>
+          
+          <div className='bg-[#458dba] top-[-13px] w-[90%] m-auto rounded-lg h-full inset-0 -z-20 absolute'></div>
+        </div>
+        <div className="flex justify-between py-2 h-[120px]">
+          {/* ... rest of your content */}
+          <div className='gap-1 text-sm text-[#a1a1a1]'>
+            <h1 className='text-white font-medium'>{value?.name}</h1>
+            <div className='flex pt-1'>
+              <p onClick={()=>navigate(`/playlistVideos/${value?._id}`)} className='text-[12px] font-semibold cursor-pointer hover:text-white'>View full playlist</p>
+              {/* <p>{formatTimeDifference(value?.createdAt)}</p> */}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 function UserSection() {
     const currentUserData = userData((state) => state.currentUserData);
     const navigate = useNavigate();
     const [history, setHistory] = useState([])
+    const [playLists, setPlayLists] = useState([])
+    const [imgColor, setImgColor] = useState('')
   
     const deskCategories = [
       {
@@ -34,16 +114,20 @@ function UserSection() {
       },
     ]
 
-    useEffect(() => {
-      async function getResult() {
-        const result = await watchHistory()
-        setHistory(result?.data.data)
-      }
+    async function getResults() {
+      const watchHistoryResult = await watchHistory()
+      setHistory(watchHistoryResult?.data.data)
 
-      getResult()
-    }, [])
+      if (currentUserData?.data) {
+        const playlistResult = await getPlaylistsOfUser(currentUserData?.data?._id)
+        setPlayLists(playlistResult.data.data.userPlaylist)
+      }
+    }
     
-    console.log(history)
+
+    useEffect(() => {
+      getResults()
+    }, [currentUserData?.data])
 
   
     if (currentUserData.notUser) {
@@ -104,7 +188,7 @@ function UserSection() {
                     <button className='px-3 py-1 rounded-full text-base border-[0.8px] '>view all</button>
                   </div>
 
-                  <div className='grid grid-cols-5 gap-2 pt-4'>
+                  <div className='grid md:grid-cols-4 lg:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-2 pt-4'>
                   {history && history.map((value) => {
                       return <div key={value?._id} className=''>
                         <div onClick={(e) => {
@@ -138,6 +222,24 @@ function UserSection() {
                         </div>
                       </div>
                   })} 
+
+                  </div>
+                </div>
+
+                <div className='pt-2'>
+                  <div className='text-xl font-semibold flex justify-between items-center pr-3'>
+                    <h1>Playlists</h1>
+                    <button className='px-3 py-1 rounded-full text-base border-[0.8px] '>view all</button>
+                  </div>
+
+                  <div className='grid grid-cols-5 gap-2 pt-4'>
+                  {playLists?.map((value) => (
+                      <PlaylistItem 
+                        key={value?._id} 
+                        value={value} 
+                        // videoClick={videoClick} 
+                      />
+                  ))}
 
                   </div>
                 </div>

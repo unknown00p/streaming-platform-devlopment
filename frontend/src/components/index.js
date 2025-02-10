@@ -9,6 +9,7 @@ import Tweets from "./Tweets";
 import Following from "./Following";
 import VideoDashboard from "./VideoDashboard";
 import UserDashboard from "./UserDashboard";
+import AddToPlaylist from "./AddToPlaylist";
 
 export {
     Register,
@@ -21,5 +22,6 @@ export {
     Tweets,
     Following,
     VideoDashboard,
-    UserDashboard
+    UserDashboard,
+    AddToPlaylist
 }

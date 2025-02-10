@@ -23,7 +23,7 @@ const AppRouter = () => {
           <Route path="following" element={<Following />} />
         </Route>
 
-        <Route path="playlistVideos" element={<PlaylistVideos />} />
+        <Route path="playlistVideos/:playlistId" element={<PlaylistVideos />} />
 
         <Route path="dashboard" element={<Dashboard />} >
           <Route index element={<Navigate to="videoDashboard" replace />} />
