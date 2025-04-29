@@ -60,16 +60,6 @@ const userSchema = new Schema(
     }
 )
 
-// userSchema.index(
-//     {
-//         username: 1
-//     },
-//     {
-//         unique: true,
-//         partialFilterExpression: { authProvider: 'local' }
-//     }
-// )
-
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password") || this.authProvider === 'google') return next();
 

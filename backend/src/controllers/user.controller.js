@@ -38,8 +38,6 @@ const registerUser = asyncHandler(async (req, res) => {
     // return res
 
     const { fullName, email, username, password } = req.body
-    console.log('lol')
-    console.log(req.files)
 
     if (
         [fullName, email, username, password].some((field) => field?.trim() === "")
@@ -55,6 +53,7 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(409, "User with email or username already exists")
     }
 
+    // console.log("avatar",req.files?.avatar)
     const avatarLocalPath = req.files?.avatar[0]?.path;
     // console.log('avatarLocalPath', avatarLocalPath);
 
@@ -74,7 +73,7 @@ const registerUser = asyncHandler(async (req, res) => {
     const coverImage = await uploadImagesToBucket(coverImgLocalPath, { isUser: true })
 
     if (!avatar) {
-        throw new ApiError(400, "Avatar file is required")
+        throw new ApiError(400, "Got error while Uploading avatar to storage")
     }
 
 
@@ -84,7 +83,8 @@ const registerUser = asyncHandler(async (req, res) => {
         coverImage: coverImage || "",
         email,
         password,
-        username: username.toLowerCase()
+        username: username.toLowerCase(),
+        authProvider: "local"
     })
 
     const createdUser = await User.findById(user._id).select(
