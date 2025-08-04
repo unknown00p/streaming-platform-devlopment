@@ -26,8 +26,6 @@ const s3Client = new S3Client({
     region: "global"
 })
 
-// console.log("running...");
-
 const myQueue = new Worker("comunication", async (job) => {
     let outputDir;
     try {
@@ -218,10 +216,10 @@ const myQueue = new Worker("comunication", async (job) => {
                 await fs.rm(outputDir, { recursive: true, force: true });
                 // console.log('Directory removed successfully.');
             } else {
-                // console.log(`Directory does not exist: ${outputDir}`);
+                console.log(`Directory does not exist: ${outputDir}`);
             }
         } catch (error) {
-            // console.log(`Failed to remove directory ${outputDir}:`, error);
+            console.log(`Failed to remove directory ${outputDir}:`, error);
         }
     }
 

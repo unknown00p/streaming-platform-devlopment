@@ -19,12 +19,9 @@ const PlaylistItem = ({ value }) => {
   async function fetchVideoData(videoId) {
     if (videoId) {
       const result = await getVideobyId(videoId);
-      // console.log('result',result?.data.data.video.thumbnail)
       return result?.data.data.video.thumbnail;
     }
   }
-
-  // console.log(thumbnail.url)
 
   useEffect(() => {
     const fetchThumbnail = async () => {

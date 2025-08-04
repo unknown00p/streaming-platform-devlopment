@@ -272,7 +272,6 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
 const addViewsToVideos = asyncHandler(async (req, res) => {
     try {
         const { videoId } = req.params
-        // // console.log('videoId',videoId.videoId)
         if (!videoId) {
             throw new ApiError(400, 'video ID is not defined')
         }
