@@ -16,11 +16,13 @@ import {
   Mic,
   Plus,
   Search,
+  Sidebar,
   User,
   UserCircle2,
   Youtube,
 } from "lucide-react";
 import { useState } from "react";
+import { SidebarTrigger } from "./ui/sidebar";
 
 function Navbar() {
   const [mobileSearch, setMobileSearch] = useState(false);
@@ -30,11 +32,11 @@ function Navbar() {
       <div
         className={`${
           mobileSearch ? "hidden" : "flex"
-        } justify-between items-center h-16 px-4 bg-[#01010d] text-white`}
+        } justify-between items-center h-16 px-5 bg-[#01010d] w-full text-white`}
       >
         {/* Left Section */}
         <div className="left flex items-center space-x-4">
-          <Menu className="text-gray-400 hover:text-white cursor-pointer" />
+          <SidebarTrigger/>
 
           <div className="logo flex items-center space-x-1">
             <Youtube className="text-red-600 w-8 h-8" />
@@ -74,19 +76,19 @@ function Navbar() {
 
         {/* Right Section - Icons and Mode Toggle */}
         <ul className="right flex items-center space-x-4">
-          <Button className="items-center hidden md:flex md:m-4 m-0 md:bg-gray-800 bg-[#0000] hover:text-white cursor-pointer">
+          <Button className="items-center hidden md:flex md:m-4 m-0 md:bg-gray-800 bg-[#0000] hover:bg-gray-700 hover:text-white cursor-pointer">
             <Plus className="text-white" />
             <span className="ml-1 hidden md:inline text-white">Create</span>
           </Button>
           <li className="items-center hidden md:flex hover:text-white cursor-pointer">
             <Bell className="text-gray-400" />
           </li>
-          <li>
+          <li className="m-1">
             <Button
               onClick={() => setMobileSearch(!mobileSearch)}
-              className="flex md:hidden items-center bg-gray-800 hover:bg-gray-700 text-white rounded-full px-3 py-1"
+              className="flex md:hidden items-center bg-[#0000] hover:bg-[#0000] !p-0 !m-0 text-white rounded-full"
             >
-              <Search className="text-white" />
+              <Search className="text-white !w-10 !h-6" />
             </Button>
           </li>
           <li className="flex items-center hover:text-white cursor-pointer">
@@ -118,8 +120,11 @@ function Navbar() {
         } md:hidden fixed top-0 left-0 w-full z-50 bg-[#01010d] text-white p-4`}
       >
         <div className="center flex md:hidden items-center flex-grow justify-center">
-          <Button onClick={() => setMobileSearch(false)} className="bg-gray-800 hover:bg-gray-700 rounded-full p-2">
-            <ArrowLeftCircle className="text-white"/>
+          <Button
+            onClick={() => setMobileSearch(false)}
+            className="bg-gray-800 hover:bg-gray-700 rounded-full p-2"
+          >
+            <ArrowLeftCircle className="text-white" />
           </Button>
           <div className="search-bar ml-2 items-center w-full md:w-1/2 flex">
             <Input
