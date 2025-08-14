@@ -57,11 +57,11 @@ const videos = [
   },
 ];
 
-function MainContent() {
+function Home() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 mt-20">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {videos.map((video) => (
-        <div key={video.id} className="bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-lg hover:shadow-lg dark:hover:shadow-xl transition-all duration-300 overflow-hidden">
+        <div key={video.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-lg hover:shadow-lg dark:hover:shadow-xl transition-all duration-300 overflow-hidden">
           <img
             src={video.thumbnail}
             alt={video.title}
@@ -87,4 +87,4 @@ function MainContent() {
   );
 }
 
-export default MainContent;
+export default Home;

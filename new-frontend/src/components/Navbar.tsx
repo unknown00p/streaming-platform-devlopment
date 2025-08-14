@@ -23,6 +23,14 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { SidebarTrigger } from "./ui/sidebar";
+import { Link } from "react-router";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Dialog } from "@radix-ui/react-dialog";
+import UploadVideo from "./UploadVideo";
 
 function Navbar() {
   const [mobileSearch, setMobileSearch] = useState(false);
@@ -32,18 +40,18 @@ function Navbar() {
       <div
         className={`${
           mobileSearch ? "hidden" : "flex"
-        } justify-between items-center h-16 px-5 bg-[#01010d] w-full text-white`}
+        } justify-between items-center h-16 px-5 main-bg w-full text-white`}
       >
         {/* Left Section */}
         <div className="left flex items-center space-x-4">
-          <SidebarTrigger/>
+          <SidebarTrigger />
 
-          <div className="logo flex items-center space-x-1">
+          <Link to={"/"} className="logo flex items-center space-x-1">
             <Youtube className="text-red-600 w-8 h-8" />
             <a href="#" className="text-lg font-semibold hover:text-gray-200">
               Craxs
             </a>
-          </div>
+          </Link>
         </div>
 
         {/* Center Section - Search Bar */}
@@ -51,7 +59,7 @@ function Navbar() {
           <div className="search-bar items-center w-full md:w-1/2 hidden md:flex">
             <Input
               placeholder="Search"
-              className="bg-gray-800 text-white rounded-l-full focus:outline-none w-full"
+              className="dark:bg-gray-800 text-white rounded-l-full focus:outline-none w-full"
             />
             {/* <button className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-r-full">
               <svg
@@ -67,7 +75,7 @@ function Navbar() {
                 />
               </svg>
             </button> */}
-            <Button className="px-4 py-2 bg-gray-800 border-[1px] border-gray-700 hover:bg-gray-700 rounded-r-full">
+            <Button className="px-4 py-2 dark:bg-gray-800 border-[1px] border-gray-700 hover:bg-gray-700 rounded-r-full">
               <Search className="text-white" />
             </Button>
           </div>
@@ -76,10 +84,11 @@ function Navbar() {
 
         {/* Right Section - Icons and Mode Toggle */}
         <ul className="right flex items-center space-x-4">
-          <Button className="items-center hidden md:flex md:m-4 m-0 md:bg-gray-800 bg-[#0000] hover:bg-gray-700 hover:text-white cursor-pointer">
+          {/* <Button className="items-center hidden md:flex md:m-4 m-0 md:bg-gray-800 bg-[#0000] hover:bg-gray-700 hover:text-white cursor-pointer">
             <Plus className="text-white" />
             <span className="ml-1 hidden md:inline text-white">Create</span>
-          </Button>
+          </Button> */}
+          <UploadVideo />
           <li className="items-center hidden md:flex hover:text-white cursor-pointer">
             <Bell className="text-gray-400" />
           </li>
@@ -97,7 +106,11 @@ function Navbar() {
                 <UserCircle2 className="text-gray-400" />
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent className="bg-gray-800 text-white rounded-lg shadow-lg p-2">
+              <DropdownMenuContent
+                align="start"
+                side="bottom"
+                className="bg-gray-800 mr-3 text-white rounded-lg shadow-lg p-2"
+              >
                 <DropdownMenuItem className="px-4 py-2 hover:bg-gray-700 cursor-pointer">
                   Profile
                 </DropdownMenuItem>

@@ -2,9 +2,37 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
+import { ThemeProvider } from "./components/theme/theme-provider.tsx";
+import { createBrowserRouter, RouterProvider } from "react-router";
+import Home from "./page/Home.tsx";
+import Video from "./page/Video.tsx";
+import You from "./page/You.tsx";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
+        path: "",
+        element: <Home />,
+      },
+      {
+        path: "video",
+        element: <Video />,
+      },
+      {
+        path: "you",
+        element: <You />,
+      }
+    ],
+  },
+]);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </StrictMode>
 );

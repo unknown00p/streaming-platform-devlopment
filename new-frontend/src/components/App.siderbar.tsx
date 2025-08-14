@@ -101,8 +101,10 @@ const exploreItems = [
 ];
 
 export function AppSidebar() {
+  //180d21
+  //170c1f
   return (
-    <Sidebar className="w-60 !bg-[#01010d] text-white border-r md:mt-16 mt-0 border-gray-800 overflow-y-auto">
+    <Sidebar className="w-60 !bg-[#01010d] text-white border-r xl:pt-16 mt-0 border-gray-800 overflow-y-auto">
       <SidebarHeader className="items-center justify-between p-4 flex xl:hidden">
         {/* <div className="flex items-center space-x-2 justify-between"> */}
           <div className="p-2 rounded-full hover:bg-gray-800">

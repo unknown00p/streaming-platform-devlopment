@@ -1,7 +1,36 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "video.js/dist/video-js.css";
+/* Optional theme */
+@import "@videojs/themes/dist/fantasy/index.css";
+
 
 @custom-variant dark (&:is(.dark *));
+
+.main-bg {
+  background-color: #0a1421;
+}
+/* body {
+  scrollbar-gutter: stable;
+} */
+
+/* html {
+  scrollbar-gutter: stable;
+} */
+
+/* html {
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+} */
+
+/* .container::-webkit-scrollbar {
+  display: none;
+} */
+
+/* For Firefox */
+/* .container {
+  scrollbar-width: none;
+} */
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
