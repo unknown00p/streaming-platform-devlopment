@@ -48,9 +48,9 @@ function Navbar() {
 
           <Link to={"/"} className="logo flex items-center space-x-1">
             <Youtube className="text-red-600 w-8 h-8" />
-            <a href="#" className="text-lg font-semibold hover:text-gray-200">
+            <span className="text-lg font-semibold hover:text-gray-200">
               Craxs
-            </a>
+            </span>
           </Link>
         </div>
 

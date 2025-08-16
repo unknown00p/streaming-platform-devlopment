@@ -1,135 +1,145 @@
-import React, { useRef } from 'react';
+import { useSidebar } from "@/components/ui/sidebar";
+import React, { useRef } from "react";
 
-// You will likely have mock data or fetch actual data for these sections
-// For now, using mock data as in previous iterations
 const videos = [
   {
     id: 1,
-    thumbnail: 'https://placehold.co/320x180/000000/FFFFFF?text=Video+1',
-    duration: '1:27',
-    title: 'Subaru Tellgius About his ability and Stars Re Zero -Seaso...',
-    views: '259K views',
-    timeAgo: '5 months ago',
+    thumbnail: "https://placehold.co/320x180/000000/FFFFFF?text=Video+1",
+    duration: "1:27",
+    title: "Subaru Tellgius About his ability and Stars Re Zero -Seaso...",
+    views: "259K views",
+    timeAgo: "5 months ago",
   },
   {
     id: 2,
-    thumbnail: 'https://placehold.co/320x180/000000/FFFFFF?text=Video+2',
-    duration: '1:39',
-    title: 'MONTAGEM ALUCINANTE - DJ ORBITAL - (Slowed & Reverb) -...',
-    views: '14M views',
-    timeAgo: '2 months ago',
+    thumbnail: "https://placehold.co/320x180/000000/FFFFFF?text=Video+2",
+    duration: "1:39",
+    title: "MONTAGEM ALUCINANTE - DJ ORBITAL - (Slowed & Reverb) -...",
+    views: "14M views",
+    timeAgo: "2 months ago",
   },
   {
     id: 3,
-    thumbnail: 'https://placehold.co/320x180/000000/FFFFFF?text=Video+3',
-    duration: '1:45',
-    title: 'Vem Vem - Jmilton (SLOWED + REVERB) | TIKTOK VERSION x...',
-    views: '1M views',
-    timeAgo: '2 months ago',
+    thumbnail: "https://placehold.co/320x180/000000/FFFFFF?text=Video+3",
+    duration: "1:45",
+    title: "Vem Vem - Jmilton (SLOWED + REVERB) | TIKTOK VERSION x...",
+    views: "1M views",
+    timeAgo: "2 months ago",
   },
   {
     id: 4,
-    thumbnail: 'https://placehold.co/320x180/000000/FFFFFF?text=Video+4',
-    duration: '1:30',
-    title: 'NADA NADA - JMILTON x KAISER, SAE, LORENZO [BRAZILIAN...',
-    views: '9.2M views',
-    timeAgo: '1 month ago',
+    thumbnail: "https://placehold.co/320x180/000000/FFFFFF?text=Video+4",
+    duration: "1:30",
+    title: "NADA NADA - JMILTON x KAISER, SAE, LORENZO [BRAZILIAN...",
+    views: "9.2M views",
+    timeAgo: "1 month ago",
   },
   {
     id: 5,
-    thumbnail: 'https://placehold.co/320x180/000000/FFFFFF?text=Video+5',
-    duration: '2:10',
-    title: 'Another great video to watch later and enjoy',
-    views: '1.2M views',
-    timeAgo: '3 weeks ago',
+    thumbnail: "https://placehold.co/320x180/000000/FFFFFF?text=Video+5",
+    duration: "2:10",
+    title: "Another great video to watch later and enjoy",
+    views: "1.2M views",
+    timeAgo: "3 weeks ago",
   },
   {
     id: 6,
-    thumbnail: 'https://placehold.co/320x180/000000/FFFFFF?text=Video+6',
-    duration: '0:45',
-    title: 'Quick tutorial on React Hooks',
-    views: '500K views',
-    timeAgo: '1 month ago',
+    thumbnail: "https://placehold.co/320x180/000000/FFFFFF?text=Video+6",
+    duration: "0:45",
+    title: "Quick tutorial on React Hooks",
+    views: "500K views",
+    timeAgo: "1 month ago",
   },
   {
     id: 7,
-    thumbnail: 'https://placehold.co/320x180/000000/FFFFFF?text=Video+7',
-    duration: '3:00',
-    title: 'Exploring the mountains of Switzerland',
-    views: '2.5M views',
-    timeAgo: '6 months ago',
+    thumbnail: "https://placehold.co/320x180/000000/FFFFFF?text=Video+7",
+    duration: "3:00",
+    title: "Exploring the mountains of Switzerland",
+    views: "2.5M views",
+    timeAgo: "6 months ago",
   },
   {
     id: 8,
-    thumbnail: 'https://placehold.co/320x180/000000/FFFFFF?text=Video+8',
-    duration: '1:55',
-    title: 'Deep dive into JavaScript Closures',
-    views: '800K views',
-    timeAgo: '2 months ago',
+    thumbnail: "https://placehold.co/320x180/000000/FFFFFF?text=Video+8",
+    duration: "1:55",
+    title: "Deep dive into JavaScript Closures",
+    views: "800K views",
+    timeAgo: "2 months ago",
   },
 ];
 
 const playlists = [
   {
     id: 101,
-    thumbnail: 'https://placehold.co/200x120/4a4a4a/FFFFFF?text=Workout+Hits',
-    title: 'Workout Hits',
-    videoCount: '50 videos',
+    thumbnail: "https://placehold.co/200x120/4a4a4a/FFFFFF?text=Workout+Hits",
+    title: "Workout Hits",
+    videoCount: "50 videos",
   },
   {
     id: 102,
-    thumbnail: 'https://placehold.co/200x120/4a4a4a/FFFFFF?text=Chill+Vibes',
-    title: 'Chill Vibes',
-    videoCount: '30 videos',
+    thumbnail: "https://placehold.co/200x120/4a4a4a/FFFFFF?text=Chill+Vibes",
+    title: "Chill Vibes",
+    videoCount: "30 videos",
   },
   {
     id: 103,
-    thumbnail: 'https://placehold.co/200x120/4a4a4a/FFFFFF?text=Coding+Tutorials',
-    title: 'Coding Tutorials',
-    videoCount: '75 videos',
+    thumbnail:
+      "https://placehold.co/200x120/4a4a4a/FFFFFF?text=Coding+Tutorials",
+    title: "Coding Tutorials",
+    videoCount: "75 videos",
   },
   {
     id: 104,
-    thumbnail: 'https://placehold.co/200x120/4a4a4a/FFFFFF?text=Travel+Vlogs',
-    title: 'Travel Vlogs',
-    videoCount: '20 videos',
+    thumbnail: "https://placehold.co/200x120/4a4a4a/FFFFFF?text=Travel+Vlogs",
+    title: "Travel Vlogs",
+    videoCount: "20 videos",
   },
   {
     id: 105,
-    thumbnail: 'https://placehold.co/200x120/4a4a4a/FFFFFF?text=Gaming+Highlights',
-    title: 'Gaming Highlights',
-    videoCount: '15 videos',
+    thumbnail:
+      "https://placehold.co/200x120/4a4a4a/FFFFFF?text=Gaming+Highlights",
+    title: "Gaming Highlights",
+    videoCount: "15 videos",
   },
   {
     id: 106,
-    thumbnail: 'https://placehold.co/200x120/4a4a4a/FFFFFF?text=Cooking+Recipes',
-    title: 'Cooking Recipes',
-    videoCount: '40 videos',
+    thumbnail:
+      "https://placehold.co/200x120/4a4a4a/FFFFFF?text=Cooking+Recipes",
+    title: "Cooking Recipes",
+    videoCount: "40 videos",
   },
 ];
 
-// Helper function to render video/playlist cards with carousel functionality
 const renderCarouselSection = (data, sectionTitle, carouselId) => {
-  const scrollRef = useRef(null); // Ref for the scrollable container
+  const scrollRef = useRef(null);
+  const { open, openMobile, isMobile } = useSidebar();
 
   const scrollLeft = () => {
     if (scrollRef.current) {
-      // Adjust scroll amount based on content width (approx. 250px + gap)
-      scrollRef.current.scrollBy({ left: - (scrollRef.current.offsetWidth * 0.8), behavior: 'smooth' });
+      scrollRef.current.scrollBy({
+        left: -(scrollRef.current.offsetWidth * 0.8),
+        behavior: "smooth",
+      });
     }
   };
 
   const scrollRight = () => {
     if (scrollRef.current) {
-      // Adjust scroll amount based on content width (approx. 250px + gap)
-      scrollRef.current.scrollBy({ left: (scrollRef.current.offsetWidth * 0.8), behavior: 'smooth' });
+      scrollRef.current.scrollBy({
+        left: scrollRef.current.offsetWidth * 0.8,
+        behavior: "smooth",
+      });
     }
   };
 
-  const isVideo = (item) => 'duration' in item; // Simple check if item is a video
+  const isVideo = (item) => "duration" in item;
+  console.log("open", open);
+  console.log("isMobile", isMobile);
+  console.log("openMobile", openMobile);
 
   return (
-    <div className="mb-10 text-white"> {/* Margin bottom for spacing between sections */}
+    <div className={`mb-10 text-white`}>
+      {" "}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl sm:text-2xl font-bold">{sectionTitle}</h2>
         <div className="flex items-center space-x-2">
@@ -176,16 +186,13 @@ const renderCarouselSection = (data, sectionTitle, carouselId) => {
           </button>
         </div>
       </div>
-
-      {/* Scrollable Container */}
       <div
         ref={scrollRef}
-        className="flex overflow-x-auto pb-4 scrollbar-hide w-[73rem] space-x-4 pr-4"
+        className={`flex overflow-x-auto pb-4 scrollbar-hide space-x-4 pr-4 w-full`}
         style={{
-          // Optional: Hide scrollbar in a cross-browser compatible way if scrollbar-hide is not enough
-          msOverflowStyle: 'none', // IE and Edge
-          scrollbarWidth: 'none', // Firefox
-          WebkitOverflowScrolling: 'touch', // iOS Safari
+          msOverflowStyle: "none",
+          scrollbarWidth: "none",
+          WebkitOverflowScrolling: "touch",
         }}
       >
         {data.map((item) => (
@@ -217,11 +224,17 @@ const renderCarouselSection = (data, sectionTitle, carouselId) => {
               </h3>
               {isVideo(item) ? (
                 <>
-                  {item.views && <p className="text-gray-400 text-xs">{item.views}</p>}
-                  {item.timeAgo && <p className="text-gray-400 text-xs">{item.timeAgo}</p>}
+                  {item.views && (
+                    <p className="text-gray-400 text-xs">{item.views}</p>
+                  )}
+                  {item.timeAgo && (
+                    <p className="text-gray-400 text-xs">{item.timeAgo}</p>
+                  )}
                 </>
               ) : (
-                item.videoCount && <p className="text-gray-400 text-xs">{item.videoCount}</p>
+                item.videoCount && (
+                  <p className="text-gray-400 text-xs">{item.videoCount}</p>
+                )
               )}
             </div>
           </div>
@@ -233,10 +246,7 @@ const renderCarouselSection = (data, sectionTitle, carouselId) => {
 
 const You = () => {
   return (
-    // The main div for the 'You' page content.
-    // Assuming the parent App.tsx handles general padding and background.
     <div className="font-inter p-4 sm:p-6 lg:p-8 rounded-lg">
-      {/* Top User Profile Section */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center mb-8 space-y-4 sm:space-y-0 sm:space-x-4">
         <div className="flex items-center space-x-4">
           <div className="w-16 h-16 sm:w-20 sm:h-20 bg-pink-600 rounded-full flex items-center justify-center text-3xl font-bold">
@@ -256,12 +266,18 @@ const You = () => {
           </button>
         </div>
       </div>
-
-      {/* Render each section as a carousel */}
-      {renderCarouselSection(videos, 'History', 'history-carousel')}
-      {renderCarouselSection(playlists, 'Playlists', 'playlists-carousel')}
-      {renderCarouselSection(videos.slice(0, 4), 'Watch Later', 'watch-later-carousel')} {/* Using a subset of videos for Watch Later */}
-      {renderCarouselSection(videos.slice(4, 8), 'Liked videos', 'liked-videos-carousel')} {/* Using a subset of videos for Liked videos */}
+      {renderCarouselSection(videos, "History", "history-carousel")}
+      {renderCarouselSection(playlists, "Playlists", "playlists-carousel")}
+      {renderCarouselSection(
+        videos.slice(0, 4),
+        "Watch Later",
+        "watch-later-carousel"
+      )}{" "}
+      {renderCarouselSection(
+        videos.slice(4, 8),
+        "Liked videos",
+        "liked-videos-carousel"
+      )}{" "}
     </div>
   );
 };
