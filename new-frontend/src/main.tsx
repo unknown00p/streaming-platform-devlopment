@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import Home from "./page/Home.tsx";
 import Video from "./page/Video.tsx";
 import You from "./page/You.tsx";
+import Channel from "./page/Channel.tsx";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "you",
         element: <You />,
+      },
+      {
+        path: ":channelName",
+        element: <Channel />,
       }
     ],
   },
