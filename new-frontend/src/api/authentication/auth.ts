@@ -13,6 +13,7 @@ import type { ApiError } from "@/types/api/error.type";
  * Signs in a user with email and password.
  * @param {SignInParams} { email, password }
  * @returns {Promise<AxiosResponse | null>}
+ * @throws {Error} Throws an error if the API request fails.
  */
 export async function SignIn({
   email,
@@ -34,7 +35,7 @@ export async function SignIn({
     } else {
       console.log(error);
     }
-    return null;
+    throw error;
   }
 }
 
@@ -42,6 +43,7 @@ export async function SignIn({
  * Signs in a user with a Google token.
  * @param {string} token - The Google token.
  * @returns {Promise<AxiosResponse | null>}
+ * @throws {Error} Throws an error if the API request fails.
  */
 export async function SignInWithGoogle(
   token: string
@@ -60,13 +62,14 @@ export async function SignInWithGoogle(
     return response;
   } catch (error: unknown) {
     console.log(error);
-    return null;
+    throw error;
   }
 }
 
 /**
  * Signs out the current user.
  * @returns {Promise<AxiosResponse | null>}
+ * @throws {Error} Throws an error if the API request fails.
  */
 export async function SignOut(): Promise<AxiosResponse | null> {
   try {
@@ -78,7 +81,7 @@ export async function SignOut(): Promise<AxiosResponse | null> {
     return response;
   } catch (error: unknown) {
     console.log(error);
-    return null;
+    throw error;
   }
 }
 
@@ -86,6 +89,7 @@ export async function SignOut(): Promise<AxiosResponse | null> {
  * Signs up a new user with provided details and optional avatar/cover image.
  * @param {SignUpParams} { username, fullname, email, password, avatar, coverImage }
  * @returns {Promise<AxiosResponse | null>}
+ * @throws {Error} Throws an error if the API request fails.
  */
 export async function SignUp({
   username,
@@ -136,7 +140,7 @@ export async function SignUp({
     return register;
   } catch (error: unknown) {
     console.error("Error during registration:", error);
-    return null;
+    throw error;
   }
 }
 
@@ -144,6 +148,7 @@ export async function SignUp({
  * Fetches user data by user ID.
  * @param {string} userId
  * @returns {Promise<AxiosResponse | null>}
+ * @throws {Error} Throws an error if the API request fails.
  */
 export async function userById(userId: string): Promise<AxiosResponse | null> {
   try {
@@ -154,7 +159,7 @@ export async function userById(userId: string): Promise<AxiosResponse | null> {
     return response;
   } catch (error: unknown) {
     console.log(error);
-    return null;
+    throw error;
   }
 }
 
@@ -179,6 +184,7 @@ export async function currentUser(): Promise<AxiosResponse> {
  * Updates the user's full name and email.
  * @param {UpdateNameEmailParams} { fullName, email }
  * @returns {Promise<AxiosResponse | null>}
+ * @throws {Error} Throws an error if the API request fails.
  */
 export async function UpdateNameEmail({
   fullName,
@@ -196,7 +202,7 @@ export async function UpdateNameEmail({
     return updatedValue;
   } catch (error: unknown) {
     console.log(error);
-    return null;
+    throw error;
   }
 }
 
@@ -204,6 +210,7 @@ export async function UpdateNameEmail({
  * Updates the user's avatar.
  * @param {File} avatarFile - The new avatar image file.
  * @returns {Promise<AxiosResponse | null>}
+ * @throws {Error} Throws an error if the API request fails.
  */
 export async function UpdateAvatar(
   avatarFile: File
@@ -224,7 +231,7 @@ export async function UpdateAvatar(
     return response;
   } catch (error: unknown) {
     console.log(error);
-    return null;
+    throw error;
   }
 }
 
@@ -232,6 +239,7 @@ export async function UpdateAvatar(
  * Updates the user's cover image.
  * @param {File} coverImage - The new cover image file.
  * @returns {Promise<AxiosResponse | null>}
+ * @throws {Error} Throws an error if the API request fails.
  */
 export async function UpdateCoverImage(
   coverImage: File
@@ -250,7 +258,7 @@ export async function UpdateCoverImage(
     return response;
   } catch (error: unknown) {
     console.log(error);
-    return null;
+    throw error;
   }
 }
 
@@ -258,6 +266,7 @@ export async function UpdateCoverImage(
  * Changes the current user's password.
  * @param {ChangePasswordParams} { oldPassword, newPassword }
  * @returns {Promise<AxiosResponse | null>}
+ * @throws {Error} Throws an error if the API request fails.
  */
 export async function changeCurrentPassword({
   oldPassword,
@@ -275,7 +284,7 @@ export async function changeCurrentPassword({
     return response;
   } catch (error: unknown) {
     console.log(error);
-    return null;
+    throw error;
   }
 }
 
@@ -301,7 +310,7 @@ export async function addVideosToWatchHistory(
     return result;
   } catch (error: unknown) {
     console.log(error);
-    throw new Error(String(error));
+    throw error
   }
 }
 
@@ -317,7 +326,7 @@ export async function watchHistory(): Promise<AxiosResponse> {
     });
     return result;
   } catch (error: unknown) {
-    throw new Error(String(error));
+    throw error;
   }
 }
 
