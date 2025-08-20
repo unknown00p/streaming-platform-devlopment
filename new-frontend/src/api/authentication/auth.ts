@@ -6,14 +6,13 @@ import type {
   SignUpParams,
   UpdateNameEmailParams,
 } from "@/types/api/auth.type";
-
 import type { ApiError } from "@/types/api/error.type";
+import { handleAxiosError } from "@/api/error/error.ts";
 
 /**
  * Signs in a user with email and password.
  * @param {SignInParams} { email, password }
  * @returns {Promise<AxiosResponse | null>}
- * @throws {Error} Throws an error if the API request fails.
  */
 export async function SignIn({
   email,
@@ -22,20 +21,13 @@ export async function SignIn({
   try {
     const response: AxiosResponse = await baseUrl.post(
       "/users/login",
-      {
-        email,
-        password,
-      },
+      { email, password },
       { withCredentials: true }
     );
     return response;
   } catch (error: unknown) {
-    if (isApiError(error)) {
-      console.log(error?.response?.data);
-    } else {
-      console.log(error);
-    }
-    throw error;
+    // Expected failure (e.g., incorrect credentials), so return null.
+    return handleAxiosError(error, false);
   }
 }
 
@@ -43,7 +35,6 @@ export async function SignIn({
  * Signs in a user with a Google token.
  * @param {string} token - The Google token.
  * @returns {Promise<AxiosResponse | null>}
- * @throws {Error} Throws an error if the API request fails.
  */
 export async function SignInWithGoogle(
   token: string
@@ -61,15 +52,14 @@ export async function SignInWithGoogle(
     );
     return response;
   } catch (error: unknown) {
-    console.log(error);
-    throw error;
+    // Expected failure (e.g., invalid token), so return null.
+    return handleAxiosError(error, false);
   }
 }
 
 /**
  * Signs out the current user.
  * @returns {Promise<AxiosResponse | null>}
- * @throws {Error} Throws an error if the API request fails.
  */
 export async function SignOut(): Promise<AxiosResponse | null> {
   try {
@@ -80,8 +70,8 @@ export async function SignOut(): Promise<AxiosResponse | null> {
     );
     return response;
   } catch (error: unknown) {
-    console.log(error);
-    throw error;
+    // Signing out failure is not critical, so return null.
+    return handleAxiosError(error, false);
   }
 }
 
@@ -89,7 +79,6 @@ export async function SignOut(): Promise<AxiosResponse | null> {
  * Signs up a new user with provided details and optional avatar/cover image.
  * @param {SignUpParams} { username, fullname, email, password, avatar, coverImage }
  * @returns {Promise<AxiosResponse | null>}
- * @throws {Error} Throws an error if the API request fails.
  */
 export async function SignUp({
   username,
@@ -100,14 +89,13 @@ export async function SignUp({
   coverImage,
 }: SignUpParams): Promise<AxiosResponse | null> {
   const formData = new FormData();
-
+  // ... (fetch and append logic remains the same)
   const defaultAvatarBlob = await fetch("/images/avatar.png").then((res) =>
     res.blob()
   );
   const defaultAvatar = new File([defaultAvatarBlob], "defaultAvatar.png", {
     type: "image/png",
   });
-
   const defaultCoverImageBlob = await fetch("/images/coverImage.jpg").then(
     (res) => res.blob()
   );
@@ -139,16 +127,15 @@ export async function SignUp({
     );
     return register;
   } catch (error: unknown) {
-    console.error("Error during registration:", error);
-    throw error;
+    // Expected failure (e.g., username already taken), so return null.
+    return handleAxiosError(error, false);
   }
 }
 
 /**
  * Fetches user data by user ID.
  * @param {string} userId
- * @returns {Promise<AxiosResponse | null>}
- * @throws {Error} Throws an error if the API request fails.
+ * @returns {Promise<AxiosResponse>}
  */
 export async function userById(userId: string): Promise<AxiosResponse | null> {
   try {
@@ -158,25 +145,26 @@ export async function userById(userId: string): Promise<AxiosResponse | null> {
     });
     return response;
   } catch (error: unknown) {
-    console.log(error);
-    throw error;
+    // This is a critical function for getting a user's profile.
+    // If it fails, the UI can't render the profile, so throw an error.
+    return handleAxiosError(error, true);
   }
 }
 
 /**
  * Fetches data of the current logged-in user.
  * @returns {Promise<AxiosResponse>}
- * @throws {Error} Throws an error if the request fails.
  */
-export async function currentUser(): Promise<AxiosResponse> {
+export async function currentUser(): Promise<AxiosResponse | null> {
   try {
     const response: AxiosResponse = await baseUrl.get("/users/current-user", {
       withCredentials: true,
     });
     return response;
   } catch (error: unknown) {
-    console.log(error);
-    throw error;
+    // This is a critical function for app state.
+    // If it fails, something is fundamentally wrong, so throw.
+    return handleAxiosError(error, true);
   }
 }
 
@@ -184,7 +172,6 @@ export async function currentUser(): Promise<AxiosResponse> {
  * Updates the user's full name and email.
  * @param {UpdateNameEmailParams} { fullName, email }
  * @returns {Promise<AxiosResponse | null>}
- * @throws {Error} Throws an error if the API request fails.
  */
 export async function UpdateNameEmail({
   fullName,
@@ -193,16 +180,13 @@ export async function UpdateNameEmail({
   try {
     const updatedValue: AxiosResponse = await baseUrl.patch(
       "/users/update-account",
-      {
-        fullName,
-        email,
-      },
+      { fullName, email },
       { withCredentials: true }
     );
     return updatedValue;
   } catch (error: unknown) {
-    console.log(error);
-    throw error;
+    // A failed update can be handled locally (e.g., show a toast).
+    return handleAxiosError(error, false);
   }
 }
 
@@ -210,7 +194,6 @@ export async function UpdateNameEmail({
  * Updates the user's avatar.
  * @param {File} avatarFile - The new avatar image file.
  * @returns {Promise<AxiosResponse | null>}
- * @throws {Error} Throws an error if the API request fails.
  */
 export async function UpdateAvatar(
   avatarFile: File
@@ -222,16 +205,14 @@ export async function UpdateAvatar(
       "/users/avatar",
       formData,
       {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       }
     );
     return response;
   } catch (error: unknown) {
-    console.log(error);
-    throw error;
+    // A failed update is not critical, so return null.
+    return handleAxiosError(error, false);
   }
 }
 
@@ -239,7 +220,6 @@ export async function UpdateAvatar(
  * Updates the user's cover image.
  * @param {File} coverImage - The new cover image file.
  * @returns {Promise<AxiosResponse | null>}
- * @throws {Error} Throws an error if the API request fails.
  */
 export async function UpdateCoverImage(
   coverImage: File
@@ -257,8 +237,8 @@ export async function UpdateCoverImage(
     );
     return response;
   } catch (error: unknown) {
-    console.log(error);
-    throw error;
+    // A failed update is not critical, so return null.
+    return handleAxiosError(error, false);
   }
 }
 
@@ -266,7 +246,6 @@ export async function UpdateCoverImage(
  * Changes the current user's password.
  * @param {ChangePasswordParams} { oldPassword, newPassword }
  * @returns {Promise<AxiosResponse | null>}
- * @throws {Error} Throws an error if the API request fails.
  */
 export async function changeCurrentPassword({
   oldPassword,
@@ -275,16 +254,13 @@ export async function changeCurrentPassword({
   try {
     const response: AxiosResponse = await baseUrl.post(
       "/users/change-password",
-      {
-        oldPassword,
-        newPassword,
-      },
+      { oldPassword, newPassword },
       { withCredentials: true }
     );
     return response;
   } catch (error: unknown) {
-    console.log(error);
-    throw error;
+    // Expected failure (e.g., incorrect old password), so return null.
+    return handleAxiosError(error, false);
   }
 }
 
@@ -292,45 +268,36 @@ export async function changeCurrentPassword({
  * Adds a video to the user's watch history.
  * @param {string} videoId
  * @returns {Promise<AxiosResponse>}
- * @throws {Error} Throws an error if the request fails.
  */
 export async function addVideosToWatchHistory(
   videoId: string
-): Promise<AxiosResponse> {
-  console.log(videoId);
+): Promise<AxiosResponse | null> {
   try {
     const result: AxiosResponse = await baseUrl.patch(
       "/users/addVideosToWatchHistory",
-      {
-        videoId: videoId,
-      },
+      { videoId: videoId },
       { withCredentials: true }
     );
-    console.log("addVideosToWatchHistory", result);
     return result;
   } catch (error: unknown) {
-    console.log(error);
-    throw error
+    // This is a critical action. If it fails, it needs to be reported.
+    return handleAxiosError(error, true);
   }
 }
 
 /**
  * Fetches the user's watch history.
  * @returns {Promise<AxiosResponse>}
- * @throws {Error} Throws an error if the request fails.
  */
-export async function watchHistory(): Promise<AxiosResponse> {
+export async function watchHistory(): Promise<AxiosResponse | null> {
   try {
     const result: AxiosResponse = await baseUrl.get("/users/watchHistory", {
       withCredentials: true,
     });
     return result;
   } catch (error: unknown) {
-    throw error;
+    // This is a critical function for displaying user content.
+    // If it fails, something is wrong, so throw.
+    return handleAxiosError(error, true);
   }
-}
-
-// A type guard to check if an unknown error is an ApiError
-function isApiError(error: unknown): error is ApiError {
-  return typeof error === "object" && error !== null && "message" in error;
 }
