@@ -24,6 +24,7 @@
     "@tailwindcss/vite": "^4.1.11",
     "@types/video.js": "^7.3.58",
     "@videojs/themes": "^1.0.1",
+    "axios": "^1.11.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",

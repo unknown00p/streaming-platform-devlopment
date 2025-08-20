@@ -116,8 +116,6 @@ async function currentUser() {
 }
 
 async function UpdateNameEmail(fullName, email) {
-    // console.log(fullName, email);
-
     try {
         const updatedValue = await baseUrl.patch("/users/update-account",
             {
