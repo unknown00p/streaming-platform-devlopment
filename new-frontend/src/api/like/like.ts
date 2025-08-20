@@ -11,7 +11,9 @@ import { handleAxiosError } from "@/api/error/error";
  * @param {string} videoId - The ID of the video to like or unlike.
  * @returns {Promise<AxiosResponse>} The Axios response from the API.
  */
-export async function toggleVideoLike(videoId: string): Promise<AxiosResponse | null> {
+export async function toggleVideoLike(
+  videoId: string
+): Promise<AxiosResponse | null> {
   try {
     const response: AxiosResponse = await baseUrl.post(
       `/likes/toggle/v/${videoId}`,
@@ -22,7 +24,7 @@ export async function toggleVideoLike(videoId: string): Promise<AxiosResponse | 
     );
     return response;
   } catch (error: unknown) {
-    return handleAxiosError(error,true)
+    return handleAxiosError(error, false);
   }
 }
 
@@ -45,7 +47,7 @@ export async function getVideoLikes({
     );
     return response;
   } catch (error: unknown) {
-    return handleAxiosError(error, false)
+    return handleAxiosError(error, false);
   }
 }
 
@@ -67,7 +69,7 @@ export async function toggleCommentLike(
     );
     return response;
   } catch (error: unknown) {
-    return handleAxiosError(error, true)
+    return handleAxiosError(error, false);
   }
 }
 
@@ -90,7 +92,7 @@ export async function getCommentLikes({
     );
     return response;
   } catch (error: unknown) {
-    return handleAxiosError(error, false)
+    return handleAxiosError(error, false);
   }
 }
 
@@ -105,6 +107,6 @@ export async function getLikedVideosOfUser(): Promise<AxiosResponse | null> {
     });
     return res;
   } catch (error: unknown) {
-    return handleAxiosError(error, true)
+    return handleAxiosError(error, true);
   }
 }
