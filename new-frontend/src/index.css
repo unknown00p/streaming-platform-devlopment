@@ -8,6 +8,7 @@
 @custom-variant dark (&:is(.dark *));
 
 .main-bg {
+  /* background-color: #171717; */
   background-color: #0a1421;
 }
 
@@ -18,9 +19,9 @@
   scrollbar-gutter: stable;
 } */
 
-html {
+/* html {
   scrollbar-gutter: stable;
-}
+} */
 
 /* html {
   scrollbar-width: thin;

@@ -8,6 +8,7 @@ import Home from "./page/Home.tsx";
 import Video from "./page/Video.tsx";
 import You from "./page/You.tsx";
 import Channel from "./page/Channel.tsx";
+import SignIn from "./page/SignIn.tsx";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: ":channelName",
         element: <Channel />,
+      },
+      {
+        path: "signin",
+        element: <SignIn />,
       }
     ],
   },
