@@ -101,8 +101,10 @@ const publishAVideo = asyncHandler(async (req, res) => {
         throw new ApiError(404, "got error while uploading Image")
     }
 
-    if (result) {
+    const userDetails = await User.findById(req.user?._id)
+    console.log(userDetails)
 
+    if (result) {
         const uploadVideo = await Video.create(
             {
                 title,

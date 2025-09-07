@@ -57,7 +57,7 @@ function UploadVideo() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="items-center hidden md:flex md:m-4 m-0 md:bg-gray-800 bg-[#0000] hover:bg-gray-700 hover:text-white cursor-pointer">
+        <Button className="items-center hidden md:flex md:m-4 m-0 md:bg-[#1d1f21] bg-[#0000] hover:bg-[#1f2122] hover:text-white cursor-pointer">
           <Plus className="text-white" />
           <span className="ml-1 hidden md:inline text-white">Create</span>
         </Button>

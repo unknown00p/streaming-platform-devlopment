@@ -143,12 +143,12 @@ const renderCarouselSection = (data, sectionTitle, carouselId) => {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl sm:text-2xl font-bold">{sectionTitle}</h2>
         <div className="flex items-center space-x-2">
-          <button className="px-3 py-1 bg-gray-700 text-white rounded-md text-sm hover:bg-gray-600 transition-colors">
+          <button className="px-3 py-1 bg-[#1d1f21] text-white rounded-md text-sm hover:bg-[#1f2123] transition-colors">
             View all
           </button>
           <button
             onClick={scrollLeft}
-            className="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors flex items-center justify-center"
+            className="p-2 bg-[#1d1f21] rounded-full hover:bg-[#1f2123] transition-colors flex items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +167,7 @@ const renderCarouselSection = (data, sectionTitle, carouselId) => {
           </button>
           <button
             onClick={scrollRight}
-            className="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors flex items-center justify-center"
+            className="p-2 bg-[#1d1f21] rounded-full hover:bg-[#1f2123] transition-colors flex items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -258,10 +258,10 @@ const You = () => {
           </div>
         </div>
         <div className="flex flex-wrap gap-2 mt-4 sm:mt-0">
-          <button className="px-4 py-2 bg-gray-700 text-white rounded-md text-sm hover:bg-gray-600 transition-colors">
+          <button className="px-4 py-2 bg-[#1d1f21] text-white rounded-md text-sm hover:bg-[#1f2122] transition-colors">
             Switch account
           </button>
-          <button className="px-4 py-2 bg-gray-700 text-white rounded-md text-sm hover:bg-gray-600 transition-colors">
+          <button className="px-4 py-2 bg-[#1d1f21] text-white rounded-md text-sm hover:bg-[#1f2122] transition-colors">
             <span className="font-bold">G</span> Google Account
           </button>
         </div>

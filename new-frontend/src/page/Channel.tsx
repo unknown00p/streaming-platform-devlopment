@@ -280,6 +280,107 @@ function Channel() {
           </div>
         </section>
       )}
+
+      {sectionNo === 3 && (
+        <section className="p-8">
+          <h2 className="text-xl font-semibold mb-4">Shorts</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            {channelVideos.map((short) => (
+              <div
+                key={short.id}
+                className="relative w-full aspect-[9/16] rounded-md overflow-hidden shadow-lg group transition-transform duration-300 hover:scale-105 hover:shadow-xl"
+              >
+                {/* Shorts Thumbnail */}
+                <img
+                  src={short.thumbnail}
+                  alt={short.title}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+
+                {/* Dynamic Gradient Overlay */}
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/50 to-transparent transition-all duration-300 group-hover:h-full"></div>
+
+                {/* Refined "Shorts" Pill Icon */}
+                <div className="absolute top-3 left-3 flex items-center p-1 pl-2 pr-3 rounded-full bg-red-600/90 text-white font-bold text-xs gap-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path d="M10 16.5v-9L16 12l-6 4.5zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                  </svg>
+                  <span className="leading-none">SHORTS</span>
+                </div>
+
+                {/* Video Title and Views with Hover Effect */}
+                <div className="absolute bottom-2 left-2 right-2 text-white transition-transform duration-300 group-hover:translate-y-[-0.5rem]">
+                  <h3 className="font-semibold text-sm line-clamp-2">
+                    {short.title}
+                  </h3>
+                  <p className="text-xs text-gray-200 mt-1">
+                    {short.views} views
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {sectionNo === 4 && (
+        <section className="p-8 cursor-pointer">
+          <h2 className="text-xl font-semibold mb-4">Videos</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {channelVideos.map((video) => (
+              <div
+                key={video.id}
+                className="relative group transition-transform duration-300 hover:-translate-y-1"
+              >
+                {/* Subtle stacking effect with multiple layers */}
+                <div className="absolute inset-0 bg-gray-300 dark:bg-gray-700 rounded-md z-0 transform translate-x-1 translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300"></div>
+                <div className="absolute inset-0 bg-gray-200 dark:bg-gray-600 rounded-md z-10 transform translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300"></div>
+
+                {/* Main card content */}
+                <div className="relative z-20 rounded-md overflow-hidden shadow-lg bg-white dark:bg-gray-800 transition-all duration-300 group-hover:shadow-xl">
+                  {/* Thumbnail with overlay */}
+                  <div className="relative w-full h-40">
+                    <img
+                      src={video.thumbnail}
+                      alt={video.title}
+                      className="w-full h-full object-cover rounded-t-md"
+                    />
+                    <div className="absolute bottom-0 right-0 p-2 bg-black/70 text-white flex items-center gap-1 rounded-bl-md">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                        />
+                      </svg>
+                      <span className="font-semibold text-xs">10+</span>
+                    </div>
+                  </div>
+
+                  {/* Video details */}
+                  <div className="p-3">
+                    <h3 className="font-semibold text-sm line-clamp-2 text-gray-900 dark:text-gray-100">
+                      {video.title}
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

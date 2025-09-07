@@ -1,5 +1,9 @@
 import { CategoryCarousel } from "@/components/CategoryCarousel";
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getAllVideos } from "@/api/video/video";
+import type { VideoDataTypes } from "@/types/video/video";
 
 const videos = [
   {
@@ -104,17 +108,26 @@ const videos = [
 ];
 
 function Home() {
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(12);
+  const { data, isLoading } = useQuery({
+    queryKey: ["allVideos", { page, limit }],
+    queryFn: () => getAllVideos(page, limit),
+  });
+
+  console.log("videos", data?.data.data.allvideos);
+  const videos: VideoDataTypes[] = data?.data.data.allvideos;
+
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <>
-      {/* <div className="sticky top-[4.5rem] z-10 w-full bg-black py-2">
-        <CategoryCarousel />
-      </div> */}
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {videos.map((video) => (
-          <div
-            key={video.id}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-lg hover:shadow-lg dark:hover:shadow-xl transition-all duration-300 overflow-hidden"
+          <Link
+            to={`/video/${video._id}`}
+            key={video._id}
+            className="bg-white dark:bg-[#1d1f21] rounded-lg shadow-md dark:shadow-lg hover:shadow-lg dark:hover:shadow-xl transition-all duration-300 overflow-hidden"
           >
             <img
               src={video.thumbnail}
@@ -122,24 +135,26 @@ function Home() {
               className="w-full h-32 object-cover"
             />
             <div className="p-3 flex items-start">
-              <img
-                src={video.channelThumbnail}
-                alt={video.channel}
-                className="w-8 h-8 rounded-full mr-2"
-              />
+              <Link to={`/${video._id}`}>
+                <img
+                  src={video.thumbnail}
+                  alt={video.title}
+                  className="w-8 h-8 rounded-full mr-2"
+                />
+              </Link>
               <div>
                 <h3 className="text-sm font-bold mb-1 line-clamp-2 text-gray-900 dark:text-white">
                   {video.title}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400 text-xs">
-                  {video.channel}
+                  {video.owner}
                 </p>
                 <p className="text-gray-500 dark:text-gray-500 text-xs mt-1">
-                  {video.views} views • {video.date}
+                  {video.views} views • {video.createdAt}
                 </p>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </>

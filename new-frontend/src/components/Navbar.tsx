@@ -59,7 +59,7 @@ function Navbar() {
           <div className="search-bar items-center w-full md:w-1/2 hidden md:flex">
             <Input
               placeholder="Search"
-              className="dark:bg-gray-800 text-white rounded-l-full focus:outline-none w-full"
+              className="dark:bg-[#1d1f21] text-white rounded-l-full focus:outline-none w-full"
             />
             {/* <button className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-r-full">
               <svg
@@ -75,7 +75,7 @@ function Navbar() {
                 />
               </svg>
             </button> */}
-            <Button className="px-4 py-2 dark:bg-gray-800 border-[1px] border-gray-700 hover:bg-gray-700 rounded-r-full">
+            <Button className="px-4 py-2 dark:bg-[#1d1f21] border-[1px] border-gray-700 hover:bg-gray-700 rounded-r-full">
               <Search className="text-white" />
             </Button>
           </div>
