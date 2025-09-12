@@ -3,7 +3,8 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { getAllVideos } from "@/api/video/video";
-import type { VideoDataTypes } from "@/types/video/video";
+import type { HomeVideoDataTypes } from "@/types/video/video";
+import formatTimeDifference from '../utils/formateTime';
 
 const videos = [
   {
@@ -115,46 +116,53 @@ function Home() {
     queryFn: () => getAllVideos(page, limit),
   });
 
-  console.log("videos", data?.data.data.allvideos);
-  const videos: VideoDataTypes[] = data?.data.data.allvideos;
+  const videos: HomeVideoDataTypes[] = data?.data.data.allvideos;
 
   if (isLoading) return <div>Loading...</div>;
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 gap-6 p-4 md:p-3">
         {videos.map((video) => (
-          <Link
-            to={`/video/${video._id}`}
-            key={video._id}
-            className="bg-white dark:bg-[#1d1f21] rounded-lg shadow-md dark:shadow-lg hover:shadow-lg dark:hover:shadow-xl transition-all duration-300 overflow-hidden"
-          >
-            <img
-              src={video.thumbnail}
-              alt={video.title}
-              className="w-full h-32 object-cover"
-            />
-            <div className="p-3 flex items-start">
-              <Link to={`/${video._id}`}>
+          <div key={video._id} className="group cursor-pointer">
+            <Link to={`/video/${video._id}`} className="block">
+              <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-3">
                 <img
                   src={video.thumbnail}
                   alt={video.title}
-                  className="w-8 h-8 rounded-full mr-2"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+            </Link>
+
+            <div className="flex items-start gap-3">
+              <Link
+                to={`/channel/${video.owner._id}`}
+                className="flex-shrink-0"
+              >
+                <img
+                  src={video.owner.avatar}
+                  alt={video.owner.username}
+                  className="w-9 h-9 rounded-full object-cover"
                 />
               </Link>
-              <div>
-                <h3 className="text-sm font-bold mb-1 line-clamp-2 text-gray-900 dark:text-white">
-                  {video.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400 text-xs">
-                  {video.owner}
-                </p>
-                <p className="text-gray-500 dark:text-gray-500 text-xs mt-1">
-                  {video.views} views • {video.createdAt}
+              <div className="flex-1">
+                <Link to={`/video/${video._id}`}>
+                  <h3 className="text-sm md:text-md font-semibold line-clamp-2 text-gray-900 dark:text-gray-100 group-hover:text-blue-500 transition-colors duration-200">
+                    {video.title}
+                  </h3>
+                </Link>
+                <Link to={`/channel/${video.owner._id}`}>
+                  <p className="text-gray-600 dark:text-gray-400 text-xs md:text-sm mt-1 hover:underline">
+                    {video.owner.username}
+                  </p>
+                </Link>
+                <p className="text-gray-500 dark:text-gray-500 text-xs md:text-sm">
+                  {video.views} views • {formatTimeDifference(video.createdAt)}
                 </p>
               </div>
             </div>
-          </Link>
+          </div>
         ))}
       </div>
     </>

@@ -1,13 +1,28 @@
 import { VideoPlayer } from "@/components/VideoPlayer";
-import React from "react";
+import { useRef } from "react";
 import videojs from "video.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useParams } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { getVideobyId } from "@/api/video/video";
+import type { VideoDataType } from "@/types/video/video";
 
 function Video() {
-  const playerRef = React.useRef(null);
+  const playerRef = useRef(null);
+  const { videoId } = useParams();
+
+  const { data: videoData, isLoading } = useQuery({
+    queryKey: ["video", videoId],
+    queryFn: () => getVideobyId(videoId!),
+  });
+
+  isLoading && <div>Loading...</div>;
+
+  console.log(videoData?.data.data.video);
+  const video: VideoDataType = videoData?.data.data.video;
 
   const videoJsOptions = {
     autoplay: true,
@@ -16,8 +31,8 @@ function Video() {
     fluid: true,
     sources: [
       {
-        src: "http://vjs.zencdn.net/v/oceans.mp4",
-        type: "video/mp4",
+        src: video?.videoUrl.auto,
+        type: "application/x-mpegURL",
       },
     ],
   };
@@ -75,7 +90,8 @@ function Video() {
       user: "Bob S.",
       comment:
         "I learned so much from this. The explanation was very clear and easy to follow.",
-      avatar: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZ3JhbW1pbmd8ZW58MHx8MHx8fDA%3D",
+      avatar:
+        "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZ3JhbW1pbmd8ZW58MHx8MHx8fDA%3D",
     },
   ];
 
@@ -84,7 +100,7 @@ function Video() {
       {/* Main Video Content and Comments */}
       <div className="lg:w-4/6 px-6 py-4">
         <div className="mb-6 rounded-lg overflow-hidden">
-          <VideoPlayer options={videoJsOptions} onReady={handlePlayerReady} />
+          <VideoPlayer url={video?.videoUrl.auto} />
         </div>
         <div className="mb-6">
           <h2 className="text-xl lg:text-2xl font-bold mb-2">

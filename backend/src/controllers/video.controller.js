@@ -38,6 +38,10 @@ const getAllVideos = asyncHandler(async (req, res) => {
     const allvideos = await Video.find()
         .skip((page - 1) * limit)
         .limit(parseInt(limit))
+        .populate({
+            path: "owner",
+            select: ["username", "avatar"]
+        })
 
     if (!allvideos) {
         throw new ApiError(404, "videos not found")
@@ -101,8 +105,6 @@ const publishAVideo = asyncHandler(async (req, res) => {
         throw new ApiError(404, "got error while uploading Image")
     }
 
-    const userDetails = await User.findById(req.user?._id)
-    console.log(userDetails)
 
     if (result) {
         const uploadVideo = await Video.create(
