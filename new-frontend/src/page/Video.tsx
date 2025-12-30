@@ -1,4 +1,4 @@
-import { VideoPlayer } from "@/components/VideoPlayer";
+// import VideoPlayer from "@/components/VideoPlayer";
 import { useRef } from "react";
 import videojs from "video.js";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,8 @@ import { useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { getVideobyId } from "@/api/video/video";
 import type { VideoDataType } from "@/types/video/video";
+import VideoPlayer from "@/components/VideoPlayer";
+import HlsVideoPlayer from "@/components/VideoPlayer";
 
 function Video() {
   const playerRef = useRef(null);
@@ -97,10 +99,9 @@ function Video() {
 
   return (
     <div className="flex flex-col lg:flex-row text-white">
-      {/* Main Video Content and Comments */}
       <div className="lg:w-4/6 px-6 py-4">
         <div className="mb-6 rounded-lg overflow-hidden">
-          <VideoPlayer url={video?.videoUrl.auto} />
+          <HlsVideoPlayer src={hlsStreamUrl} controls={true} autoPlay={true} />
         </div>
         <div className="mb-6">
           <h2 className="text-xl lg:text-2xl font-bold mb-2">
@@ -178,8 +179,6 @@ function Video() {
         </div>
       </div>
 
-      {/* --- */}
-      {/* Suggested Videos Section */}
       <div className="lg:w-2/6 px-6 py-4">
         <h3 className="text-lg font-semibold mb-4 text-white">
           Suggested Videos
